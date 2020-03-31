@@ -42,10 +42,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: "Surname is required"
     },
-    date: {
-      type: String,
-      required: "Date is required"
-    },
+    date: String,
     type: {
       type: String,
       required: "Type is required",

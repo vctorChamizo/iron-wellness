@@ -60,6 +60,36 @@ router.post("/login", isLoggedOut(), (req, res, next) => {
   })(req, res, next);
 });
 
+router.get(
+  "/google",
+  isLoggedOut(),
+  passport.authenticate("google", {
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
+  })
+);
+
+// router.get(
+//   "/google/callback",
+//   isLoggedOut(),
+//   passport.authenticate("google"),
+//   (req, res) => res.status(200).json(req.user)
+// );
+
+router.get("/google/callback", (req, res, next) => {
+  passport.authenticate("google", (error, user) => {
+    if (error) return res.status(500).json({ status: "ServerError", error });
+
+    req.logIn(user, error =>
+      error
+        ? res.status(500).json({ status: "ServerError", error })
+        : res.status(200).json(req.user)
+    );
+  })(req, res, next);
+});
+
 router.get("/logout", isLoggedIn(), async (req, res) => {
   try {
     req.logout();
