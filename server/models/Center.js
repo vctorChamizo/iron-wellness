@@ -39,6 +39,4 @@ centerSchema.virtual("profilepic").get(function() {
   return pic.startsWith("http") ? pic : `/${pic}`;
 });
 
-const model = mongoose.model("Center", centerSchema);
-
-module.exports = model;
+module.exports = mongoose.model("Center", centerSchema);

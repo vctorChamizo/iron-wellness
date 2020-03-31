@@ -18,14 +18,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/editprofile", async (req, res, next) => {
-  try {
-    return res.render("users/edit");
-  } catch (error) {
-    next(error);
-  }
-});
-
 router.post("/editprofile", async (req, res, next) => {
   try {
     await User.updateOne(
@@ -88,102 +80,6 @@ router.get("/removefav", async (req, res, next) => {
       }
     );
     res.redirect(`/movies/${movie}`);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/followuser", async (req, res, next) => {
-  try {
-    const { user } = req.query;
-    await User.updateOne(
-      {
-        _id: res.locals.user._id
-      },
-      {
-        $addToSet: {
-          follows: user
-        }
-      }
-    );
-    res.redirect("/users");
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get("/unfollowuser", async (req, res, next) => {
-  try {
-    const { user } = req.query;
-    await User.updateOne(
-      {
-        _id: res.locals.user._id
-      },
-      {
-        $pull: {
-          follows: user
-        }
-      }
-    );
-    res.redirect("/users");
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post("/review", async (req, res, next) => {
-  try {
-    const { idMovie } = req.query;
-    const { review } = req.body;
-    const newReview = await Review.create({
-      review,
-      movie: idMovie,
-      user: req.user._id
-    });
-    await User.updateOne(
-      { _id: req.user._id },
-      {
-        $addToSet: {
-          reviews: newReview._id
-        }
-      }
-    );
-    await Movie.updateOne(
-      { _id: idMovie },
-      {
-        $addToSet: {
-          reviews: newReview._id
-        }
-      }
-    );
-    res.redirect(`/movies/${idMovie}`);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post("/answer", async (req, res, next) => {
-  try {
-    const { idReview, idMovie } = req.query;
-    const { review } = req.body;
-    const newReview = await Review.create({ review });
-    await Review.updateOne(
-      { _id: idReview },
-      {
-        $addToSet: {
-          answers: newReview._id
-        }
-      }
-    );
-    await User.updateOne(
-      { _id: req.user._id },
-      {
-        $addToSet: {
-          reviews: newReview._id
-        }
-      }
-    );
-    res.redirect(`/movies/${idMovie}`);
   } catch (error) {
     next(error);
   }

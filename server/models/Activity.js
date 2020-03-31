@@ -16,7 +16,7 @@ const activitySchema = new mongoose.Schema(
       required: "Level is required",
       enum: ["BEGGINER, MEDIUM, PROFESSIONAL"]
     },
-    level: {
+    type: {
       type: String,
       required: "Type is required"
     }
@@ -26,6 +26,4 @@ const activitySchema = new mongoose.Schema(
   }
 );
 
-const model = mongoose.model("Activity", activitySchema);
-
-module.exports = model;
+module.exports = mongoose.model("Activity", activitySchema);
