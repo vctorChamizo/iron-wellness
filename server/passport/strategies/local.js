@@ -1,23 +1,22 @@
 const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+
+const { checkHashedPassword } = require("../../lib/hash-password");
 
 const User = require("../../models/User");
-const { checkHashedPassword } = require("../../lib/hash-password");
-const LocalStrategy = require("passport-local").Strategy;
 
 passport.use(
   new LocalStrategy(
     { passReqToCallback: true },
-    async (req, userCredentials, password, done) => {
+    async (req, username, password, done) => {
       try {
         const user = await User.findOne({
-          $or: [{ username: userCredentials }, { email: userCredentials }]
+          $or: [{ username }, { email: username }]
         });
 
-        user
-          ? checkHashedPassword(password, user.password)
-            ? done(null, user)
-            : done(null, false)
-          : done(null, false);
+        user && checkHashedPassword(password, user.password)
+          ? done(null, user)
+          : done(null, false, { message: "BadCredentials" });
       } catch (error) {
         done(error);
       }

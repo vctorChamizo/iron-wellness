@@ -9,15 +9,28 @@ const { hashPassword } = require("../lib/hash-password");
 const router = express.Router();
 
 router.post("/signup", isLoggedOut(), async (req, res) => {
-  const { username, password, campus, course } = req.body.user;
+  const {
+    email,
+    username,
+    password,
+    name,
+    surname,
+    image,
+    date,
+    type
+  } = req.body.user;
 
   try {
-    if (!(await User.findOne({ username }))) {
+    if (!(await User.findOne({ $or: [{ email }, { username }] }))) {
       const user = await User.create({
+        email,
         username,
         password: hashPassword(password),
-        campus,
-        course
+        name,
+        surname,
+        image,
+        date,
+        type
       });
 
       req.login(user, error => {
@@ -34,12 +47,18 @@ router.post("/signup", isLoggedOut(), async (req, res) => {
   }
 });
 
-router.post(
-  "/login",
-  isLoggedOut(),
-  passport.authenticate("local"),
-  (req, res) => res.status(200).json(req.user)
-);
+router.post("/login", isLoggedOut(), (req, res, next) => {
+  passport.authenticate("local", (error, user, info) => {
+    if (error) return res.status(500).json({ status: "ServerError", error });
+    if (!user) return res.status(401).json({ status: info.message });
+
+    req.logIn(user, error =>
+      error
+        ? res.status(500).json({ status: "ServerError", error })
+        : res.status(200).json(req.user)
+    );
+  })(req, res, next);
+});
 
 router.get("/logout", isLoggedIn(), async (req, res) => {
   try {

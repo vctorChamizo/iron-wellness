@@ -43,13 +43,13 @@ const userSchema = new mongoose.Schema(
       required: "Surname is required"
     },
     date: {
-      type: Date,
+      type: String,
       required: "Date is required"
     },
     type: {
       type: String,
       required: "Type is required",
-      enum: ["ADMIN, TRAINER, USER"]
+      enum: ["ADMIN", "TRAINER", "USER"]
     },
     classes: [{ type: mongoose.ObjectId, ref: "Class" }],
     social: {
@@ -65,6 +65,7 @@ const defaultPicture =
   "https://www.sackettwaconia.com/wp-content/uploads/default-profile.png";
 
 userSchema.virtual("profilepic").get(function() {
+  console.log("pasa por aqui");
   let pic = _.get(this, "image.path");
 
   if (!pic) {

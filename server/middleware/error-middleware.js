@@ -8,13 +8,11 @@ const error = (err, req, res) => {
   // Sentry.captureException(err);
 
   if (!res.headersSent) {
-    res.status(500);
+    return res.status(500).json({ status: "ServerError", err });
   }
 };
 
-const notFound = (req, res, next) => {
-  res.status(404);
-};
+const notFound = (req, res) => res.status(400).json({ status: "NotFound" });
 
 module.exports = {
   error,
