@@ -22,6 +22,64 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/type", async (req, res) => {
+  try {
+    const users = await User.find({ type: req.query.type });
+
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ status: "ServerError", error });
+  }
+});
+
+router.get("/addclass/:id", async (req, res) => {
+  try {
+    const resultUser = await User.updateOne(
+      {
+        _id: req.user._id
+      },
+      { $addToSet: { classes: req.params.id } }
+    );
+
+    const resultClass = await Class.updateOne(
+      {
+        _id: req.params.id
+      },
+      { $addToSet: { students: req.user._id } }
+    );
+
+    return resultClass.n && resultUser.n
+      ? res.status(200).json({ status: "OperationSuccessful" })
+      : res.status(400).json({ status: "BadRequest" });
+  } catch (error) {
+    return res.status(500).json({ status: "ServerError", error });
+  }
+});
+
+router.get("/removeclass/:id", async (req, res) => {
+  try {
+    const resultUser = await User.updateOne(
+      {
+        _id: req.user._id
+      },
+      { $pull: { classes: req.params.id } }
+    );
+
+    const resultClass = await Class.updateOne(
+      {
+        _id: req.params.id
+      },
+      { $pull: { students: req.user._id } }
+    );
+
+    return resultClass.n && resultUser.n
+      ? res.status(200).json({ status: "OperationSuccessful" })
+      : res.status(400).json({ status: "BadRequest" });
+  } catch (error) {
+    return res.status(500).json({ status: "ServerError", error });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.params.id });
@@ -34,9 +92,10 @@ router.get("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    await User.deleteOne({ _id: req.params.id });
-
-    return res.status(200).json({ status: "OperationSuccessful" });
+    const result = await User.deleteOne({ _id: req.params.id });
+    return result.n
+      ? res.status(200).json({ status: "OperationSuccessful" })
+      : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }
@@ -63,18 +122,6 @@ router.put("/:id", async (req, res) => {
     return res.status(200).json(updatedUser);
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
-  }
-});
-
-router.post("/search", async (req, res, next) => {
-  try {
-    const { search } = req.body;
-    const user = await User.findOne({
-      $or: [{ email: search }, { username: search }]
-    });
-    res.send(user);
-  } catch (error) {
-    next(error);
   }
 });
 
