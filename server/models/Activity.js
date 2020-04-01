@@ -8,11 +8,6 @@ const activitySchema = new mongoose.Schema(
       unique: true
     },
     description: String,
-    level: {
-      type: String,
-      required: "Level is required",
-      enum: ["BEGGINER", "MEDIUM", "PROFESSIONAL"]
-    },
     type: {
       type: String,
       required: "Type is required",

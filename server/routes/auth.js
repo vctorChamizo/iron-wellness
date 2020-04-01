@@ -21,6 +21,8 @@ router.post("/signup", isLoggedOut(), async (req, res) => {
       type
     } = req.body.user;
 
+    if (type === "ADMIN") return res.status(400).json({ status: "BadRequest" });
+
     if (!(await User.findOne({ $or: [{ email }, { username }] }))) {
       const user = await User.create({
         email,
@@ -86,7 +88,7 @@ router.get("/google/callback", (req, res, next) => {
 router.get("/logout", isLoggedIn(), async (req, res) => {
   try {
     req.logout();
-    return res.status(200).json({ status: "Log out" });
+    return res.status(200).json({ status: "OperationSuccessful" });
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }

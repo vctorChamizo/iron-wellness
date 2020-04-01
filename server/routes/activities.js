@@ -16,12 +16,12 @@ router.get("/", async (req, res) => {
 
 router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
   try {
-    const { name, desciption, type, level } = req.body.activity;
+    const { name, desciption, type } = req.body.activity;
 
     if (!(await Activity.findOne({ name })))
       return res
         .status(201)
-        .json(await Activity.create({ name, desciption, type, level }));
+        .json(await Activity.create({ name, desciption, type }));
     else
       return res.status(401).json({
         status: "ActivityExists"
@@ -50,8 +50,7 @@ router.put("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
       {
         name: activity.name,
         desciption: activity.desciption,
-        type: activity.type,
-        level: activity.level
+        type: activity.type
       },
       { new: true, runValidators: true }
     );

@@ -26,6 +26,11 @@ const classSchema = new mongoose.Schema(
       type: Date,
       required: "Date is required"
     },
+    level: {
+      type: String,
+      required: "Level is required",
+      enum: ["BEGGINER", "MEDIUM", "PROFESSIONAL"]
+    },
     size: { type: Number, required: "Size is required" }
   },
   {
