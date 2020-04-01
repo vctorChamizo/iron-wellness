@@ -5,8 +5,10 @@ const { isLoggedIn } = require("../middleware/account-middleware");
 
 const auth = require("./auth");
 const users = require("./users");
+const centers = require("./centers");
 
 router.use("/auth", auth);
+router.use("/centers", centers);
 
 router.use(isLoggedIn());
 

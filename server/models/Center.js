@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const URL_PATTERN = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/;
+
 const centerSchema = new mongoose.Schema(
   {
     name: {
@@ -15,9 +17,9 @@ const centerSchema = new mongoose.Schema(
       type: String,
       required: "Street is required"
     },
-    postal_code: {
-      type: Number,
-      required: "Postal code is required"
+    community: {
+      type: String,
+      required: "Community is required"
     },
     image: { type: Object, match: [URL_PATTERN, "Invalid avatar URL pattern"] }
   },

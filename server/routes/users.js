@@ -8,12 +8,10 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    const users = await User.find();
-
     return res
       .status(200)
       .json(
-        users.map(e =>
+        (await User.find()).map(e =>
           _.pick(e, ["_id", "username", "name", "surname", "image"])
         )
       );
@@ -24,9 +22,7 @@ router.get("/", async (req, res) => {
 
 router.get("/type", async (req, res) => {
   try {
-    const users = await User.find({ type: req.query.type });
-
-    return res.status(200).json(users);
+    return res.status(200).json(await User.find({ type: req.query.type }));
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }
@@ -82,9 +78,7 @@ router.get("/removeclass/:id", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.params.id });
-
-    return res.status(200).json(user);
+    return res.status(200).json(await User.findOne({ _id: req.params.id }));
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }
@@ -93,6 +87,7 @@ router.get("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const result = await User.deleteOne({ _id: req.params.id });
+
     return result.n
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });

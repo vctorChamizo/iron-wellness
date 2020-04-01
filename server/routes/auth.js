@@ -9,18 +9,18 @@ const { hashPassword } = require("../lib/hash-password");
 const router = express.Router();
 
 router.post("/signup", isLoggedOut(), async (req, res) => {
-  const {
-    email,
-    username,
-    password,
-    name,
-    surname,
-    image,
-    date,
-    type
-  } = req.body.user;
-
   try {
+    const {
+      email,
+      username,
+      password,
+      name,
+      surname,
+      image,
+      date,
+      type
+    } = req.body.user;
+
     if (!(await User.findOne({ $or: [{ email }, { username }] }))) {
       const user = await User.create({
         email,
