@@ -1,10 +1,14 @@
 const express = require("express");
 const _ = require("lodash");
 
+const { isLoggedIn } = require("../middleware/account-middleware");
+
 const User = require("../models/User");
 const Class = require("../models/Class");
 
 const router = express.Router();
+
+router.use(isLoggedIn());
 
 router.get("/", async (req, res) => {
   try {
@@ -84,23 +88,11 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
-  try {
-    const result = await User.deleteOne({ _id: req.params.id });
-
-    return result.n
-      ? res.status(200).json({ status: "OperationSuccessful" })
-      : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
-  }
-});
-
 router.put("/:id", async (req, res) => {
   try {
     const { user } = req.body;
 
-    const updatedUser = await User.findOneAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       {
         _id: req.user._id
       },
@@ -111,10 +103,24 @@ router.put("/:id", async (req, res) => {
         surname: user.surname,
         date: user.date
       },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
-    return res.status(200).json(updatedUser);
+    return updatedUser
+      ? res.status(200).json(updatedUser)
+      : res.status(400).json({ status: "BadRequest" });
+  } catch (error) {
+    return res.status(500).json({ status: "ServerError", error });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const result = await User.deleteOne({ _id: req.params.id });
+
+    return result.n
+      ? res.status(200).json({ status: "OperationSuccessful" })
+      : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }

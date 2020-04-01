@@ -7,18 +7,16 @@ const activitySchema = new mongoose.Schema(
       required: "Name is required",
       unique: true
     },
-    description: {
-      type: String,
-      required: "City is required"
-    },
+    description: String,
     level: {
       type: String,
       required: "Level is required",
-      enum: ["BEGGINER, MEDIUM, PROFESSIONAL"]
+      enum: ["BEGGINER", "MEDIUM", "PROFESSIONAL"]
     },
     type: {
       type: String,
-      required: "Type is required"
+      required: "Type is required",
+      enum: ["INDOOR", "OUTDOOR", "POOL"]
     }
   },
   {
