@@ -71,13 +71,6 @@ router.get(
   })
 );
 
-// router.get(
-//   "/google/callback",
-//   isLoggedOut(),
-//   passport.authenticate("google"),
-//   (req, res) => res.status(200).json(req.user)
-// );
-
 router.get("/google/callback", (req, res, next) => {
   passport.authenticate("google", (error, user) => {
     if (error) return res.status(500).json({ status: "ServerError", error });

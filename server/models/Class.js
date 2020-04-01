@@ -4,8 +4,7 @@ const classSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: "Name is required",
-      match: [EMAIL_PATTERN, "Invalid email"]
+      required: "Name is required"
     },
     activity: {
       type: mongoose.ObjectId,
