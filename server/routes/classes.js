@@ -5,6 +5,8 @@ const router = express.Router();
 const { isAdmin, isLoggedIn } = require("../middleware/account-middleware");
 
 const Class = require("../models/Class");
+const User = require("../models/User");
+const Activity = require("../models/Activity");
 
 router.get("/", async (req, res) => {
   try {
@@ -18,9 +20,28 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
   try {
     const { name, activity, trainer, date, level, size } = req.body._class;
 
-    return res
-      .status(201)
-      .json(await Class.create({ name, activity, trainer, date, level, size }));
+    const checkTrainer = await User.findById({ _id: trainer });
+    const checkActivity = await Activity.findById({ _id: activity });
+
+    if (checkActivity && checkTrainer) {
+      const _class = await Class.create({
+        name,
+        activity,
+        trainer,
+        date,
+        level,
+        size
+      });
+
+      await User.updateOne(
+        { _id: trainer },
+        { $addToSet: { classes: _class._id } }
+      );
+
+      return res.status(201).json(_class);
+    }
+
+    return res.status(400).json({ status: "BadRequest" });
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }

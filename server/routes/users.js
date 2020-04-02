@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
       .status(200)
       .json(
         (await User.find()).map(e =>
-          _.pick(e, ["_id", "username", "name", "surname", "image"])
+          _.pick(e, ["_id", "username", "name", "surname", "image", "type"])
         )
       );
   } catch (error) {
@@ -82,7 +82,9 @@ router.get("/removeclass/:id", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    return res.status(200).json(await User.findOne({ _id: req.params.id }));
+    return res
+      .status(200)
+      .json(await User.findOne({ _id: req.params.id }).populate("classes"));
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }
