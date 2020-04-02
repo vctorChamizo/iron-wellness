@@ -33,7 +33,13 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    return res.status(200).json(await Center.findOne({ _id: req.params.id }));
+    return res
+      .status(200)
+      .json(
+        await Center.findOne({ _id: req.params.id }).select(
+          "-updatedAt -createdAt -__v"
+        )
+      );
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }

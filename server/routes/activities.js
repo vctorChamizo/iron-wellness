@@ -16,12 +16,12 @@ router.get("/", async (req, res) => {
 
 router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
   try {
-    const { name, desciption, type } = req.body.activity;
+    const { name, description, type } = req.body.activity;
 
     if (!(await Activity.findOne({ name })))
       return res
         .status(201)
-        .json(await Activity.create({ name, desciption, type }));
+        .json(await Activity.create({ name, description, type }));
     else
       return res.status(401).json({
         status: "ActivityExists"
@@ -33,7 +33,13 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    return res.status(200).json(await Activity.findOne({ _id: req.params.id }));
+    return res
+      .status(200)
+      .json(
+        await Activity.findOne({ _id: req.params.id }).select(
+          "-updatedAt -createdAt -__v"
+        )
+      );
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }

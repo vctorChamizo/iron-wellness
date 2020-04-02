@@ -1,7 +1,7 @@
 const express = require("express");
 const _ = require("lodash");
 
-const { isLoggedIn } = require("../middleware/account-middleware");
+const { isLoggedIn, isClient } = require("../middleware/account-middleware");
 
 const User = require("../models/User");
 const Class = require("../models/Class");
@@ -32,19 +32,15 @@ router.get("/type", async (req, res) => {
   }
 });
 
-router.get("/addclass/:id", async (req, res) => {
+router.get("/addclass/:id", isClient(), async (req, res) => {
   try {
     const resultUser = await User.updateOne(
-      {
-        _id: req.user._id
-      },
+      { _id: req.user._id },
       { $addToSet: { classes: req.params.id } }
     );
 
     const resultClass = await Class.updateOne(
-      {
-        _id: req.params.id
-      },
+      { _id: req.params.id },
       { $addToSet: { students: req.user._id } }
     );
 
@@ -56,7 +52,7 @@ router.get("/addclass/:id", async (req, res) => {
   }
 });
 
-router.get("/removeclass/:id", async (req, res) => {
+router.get("/removeclass/:id", isClient(), async (req, res) => {
   try {
     const resultUser = await User.updateOne(
       {
@@ -82,9 +78,11 @@ router.get("/removeclass/:id", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    return res
-      .status(200)
-      .json(await User.findOne({ _id: req.params.id }).populate("classes"));
+    return res.status(200).json(
+      await User.findOne({ _id: req.params.id })
+        .populate("classes")
+        .select("-updatedAt -createdAt -__v")
+    );
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }

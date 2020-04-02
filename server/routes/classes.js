@@ -51,9 +51,16 @@ router.get("/:id", async (req, res) => {
   try {
     return res.status(200).json(
       await Class.findOne({ _id: req.params.id })
-        .populate("students")
-        .populate("trainer")
-        .populate("activity")
+        .populate({
+          path: "students",
+          select: ["_id", "username", "name", "surname", "type"]
+        })
+        .populate({
+          path: "trainer",
+          select: ["_id", "username", "name", "surname", "type"]
+        })
+        .populate({ path: "activity", select: ["name", "type", "description"] })
+        .select("-updatedAt -createdAt -__v")
     );
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });

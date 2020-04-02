@@ -17,11 +17,11 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: "Password is required",
-      match: [
-        PASSWORD_PATTERN,
-        "Passwords must contain at least six characters, including uppercase, lowercase letters and numbers."
-      ]
+      required: "Password is required"
+      // match: [
+      //   PASSWORD_PATTERN,
+      //   "Passwords must contain at least six characters, including uppercase, lowercase letters and numbers."
+      // ]
     },
     username: {
       type: String,
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema(
     type: {
       type: String,
       required: "Type is required",
-      enum: ["ADMIN", "TRAINER", "USER"]
+      enum: ["ADMIN", "TRAINER", "CLIENT"]
     },
     classes: [{ type: mongoose.ObjectId, ref: "Class" }],
     social: {
@@ -73,14 +73,5 @@ userSchema.virtual("profilepic").get(function() {
 });
 
 const model = mongoose.model("User", userSchema);
-
-model.collection
-  .createIndexes([
-    {
-      key: { username: 1 },
-      name: "username"
-    }
-  ])
-  .catch(e => console.log(e));
 
 module.exports = model;

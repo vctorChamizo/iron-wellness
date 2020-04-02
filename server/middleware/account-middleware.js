@@ -9,8 +9,14 @@ const isAdmin = () => (req, res, next) =>
     ? next()
     : res.status(401).json({ status: "User must be ADMIN" });
 
+const isClient = () => (req, res, next) =>
+  req.user.type === "CLIENT"
+    ? next()
+    : res.status(401).json({ status: "User must be CLIENT" });
+
 module.exports = {
   isLoggedIn,
   isLoggedOut,
-  isAdmin
+  isAdmin,
+  isClient
 };

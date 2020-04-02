@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/index",
-    "dev": "DEBUG=express-mongoose:* nodemon -e js,hbs ./bin/index"
+    "dev": "DEBUG=express-mongoose:* nodemon -e js,hbs ./bin/index",
+    "seed": "node seeds/index.js"
   },
   "dependencies": {
     "@sentry/node": "^5.12.5",
