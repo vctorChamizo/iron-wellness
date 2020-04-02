@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
         )
       );
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
@@ -28,7 +28,7 @@ router.get("/type", async (req, res) => {
   try {
     return res.status(200).json(await User.find({ type: req.query.type }));
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
@@ -48,7 +48,7 @@ router.get("/addclass/:id", isClient(), async (req, res) => {
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
@@ -72,22 +72,25 @@ router.get("/removeclass/:id", isClient(), async (req, res) => {
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
 router.get("/:id", async (req, res) => {
   try {
-    return res.status(200).json(
-      await User.findOne({ _id: req.params.id })
-        .populate({
-          path: "classes",
-          select: ["_id", "name", "date"]
-        })
-        .select("-updatedAt -createdAt -__v")
-    );
+    const user = await User.findOne({ _id: req.params.id })
+      .populate({
+        path: "classes",
+        select: ["_id", "name", "date"]
+      })
+      .select("-updatedAt -createdAt -__v");
+
+    return user
+      ? res.status(200).json(user)
+      : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    console.log(error);
+    throw error;
   }
 });
 
@@ -113,7 +116,7 @@ router.put("/:id", async (req, res) => {
       ? res.status(200).json(updatedUser)
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
@@ -125,7 +128,7 @@ router.delete("/:id", async (req, res) => {
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 

@@ -8,7 +8,7 @@ const error = (err, req, res) => {
   // Sentry.captureException(err);
 
   if (!res.headersSent) {
-    return res.status(500).json({ status: "ServerError", err });
+    return res.status(500).json({ status: "ServeError" });
   }
 };
 

@@ -36,8 +36,7 @@ router.post("/signup", isLoggedOut(), async (req, res) => {
       });
 
       req.login(user, error => {
-        if (error)
-          return res.status(500).json({ status: "ServerError", error });
+        if (error) throw error;
         return res.status(201).json(user);
       });
     } else
@@ -45,20 +44,19 @@ router.post("/signup", isLoggedOut(), async (req, res) => {
         status: "UserExists"
       });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
 router.post("/login", isLoggedOut(), (req, res, next) => {
   passport.authenticate("local", (error, user, info) => {
-    if (error) return res.status(500).json({ status: "ServerError", error });
+    if (error) throw error;
     if (!user) return res.status(401).json({ status: info.message });
 
-    req.logIn(user, error =>
-      error
-        ? res.status(500).json({ status: "ServerError", error })
-        : res.status(200).json(req.user)
-    );
+    req.logIn(user, error => {
+      if (error) throw error;
+      return res.status(200).json(req.user);
+    });
   })(req, res, next);
 });
 
@@ -75,13 +73,12 @@ router.get(
 
 router.get("/google/callback", (req, res, next) => {
   passport.authenticate("google", (error, user) => {
-    if (error) return res.status(500).json({ status: "ServerError", error });
+    if (error) throw error;
 
-    req.logIn(user, error =>
-      error
-        ? res.status(500).json({ status: "ServerError", error })
-        : res.status(200).json(req.user)
-    );
+    req.logIn(user, error => {
+      if (error) throw error;
+      return res.status(200).json(req.user);
+    });
   })(req, res, next);
 });
 
@@ -90,7 +87,7 @@ router.get("/logout", isLoggedIn(), async (req, res) => {
     req.logout();
     return res.status(200).json({ status: "OperationSuccessful" });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 

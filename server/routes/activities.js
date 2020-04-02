@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
   try {
     return res.status(200).json(await Activity.find());
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
@@ -27,7 +27,7 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
         status: "ActivityExists"
       });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
@@ -41,7 +41,7 @@ router.get("/:id", async (req, res) => {
       ? res.status(200).json(activity)
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
@@ -64,7 +64,7 @@ router.put("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
@@ -76,7 +76,7 @@ router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    return res.status(500).json({ status: "ServerError", error });
+    throw error;
   }
 });
 
