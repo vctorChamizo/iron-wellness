@@ -33,13 +33,13 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    return res
-      .status(200)
-      .json(
-        await Activity.findOne({ _id: req.params.id }).select(
-          "-updatedAt -createdAt -__v"
-        )
-      );
+    const activity = await Activity.findOne({ _id: req.params.id }).select(
+      "-updatedAt -createdAt -__v"
+    );
+
+    return activity
+      ? res.status(200).json(activity)
+      : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }
@@ -50,9 +50,7 @@ router.put("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
     const { activity } = req.body;
 
     const updatedActivity = await Activity.findByIdAndUpdate(
-      {
-        _id: req.params.id
-      },
+      { _id: req.params.id },
       {
         name: activity.name,
         desciption: activity.desciption,

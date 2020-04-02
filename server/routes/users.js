@@ -80,7 +80,10 @@ router.get("/:id", async (req, res) => {
   try {
     return res.status(200).json(
       await User.findOne({ _id: req.params.id })
-        .populate("classes")
+        .populate({
+          path: "classes",
+          select: ["_id", "name", "date"]
+        })
         .select("-updatedAt -createdAt -__v")
     );
   } catch (error) {

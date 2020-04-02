@@ -49,19 +49,21 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    return res.status(200).json(
-      await Class.findOne({ _id: req.params.id })
-        .populate({
-          path: "students",
-          select: ["_id", "username", "name", "surname", "type"]
-        })
-        .populate({
-          path: "trainer",
-          select: ["_id", "username", "name", "surname", "type"]
-        })
-        .populate({ path: "activity", select: ["name", "type", "description"] })
-        .select("-updatedAt -createdAt -__v")
-    );
+    const _class = await Class.findOne({ _id: req.params.id })
+      .populate({
+        path: "students",
+        select: ["_id", "username", "name", "surname"]
+      })
+      .populate({
+        path: "trainer",
+        select: ["_id", "username", "name", "surname", "type"]
+      })
+      .populate({ path: "activity", select: ["name", "type", "description"] })
+      .select("-updatedAt -createdAt -__v");
+
+    return _class
+      ? res.status(200).json(_class)
+      : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
     return res.status(500).json({ status: "ServerError", error });
   }
