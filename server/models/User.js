@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
 const PASSWORD_PATTERN = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,100}/;
-const URL_PATTERN = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/;
 const USERNAME = /[a-zA-Z0-9_-]{3,15}/;
 
 const userSchema = new mongoose.Schema(
@@ -33,7 +32,7 @@ const userSchema = new mongoose.Schema(
         "Username must containt at least three characters and cannot spaces."
       ]
     },
-    image: { type: Object, match: [URL_PATTERN, "Invalid avatar URL pattern"] },
+    image: Object,
     name: {
       type: String,
       required: "Name is required"

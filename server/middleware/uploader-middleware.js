@@ -8,15 +8,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET
 });
 
-const storage = cloudinaryStorage({
-  cloudinary,
-  folder: "lab-profile-app",
-  allowedFormats: ["jpg", "png"],
-  filename: function(req, file, cb) {
-    cb(null, file.originalname);
-  }
+const uploadCloud = multer({
+  storage: cloudinaryStorage({
+    cloudinary,
+    folder: "iron-wellness",
+    allowedFormats: ["jpg", "png"]
+  })
 });
 
-const uploader = multer({ storage: storage });
-
-module.exports = uploader;
+module.exports = uploadCloud;

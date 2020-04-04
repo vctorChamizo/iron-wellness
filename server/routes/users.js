@@ -2,7 +2,7 @@ const express = require("express");
 const _ = require("lodash");
 
 const { isLoggedIn, isClient } = require("../middleware/account-middleware");
-const uploader = require("../lib/uploader");
+const uploadCloud = require("../middleware/uploader-middleware");
 
 const User = require("../models/User");
 const Class = require("../models/Class");
@@ -33,17 +33,16 @@ router.get("/type", async (req, res) => {
   }
 });
 
-router.post("/upload", uploader.single("imageUrl"), async (req, res, next) => {
+router.post("/upload", uploadCloud.single("imageUrl"), async (req, res) => {
   try {
-    if (!req.file) res.status(400).json({ status: "BadRequest" });
-
-    const image = req.file.secure_url;
+    if (!req.file) return res.status(400).json({ status: "BadRequest" });
 
     const updatedUser = await Users.findByIdAndUpdate(
       req.user._id,
-      { image },
+      { image: req.file },
       { new: true }
     );
+
     return updatedUser
       ? res.status(200).json(updatedUser)
       : res.status(400).json({ status: "BadRequest" });
