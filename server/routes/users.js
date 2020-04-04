@@ -2,6 +2,7 @@ const express = require("express");
 const _ = require("lodash");
 
 const { isLoggedIn, isClient } = require("../middleware/account-middleware");
+const uploader = require("../lib/cloudinary.config");
 
 const User = require("../models/User");
 const Class = require("../models/Class");
@@ -27,6 +28,25 @@ router.get("/", async (req, res) => {
 router.get("/type", async (req, res) => {
   try {
     return res.status(200).json(await User.find({ type: req.query.type }));
+  } catch (error) {
+    throw error;
+  }
+});
+
+router.post("/upload", uploader.single("imageUrl"), async (req, res, next) => {
+  try {
+    if (!req.file) res.status(400).json({ status: "BadRequest" });
+
+    const image = req.file.secure_url;
+
+    const updatedUser = await Users.findByIdAndUpdate(
+      req.user._id,
+      { image },
+      { new: true }
+    );
+    return updatedUser
+      ? res.status(200).json(updatedUser)
+      : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
     throw error;
   }
