@@ -5,6 +5,7 @@ const User = require("../models/User");
 
 const { isLoggedIn, isLoggedOut } = require("../middleware/account-middleware");
 const { hashPassword } = require("../lib/hash-password");
+const mailSender = require("../mail/index");
 
 const router = express.Router();
 
@@ -34,6 +35,8 @@ router.post("/signup", isLoggedOut(), async (req, res) => {
         date,
         type
       });
+
+      await sendMail(user);
 
       req.login(user, error => {
         if (error) throw error;
@@ -72,8 +75,10 @@ router.get(
 );
 
 router.get("/google/callback", (req, res, next) => {
-  passport.authenticate("google", (error, user) => {
+  passport.authenticate("google", async (error, user) => {
     if (error) throw error;
+
+    await sendMail(user);
 
     req.logIn(user, error => {
       if (error) throw error;
@@ -94,5 +99,14 @@ router.get("/logout", isLoggedIn(), async (req, res) => {
 router.get("/loggedin", isLoggedIn(), async (req, res) =>
   res.status(200).json(req.user)
 );
+
+const sendMail = async user => {
+  return await mailSender({
+    email: user.email,
+    subject: `Welcome to IronWellness ${user.username}`,
+    context: user,
+    template: "welcome"
+  });
+};
 
 module.exports = router;

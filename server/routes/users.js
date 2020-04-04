@@ -2,7 +2,7 @@ const express = require("express");
 const _ = require("lodash");
 
 const { isLoggedIn, isClient } = require("../middleware/account-middleware");
-const uploader = require("../lib/cloudinary.config");
+const uploader = require("../lib/uploader");
 
 const User = require("../models/User");
 const Class = require("../models/Class");
@@ -96,8 +96,9 @@ router.get("/removeclass/:id", isClient(), async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
+    throw "ERROR DE PRUEBA";
     const user = await User.findOne({ _id: req.params.id })
       .populate({
         path: "classes",
@@ -109,8 +110,8 @@ router.get("/:id", async (req, res) => {
       ? res.status(200).json(user)
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    console.log(error);
-    throw error;
+    console.error("ERROR DEL CATCH:", error);
+    next(error);
   }
 });
 

@@ -63,7 +63,6 @@ router.put("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
       ? res.status(200).json(updatedActivity)
       : res.status(400).json({ status: "BadRequest" });
   } catch (error) {
-    console.log(error);
     throw error;
   }
 });

@@ -58,20 +58,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const defaultPicture =
-  "https://www.sackettwaconia.com/wp-content/uploads/default-profile.png";
-
-userSchema.virtual("profilepic").get(function() {
-  console.log("pasa por aqui");
-  let pic = _.get(this, "image.path");
-
-  if (!pic) {
-    pic = _.get(this, "image.url");
-    if (!pic) pic = defaultPicture;
-  }
-  return pic.startsWith("http") ? pic : `/${pic}`;
-});
-
 const model = mongoose.model("User", userSchema);
 
 module.exports = model;

@@ -1,15 +1,13 @@
-const Sentry = require("@sentry/node");
+//const Sentry = require("@sentry/node");
 
-Sentry.init({ dsn: process.env.SENTRY_DSN });
+//Sentry.init({ dsn: process.env.SENTRY_DSN });
 
-const error = (err, req, res) => {
-  console.error("ERROR", req.method, req.path, err);
+const error = (error, req, res) => {
+  console.error("ERROR", req.method, req.path, error);
 
   // Sentry.captureException(err);
 
-  if (!res.headersSent) {
-    return res.status(500).json({ status: "ServeError" });
-  }
+  return res.status(500).json({ status: "ServeError" });
 };
 
 const notFound = (req, res) => res.status(400).json({ status: "NotFound" });

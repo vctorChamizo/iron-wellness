@@ -38,7 +38,7 @@ passport.use(
             name: profile.name.givenName,
             surname: profile.name.familyName,
             image: profile._json.picture,
-            type: "USER",
+            type: "CLIENT",
             social: {
               googleID
             }
