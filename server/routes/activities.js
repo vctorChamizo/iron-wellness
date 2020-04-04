@@ -6,15 +6,15 @@ const { isAdmin, isLoggedIn } = require("../middleware/account-middleware");
 
 const Activity = require("../models/Activity");
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     return res.status(200).json(await Activity.find());
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
+router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const { name, description, type } = req.body.activity;
 
@@ -26,12 +26,12 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
       return res.status(401).json({
         status: "ActivityExists"
       });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const activity = await Activity.findOne({ _id: req.params.id }).select(
       "-updatedAt -createdAt -__v"
@@ -40,12 +40,12 @@ router.get("/:id", async (req, res) => {
     return activity
       ? res.status(200).json(activity)
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.put("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
+router.put("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const { activity } = req.body;
 
@@ -62,20 +62,20 @@ router.put("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
     return updatedActivity
       ? res.status(200).json(updatedActivity)
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
+router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const result = await Activity.deleteOne({ _id: req.params.id });
 
     return result.n
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 

@@ -8,15 +8,15 @@ const Class = require("../models/Class");
 const User = require("../models/User");
 const Activity = require("../models/Activity");
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     return res.status(200).json(await Class.find());
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
+router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const { name, activity, trainer, date, level, size } = req.body._class;
 
@@ -42,12 +42,12 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
     }
 
     return res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const _class = await Class.findOne({ _id: req.params.id })
       .populate({
@@ -64,12 +64,12 @@ router.get("/:id", async (req, res) => {
     return _class
       ? res.status(200).json(_class)
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.put("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
+router.put("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const { _class } = req.body;
 
@@ -91,20 +91,20 @@ router.put("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
     return updatedClass
       ? res.status(200).json(updatedClass)
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
+router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const result = await Class.deleteOne({ _id: req.params.id });
 
     return result.n
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 

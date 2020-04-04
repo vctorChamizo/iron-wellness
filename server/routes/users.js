@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.use(isLoggedIn());
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     return res
       .status(200)
@@ -20,38 +20,42 @@ router.get("/", async (req, res) => {
           _.pick(e, ["_id", "username", "name", "surname", "image", "type"])
         )
       );
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.get("/type", async (req, res) => {
+router.get("/type", async (req, res, next) => {
   try {
     return res.status(200).json(await User.find({ type: req.query.type }));
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.post("/upload", uploadCloud.single("imageUrl"), async (req, res) => {
-  try {
-    if (!req.file) return res.status(400).json({ status: "BadRequest" });
+router.post(
+  "/upload",
+  uploadCloud.single("imageUrl"),
+  async (req, res, next) => {
+    try {
+      if (!req.file) return res.status(400).json({ status: "BadRequest" });
 
-    const updatedUser = await Users.findByIdAndUpdate(
-      req.user._id,
-      { image: req.file },
-      { new: true }
-    );
+      const updatedUser = await Users.findByIdAndUpdate(
+        req.user._id,
+        { image: req.file },
+        { new: true }
+      );
 
-    return updatedUser
-      ? res.status(200).json(updatedUser)
-      : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+      return updatedUser
+        ? res.status(200).json(updatedUser)
+        : res.status(400).json({ status: "BadRequest" });
+    } catch (e) {
+      return next(e);
+    }
   }
-});
+);
 
-router.get("/addclass/:id", isClient(), async (req, res) => {
+router.get("/addclass/:id", isClient(), async (req, res, next) => {
   try {
     const resultUser = await User.updateOne(
       { _id: req.user._id },
@@ -66,12 +70,12 @@ router.get("/addclass/:id", isClient(), async (req, res) => {
     return resultClass.n && resultUser.n
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.get("/removeclass/:id", isClient(), async (req, res) => {
+router.get("/removeclass/:id", isClient(), async (req, res, next) => {
   try {
     const resultUser = await User.updateOne(
       {
@@ -90,14 +94,13 @@ router.get("/removeclass/:id", isClient(), async (req, res) => {
     return resultClass.n && resultUser.n
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
 router.get("/:id", async (req, res, next) => {
   try {
-    throw "ERROR DE PRUEBA";
     const user = await User.findOne({ _id: req.params.id })
       .populate({
         path: "classes",
@@ -108,13 +111,12 @@ router.get("/:id", async (req, res, next) => {
     return user
       ? res.status(200).json(user)
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    console.error("ERROR DEL CATCH:", error);
-    next(error);
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res, next) => {
   try {
     const { user } = req.body;
 
@@ -135,20 +137,20 @@ router.put("/:id", async (req, res) => {
     return updatedUser
       ? res.status(200).json(updatedUser)
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res, next) => {
   try {
     const result = await User.deleteOne({ _id: req.params.id });
 
     return result.n
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 

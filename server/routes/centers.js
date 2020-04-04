@@ -6,15 +6,15 @@ const { isAdmin, isLoggedIn } = require("../middleware/account-middleware");
 
 const Center = require("../models/Center");
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     return res.status(200).json(await Center.find());
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
+router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const { name, street, city, community, image } = req.body.center;
 
@@ -26,12 +26,12 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res) => {
       return res.status(401).json({
         status: "CenterExists"
       });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res, next) => {
   try {
     const center = await Center.findOne({ _id: req.params.id }).select(
       "-updatedAt -createdAt -__v"
@@ -40,20 +40,20 @@ router.get("/:id", async (req, res) => {
     return center
       ? res.status(200).json(center)
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
-router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res) => {
+router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const result = await Center.deleteOne({ _id: req.params.id });
 
     return result.n
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 

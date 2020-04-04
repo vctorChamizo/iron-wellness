@@ -9,7 +9,7 @@ const mailSender = require("../mail/index");
 
 const router = express.Router();
 
-router.post("/signup", isLoggedOut(), async (req, res) => {
+router.post("/signup", isLoggedOut(), async (req, res, next) => {
   try {
     const {
       email,
@@ -46,8 +46,8 @@ router.post("/signup", isLoggedOut(), async (req, res) => {
       return res.status(401).json({
         status: "UserExists"
       });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
@@ -87,12 +87,12 @@ router.get("/google/callback", (req, res, next) => {
   })(req, res, next);
 });
 
-router.get("/logout", isLoggedIn(), async (req, res) => {
+router.get("/logout", isLoggedIn(), async (req, res, next) => {
   try {
     req.logout();
     return res.status(200).json({ status: "OperationSuccessful" });
-  } catch (error) {
-    throw error;
+  } catch (e) {
+    return next(e);
   }
 });
 
