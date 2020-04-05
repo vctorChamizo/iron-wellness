@@ -11,6 +11,11 @@ const users = require("./data/users");
 const centers = require("./data/centers");
 const activities = require("./data/activities");
 
+const hashUsers = users.map((e) => {
+  e.password = hashPassword(e.password);
+  return e;
+});
+
 connectionDB(async () => {
   await dropIfExists(User);
   await User.create(hashUsers);

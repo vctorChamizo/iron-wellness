@@ -8,6 +8,28 @@ const Class = require("../models/Class");
 const User = require("../models/User");
 const Activity = require("../models/Activity");
 
+const sendMail = async (users, template, oldClass, newClass) => {
+  const arrayPromises = [];
+
+  const subject =
+    template === "modifiedClas"
+      ? "Tu clase ha sido modificada"
+      : "Tu clase ha sido eliminada";
+
+  users.map((e) => {
+    arrayPromises.push(
+      mailSender({
+        email: user.email,
+        subject,
+        context: { e, newClass, oldClass },
+        template,
+      })
+    );
+  });
+
+  return await Promise.all(arrayPromises);
+};
+
 router.get("/", async (req, res, next) => {
   try {
     return res.status(200).json(await Class.find());
@@ -30,7 +52,7 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
         trainer,
         date,
         level,
-        size
+        size,
       });
 
       await User.updateOne(
@@ -52,11 +74,11 @@ router.get("/:id", async (req, res, next) => {
     const _class = await Class.findOne({ _id: req.params.id })
       .populate({
         path: "students",
-        select: ["_id", "username", "name", "surname"]
+        select: ["_id", "username", "name", "surname"],
       })
       .populate({
         path: "trainer",
-        select: ["_id", "username", "name", "surname", "type"]
+        select: ["_id", "username", "name", "surname", "type"],
       })
       .populate({ path: "activity", select: ["name", "type", "description"] })
       .select("-updatedAt -createdAt -__v");
@@ -74,18 +96,19 @@ router.put("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
     const { _class } = req.body;
 
     const updatedClass = await Class.findByIdAndUpdate(
+      { _id: req.params.id },
       {
-        _id: req.params.id
-      },
-      {
-        name: _class.name,
-        activity: _class.activity,
         trainer: _class.trainer,
         date: _class.date,
-        level: _class.level,
-        size: _class.size
       },
       { new: true, runValidators: true }
+    );
+
+    await sendMail(
+      updatedClass.students,
+      "modifiedClass",
+      _class,
+      updatedClass
     );
 
     return updatedClass
@@ -98,7 +121,9 @@ router.put("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
 
 router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
-    const result = await Class.deleteOne({ _id: req.params.id });
+    const _class = await Class.findByIdAndDelete({ _id: req.params.id });
+
+    await sendMail(_class.students, "removeClass", _class);
 
     return result.n
       ? res.status(200).json({ status: "OperationSuccessful" })

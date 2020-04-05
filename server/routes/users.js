@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
     return res
       .status(200)
       .json(
-        (await User.find()).map(e =>
+        (await User.find()).map((e) =>
           _.pick(e, ["_id", "username", "name", "surname", "image", "type"])
         )
       );
@@ -35,7 +35,7 @@ router.get("/type", async (req, res, next) => {
 
 router.post(
   "/upload",
-  uploadCloud.single("imageUrl"),
+  uploadCloud.single("profileImage"),
   async (req, res, next) => {
     try {
       if (!req.file) return res.status(400).json({ status: "BadRequest" });
@@ -57,10 +57,9 @@ router.post(
 
 router.get("/addclass/:id", isClient(), async (req, res, next) => {
   try {
-    const resultUser = await User.updateOne(
-      { _id: req.user._id },
-      { $addToSet: { classes: req.params.id } }
-    );
+    const resultUser = await User.updateOne(req.user._id, {
+      $addToSet: { classes: req.params.id },
+    });
 
     const resultClass = await Class.updateOne(
       { _id: req.params.id },
@@ -77,17 +76,12 @@ router.get("/addclass/:id", isClient(), async (req, res, next) => {
 
 router.get("/removeclass/:id", isClient(), async (req, res, next) => {
   try {
-    const resultUser = await User.updateOne(
-      {
-        _id: req.user._id
-      },
-      { $pull: { classes: req.params.id } }
-    );
+    const resultUser = await User.updateOne(req.user._id, {
+      $pull: { classes: req.params.id },
+    });
 
     const resultClass = await Class.updateOne(
-      {
-        _id: req.params.id
-      },
+      { _id: req.params.id },
       { $pull: { students: req.user._id } }
     );
 
@@ -104,7 +98,7 @@ router.get("/:id", async (req, res, next) => {
     const user = await User.findOne({ _id: req.params.id })
       .populate({
         path: "classes",
-        select: ["_id", "name", "date"]
+        select: ["_id", "name", "date"],
       })
       .select("-updatedAt -createdAt -__v");
 
@@ -122,14 +116,14 @@ router.put("/:id", async (req, res, next) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       {
-        _id: req.user._id
+        _id: req.user._id,
       },
       {
         email: user.email,
         username: user.username,
         name: user.name,
         surname: user.surname,
-        date: user.date
+        date: user.date,
       },
       { new: true, runValidators: true }
     );
@@ -144,6 +138,19 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
+    const arrayPromises = [];
+
+    const user = await User.findOne({ _id: req.params.id });
+    user.classes.map((e) => {
+      arrayPromises.push(
+        Class.updateOne({ _id: e }, { $pull: { students: req.user._id } })
+      );
+    });
+
+    const resultPromise = await Promise.all(arrayPromises);
+
+    console.log(resultPromise); // provisional para ver que sale
+
     const result = await User.deleteOne({ _id: req.params.id });
 
     return result.n

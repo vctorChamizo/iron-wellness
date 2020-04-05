@@ -8,7 +8,9 @@ const Center = require("../models/Center");
 
 router.get("/", async (req, res, next) => {
   try {
-    return res.status(200).json(await Center.find());
+    return res
+      .status(200)
+      .json(await Center.find().select("-updatedAt -createdAt -__v"));
   } catch (e) {
     return next(e);
   }
@@ -16,18 +18,20 @@ router.get("/", async (req, res, next) => {
 
 router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
-    const { name, street, city, community, image } = req.body.center;
+    const { name, street, city, community } = req.body.center;
 
     if (!(await Center.findOne({ name })))
       return res
         .status(201)
-        .json(await Center.create({ name, street, city, community, image }));
+        .json(await Center.create({ name, street, city, community }));
     else
       return res.status(401).json({
-        status: "CenterExists"
+        status: "CenterExists",
       });
   } catch (e) {
-    return next(e);
+    return e.name === "ValidationError"
+      ? res.status(400).json({ status: "ValidationError", error: e.errors })
+      : next(e);
   }
 });
 
@@ -41,7 +45,9 @@ router.get("/:id", async (req, res, next) => {
       ? res.status(200).json(center)
       : res.status(400).json({ status: "BadRequest" });
   } catch (e) {
-    return next(e);
+    return e.name === "CastError"
+      ? res.status(400).json({ status: "BadRequest" })
+      : next(e);
   }
 });
 
@@ -53,7 +59,9 @@ router.delete("/:id", isLoggedIn(), isAdmin(), async (req, res, next) => {
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
   } catch (e) {
-    return next(e);
+    return e.name === "CastError"
+      ? res.status(400).json({ status: "BadRequest" })
+      : next(e);
   }
 });
 
