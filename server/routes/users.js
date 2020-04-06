@@ -27,6 +27,9 @@ router.get("/", async (req, res, next) => {
 
 router.get("/type", async (req, res, next) => {
   try {
+    if (req.query.type === "ADMIN")
+      return res.status(406).json({ status: "NotAcceptable" });
+
     return res
       .status(200)
       .json(

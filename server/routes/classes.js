@@ -1,4 +1,5 @@
 const express = require("express");
+const _ = require("lodash");
 
 const router = express.Router();
 
@@ -48,7 +49,7 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
     const checkActivity = await Activity.findById({ _id: activity });
 
     if (checkActivity && checkTrainer) {
-      const _class = await Class.create({
+      const newClass = await Class.create({
         name,
         activity,
         trainer,
@@ -59,10 +60,20 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
 
       await User.updateOne(
         { _id: trainer },
-        { $addToSet: { classes: _class._id } }
+        { $addToSet: { classes: newClass._id } }
       );
 
-      return res.status(201).json(_class);
+      return res
+        .status(201)
+        .json(newClass, [
+          "_id",
+          "name",
+          "activity",
+          "trainer",
+          "date",
+          "level",
+          "size",
+        ]);
     }
 
     return res.status(400).json({ status: "BadRequest" });
