@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
-const PASSWORD_PATTERN = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,100}/;
-const URL_PATTERN = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/;
+const PASSWORD_PATTERN = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
 const USERNAME = /[a-zA-Z0-9_-]{3,15}/;
 
 const userSchema = new mongoose.Schema(
@@ -13,15 +12,15 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      match: [EMAIL_PATTERN, "Invalid email"]
+      match: [EMAIL_PATTERN, "Invalid email"],
     },
     password: {
       type: String,
       required: "Password is required",
       match: [
         PASSWORD_PATTERN,
-        "Passwords must contain at least six characters, including uppercase, lowercase letters and numbers."
-      ]
+        "Passwords must contain at least six characters, including uppercase, lowercase letters and numbers.",
+      ],
     },
     username: {
       type: String,
@@ -30,57 +29,34 @@ const userSchema = new mongoose.Schema(
       trim: true,
       match: [
         USERNAME,
-        "Username must containt at least three characters and cannot spaces."
-      ]
+        "Username must containt at least three characters and cannot spaces.",
+      ],
     },
-    image: { type: Object, match: [URL_PATTERN, "Invalid avatar URL pattern"] },
+    image: Object,
     name: {
       type: String,
-      required: "Name is required"
+      required: "Name is required",
     },
     surname: {
       type: String,
-      required: "Surname is required"
+      required: "Surname is required",
     },
     date: String,
     type: {
       type: String,
       required: "Type is required",
-      enum: ["ADMIN", "TRAINER", "USER"]
+      enum: ["ADMIN", "TRAINER", "CLIENT"],
     },
     classes: [{ type: mongoose.ObjectId, ref: "Class" }],
     social: {
-      googleID: String
-    }
+      googleID: String,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
-const defaultPicture =
-  "https://www.sackettwaconia.com/wp-content/uploads/default-profile.png";
-
-userSchema.virtual("profilepic").get(function() {
-  console.log("pasa por aqui");
-  let pic = _.get(this, "image.path");
-
-  if (!pic) {
-    pic = _.get(this, "image.url");
-    if (!pic) pic = defaultPicture;
-  }
-  return pic.startsWith("http") ? pic : `/${pic}`;
-});
-
 const model = mongoose.model("User", userSchema);
-
-model.collection
-  .createIndexes([
-    {
-      key: { username: 1 },
-      name: "username"
-    }
-  ])
-  .catch(e => console.log(e));
 
 module.exports = model;

@@ -13,7 +13,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: process.env.CALLBACK_URL
+      callbackURL: process.env.CALLBACK_URL,
     },
     async (accessToken, refreshToken, profile, done) => {
       const googleID = profile.id;
@@ -25,28 +25,29 @@ passport.use(
 
       try {
         const user = await User.findOne({
-          $or: [{ email }, { username }, { "social.googleID": googleID }]
+          $or: [{ "social.googleID": googleID }, { username, email }],
         });
 
-        if (!user) {
-          const newUser = await User.create({
-            email,
-            username,
-            password: hashPassword(
-              BASE_PASSWORD.concat(Math.random().toString(35))
-            ),
-            name: profile.name.givenName,
-            surname: profile.name.familyName,
-            image: profile._json.picture,
-            type: "USER",
-            social: {
-              googleID
-            }
-          });
-          return done(null, newUser);
-        }
+        if (user) return done(null, user);
 
-        return done(null, user);
+        if (await User.findOne({ $or: [{ username }, { email }] }))
+          return done(null, false, { message: "UserExists" });
+
+        const newUser = await User.create({
+          email,
+          username,
+          password: hashPassword(
+            BASE_PASSWORD.concat(Math.random().toString(35))
+          ),
+          name: profile.name.givenName,
+          surname: profile.name.familyName,
+          image: profile._json.picture,
+          type: "CLIENT",
+          social: {
+            googleID,
+          },
+        });
+        return done(null, newUser, { message: "newUser" });
       } catch (error) {
         done(error);
       }

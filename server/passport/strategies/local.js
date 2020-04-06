@@ -11,8 +11,8 @@ passport.use(
     async (req, username, password, done) => {
       try {
         const user = await User.findOne({
-          $or: [{ username }, { email: username }]
-        });
+          $or: [{ username }, { email: username }],
+        }).select("-updatedAt -createdAt -__v");
 
         user && checkHashedPassword(password, user.password)
           ? done(null, user)

@@ -4,8 +4,7 @@ const classSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: "Name is required",
-      match: [EMAIL_PATTERN, "Invalid email"]
+      required: "Name is required"
     },
     activity: {
       type: mongoose.ObjectId,
@@ -26,6 +25,11 @@ const classSchema = new mongoose.Schema(
     date: {
       type: Date,
       required: "Date is required"
+    },
+    level: {
+      type: String,
+      required: "Level is required",
+      enum: ["BEGGINER", "MEDIUM", "PROFESSIONAL"]
     },
     size: { type: Number, required: "Size is required" }
   },

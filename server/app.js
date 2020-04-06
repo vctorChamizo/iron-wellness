@@ -5,7 +5,6 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const mongoose = require("mongoose");
 const logger = require("morgan");
-const path = require("path");
 const session = require("express-session");
 const cors = require("cors");
 const MongoStore = require("connect-mongo")(session);
