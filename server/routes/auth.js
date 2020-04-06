@@ -1,5 +1,6 @@
 const express = require("express");
 const passport = require("passport");
+const _ = require("lodash");
 
 const User = require("../models/User");
 
@@ -50,7 +51,19 @@ router.post("/signup", isLoggedOut(), async (req, res, next) => {
 
       req.login(user, (error) => {
         if (error) return next(error);
-        return res.status(201).json(user);
+        return res
+          .status(201)
+          .json(
+            _.pick(user, [
+              "_id",
+              "username",
+              "email",
+              "name",
+              "surname",
+              "date",
+              "type",
+            ])
+          );
       });
     } else
       return res.status(401).json({
@@ -109,7 +122,21 @@ router.get("/logout", isLoggedIn(), async (req, res, next) => {
 });
 
 router.get("/loggedin", isLoggedIn(), async (req, res) =>
-  res.status(200).json(req.user)
+  res
+    .status(200)
+    .json(
+      _.pick(req.user, [
+        "_id",
+        "username",
+        "email",
+        "name",
+        "surname",
+        "date",
+        "type",
+        "image",
+        "classes",
+      ])
+    )
 );
 
 module.exports = router;

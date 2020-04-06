@@ -1,4 +1,5 @@
 const express = require("express");
+const _ = require("lodash");
 
 const router = express.Router();
 
@@ -8,9 +9,7 @@ const Center = require("../models/Center");
 
 router.get("/", async (req, res, next) => {
   try {
-    return res
-      .status(200)
-      .json(await Center.find().select("-updatedAt -createdAt -__v"));
+    return res.status(200).json(await Center.find().select("_id name city"));
   } catch (e) {
     return next(e);
   }
@@ -20,11 +19,14 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
   try {
     const { name, street, city, community } = req.body.center;
 
-    if (!(await Center.findOne({ name })))
+    if (!(await Center.findOne({ name }))) {
+      const newCenter = await Center.create({ name, street, city, community });
       return res
         .status(201)
-        .json(await Center.create({ name, street, city, community }));
-    else
+        .json(
+          _.pick(newCenter, ["_id", "name", "street", "city", "community"])
+        );
+    } else
       return res.status(401).json({
         status: "CenterExists",
       });
