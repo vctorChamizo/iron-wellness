@@ -17,6 +17,10 @@ export const Profile = connect((state) => ({ user: state.user }))(
       }
     };
 
-    return <></>;
+    return (
+      <>
+        <p>PROFILE</p>
+      </>
+    );
   })
 );

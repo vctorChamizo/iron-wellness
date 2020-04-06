@@ -20,4 +20,7 @@ export const edit = async () => await api.post("/user/edit", { user });
 
 export const logout = async () => await api.get("/auth/logout");
 
-export const loggedin = async () => await api.get("/auth/loggedin");
+export const loggedin = async () => {
+  const result = await api.get("/auth/loggedin");
+  return result.status === 204 ? null : result.data;
+};

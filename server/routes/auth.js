@@ -121,22 +121,24 @@ router.get("/logout", isLoggedIn(), async (req, res, next) => {
   }
 });
 
-router.get("/loggedin", isLoggedIn(), async (req, res) =>
-  res
-    .status(200)
-    .json(
-      _.pick(req.user, [
-        "_id",
-        "username",
-        "email",
-        "name",
-        "surname",
-        "date",
-        "type",
-        "image",
-        "classes",
-      ])
-    )
-);
+router.get("/loggedin", async (req, res) => {
+  return req.user
+    ? res
+        .status(200)
+        .json(
+          _.pick(req.user, [
+            "_id",
+            "username",
+            "email",
+            "name",
+            "surname",
+            "date",
+            "type",
+            "image",
+            "classes",
+          ])
+        )
+    : res.status(204).json("NoContent");
+});
 
 module.exports = router;

@@ -25,6 +25,10 @@ export const Login = connect()(
         if (error.response.statusText == "BadCredentials") handleError();
       }
     };
-    return <></>;
+    return (
+      <>
+        <p>LOGIN</p>
+      </>
+    );
   })
 );
