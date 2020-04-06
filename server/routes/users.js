@@ -16,8 +16,8 @@ router.get("/", async (req, res, next) => {
     return res
       .status(200)
       .json(
-        (await User.find()).map((e) =>
-          _.pick(e, ["_id", "username", "name", "surname", "image", "type"])
+        await User.find({ type: { $not: { $regex: "^ADMIN$" } } }).select(
+          "_id username name surname image type"
         )
       );
   } catch (e) {
@@ -27,7 +27,13 @@ router.get("/", async (req, res, next) => {
 
 router.get("/type", async (req, res, next) => {
   try {
-    return res.status(200).json(await User.find({ type: req.query.type }));
+    return res
+      .status(200)
+      .json(
+        await User.find({ type: req.query.type }).select(
+          "_id username name surname image type"
+        )
+      );
   } catch (e) {
     return next(e);
   }
@@ -57,39 +63,47 @@ router.post(
 
 router.get("/addclass/:id", isClient(), async (req, res, next) => {
   try {
-    const resultUser = await User.updateOne(req.user._id, {
-      $addToSet: { classes: req.params.id },
-    });
+    const _class = await Class.findById({ _id: req.params.id });
 
-    const resultClass = await Class.updateOne(
-      { _id: req.params.id },
-      { $addToSet: { students: req.user._id } }
-    );
+    if (_class) {
+      if (_class.size - _class.students.length > 0) {
+        await User.findByIdAndUpdate(req.user._id, {
+          $addToSet: { classes: req.params.id },
+        });
 
-    return resultClass.n && resultUser.n
-      ? res.status(200).json({ status: "OperationSuccessful" })
-      : res.status(400).json({ status: "BadRequest" });
+        await Class.findByIdAndUpdate(
+          { _id: req.params.id },
+          { $addToSet: { students: req.user._id } }
+        );
+
+        return res.status(200).json({ status: "OperationSuccessful" });
+      } else return res.status(406).json({ status: "NotAcceptable" });
+    } else return res.status(400).json({ status: "BadRequest" });
   } catch (e) {
-    return next(e);
+    return e.name === "CastError"
+      ? res.status(400).json({ status: "BadRequest" })
+      : next(e);
   }
 });
 
 router.get("/removeclass/:id", isClient(), async (req, res, next) => {
   try {
-    const resultUser = await User.updateOne(req.user._id, {
-      $pull: { classes: req.params.id },
-    });
+    if (await Class.findById({ _id: req.params.id })) {
+      await User.findByIdAndUpdate(req.user._id, {
+        $pull: { classes: req.params.id },
+      });
 
-    const resultClass = await Class.updateOne(
-      { _id: req.params.id },
-      { $pull: { students: req.user._id } }
-    );
+      await Class.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $pull: { students: req.user._id } }
+      );
 
-    return resultClass.n && resultUser.n
-      ? res.status(200).json({ status: "OperationSuccessful" })
-      : res.status(400).json({ status: "BadRequest" });
+      return res.status(200).json({ status: "OperationSuccessful" });
+    } else return res.status(400).json({ status: "BadRequest" });
   } catch (e) {
-    return next(e);
+    return e.name === "CastError"
+      ? res.status(400).json({ status: "BadRequest" })
+      : next(e);
   }
 });
 
@@ -100,13 +114,15 @@ router.get("/:id", async (req, res, next) => {
         path: "classes",
         select: ["_id", "name", "date"],
       })
-      .select("-updatedAt -createdAt -__v");
+      .select("_id username email name surname image type");
 
     return user
       ? res.status(200).json(user)
       : res.status(400).json({ status: "BadRequest" });
   } catch (e) {
-    return next(e);
+    return e.name === "CastError"
+      ? res.status(400).json({ status: "BadRequest" })
+      : next(e);
   }
 });
 
@@ -114,42 +130,59 @@ router.put("/:id", async (req, res, next) => {
   try {
     const { user } = req.body;
 
-    const updatedUser = await User.findByIdAndUpdate(
-      {
-        _id: req.user._id,
-      },
-      {
-        email: user.email,
-        username: user.username,
-        name: user.name,
-        surname: user.surname,
-        date: user.date,
-      },
-      { new: true, runValidators: true }
-    );
+    if (req.user.type !== "ADMIN" && req.user._id !== req.params.id)
+      return res.status(406).json({ status: "NotAcceptable" });
 
-    return updatedUser
-      ? res.status(200).json(updatedUser)
-      : res.status(400).json({ status: "BadRequest" });
+    if (
+      !(await User.findOne({
+        $or: [{ email: user.email }, { username: user.username }],
+      }))
+    ) {
+      const updatedUser = await User.findByIdAndUpdate(
+        { _id: req.params.id },
+        {
+          email: user.email,
+          username: user.username,
+          name: user.name,
+          surname: user.surname,
+          date: user.date,
+        },
+        { new: true, runValidators: true }
+      ).select("_id username email name surname image type");
+
+      return updatedUser
+        ? res.status(200).json(updatedUser)
+        : res.status(400).json({ status: "BadRequest" });
+    } else
+      return res.status(401).json({
+        status: "UserExists",
+      });
   } catch (e) {
-    return next(e);
+    return e.name === "CastError"
+      ? res.status(400).json({ status: "BadRequest" })
+      : e.name === "ValidationError"
+      ? res.status(400).json({ status: "ValidationError", error: e.errors })
+      : next(e);
   }
 });
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    const arrayPromises = [];
+    if (req.user.type !== "ADMIN" && req.user._id != req.params.id)
+      return res.status(406).json({ status: "NotAcceptable" });
 
     const user = await User.findOne({ _id: req.params.id });
-    user.classes.map((e) => {
-      arrayPromises.push(
+
+    if (user.type === "TRAINER" && user.classes.length > 0)
+      return res.status(406).json({ status: "NotAcceptable" });
+
+    if (user.classes.length > 0) {
+      const arrayPromises = user.classes.map((e) =>
         Class.updateOne({ _id: e }, { $pull: { students: req.user._id } })
       );
-    });
 
-    const resultPromise = await Promise.all(arrayPromises);
-
-    console.log(resultPromise); // provisional para ver que sale
+      await Promise.all(arrayPromises);
+    }
 
     const result = await User.deleteOne({ _id: req.params.id });
 
@@ -157,7 +190,9 @@ router.delete("/:id", async (req, res, next) => {
       ? res.status(200).json({ status: "OperationSuccessful" })
       : res.status(400).json({ status: "BadRequest" });
   } catch (e) {
-    return next(e);
+    return e.name === "CastError"
+      ? res.status(400).json({ status: "BadRequest" })
+      : next(e);
   }
 });
 
