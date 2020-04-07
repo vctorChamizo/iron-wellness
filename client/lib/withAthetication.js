@@ -14,7 +14,7 @@ export const withAuthentication = (Component) => () => {
       .then((data) => {
         if (data) store.dispatch(useSetUser(data));
       })
-      .catch((e) => console.error(e.response.statusText))
+      .catch((e) => console.error(e.response?.statusText))
       .finally(() => setLoading(false));
   }, []);
 
