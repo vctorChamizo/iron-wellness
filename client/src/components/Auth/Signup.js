@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { signup } from "../../../../lib/api/auth.api.js";
-import { useSetUser } from "../../../../lib/redux/action";
-
 export const Signup = connect()(
   withRouter(({ history, dispatch }) => {
     const [state, setState] = useState({});

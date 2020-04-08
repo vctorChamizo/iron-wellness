@@ -11,13 +11,7 @@ import { HomePage } from "./pages/Home.page";
 import { LoginPage } from "./pages/auth/Login.page";
 import { SignupPage } from "./pages/auth/Signup.page";
 import { ProfilePage } from "./pages/user/Profile.page";
-import { ScrollTop } from "../src/layouts/NavBar/ScrollTop";
 import { NavBar } from "../src/layouts/NavBar/index";
-
-import AppBar from "@material-ui/core/AppBar";
-import Typography from "@material-ui/core/Typography";
-import Toolbar from "@material-ui/core/Toolbar";
-import PropTypes from "prop-types";
 
 export const App = withAuthentication(() => (
   <ThemeProvider theme={theme}>
