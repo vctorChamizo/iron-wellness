@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -41,72 +40,70 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Login = connect()(
-  withRouter(({ history, dispatch }) => {
-    const classes = useStyles();
+export const Login = connect()(({ dispatch, setComponent }) => {
+  const classes = useStyles();
 
-    const [state, setState] = useState({});
-    const [error, setError] = useState(false);
+  const [state, setState] = useState({});
+  const [error, setError] = useState(false);
 
-    const handleError = () => {
-      setError(true);
-      setTimeout(() => setError(false), 3000);
-    };
+  const handleError = () => {
+    setError(true);
+    setTimeout(() => setError(false), 3000);
+  };
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-      try {
-        dispatch(useSetUser(await login(state.username, state.password)));
-        history.push("/profile");
-      } catch (error) {
-        if (error.response.statusText == "BadCredentials") handleError();
-      }
-    };
+    try {
+      dispatch(useSetUser(await login(state.username, state.password)));
+      history.push("/profile");
+    } catch (error) {
+      if (error.response.statusText == "BadCredentials") handleError();
+    }
+  };
 
-    return (
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h4">
+  return (
+    <div className={classes.paper}>
+      <Typography component="h1" variant="h4">
+        Login
+      </Typography>
+      <form className={classes.form} noValidate>
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          label="Email o usuario"
+          name="email"
+          autoComplete="email"
+          autoFocus
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Contraseña"
+          type="password"
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+        >
           Login
-        </Typography>
-        <form className={classes.form} noValidate>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Email o usuario"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Contraseña"
-            type="password"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Login
-          </Button>
-          <Grid container>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"No tines una cuenta aún? Regístrate"}
-              </Link>
-            </Grid>
+        </Button>
+        <Grid container>
+          <Grid item>
+            <Link onClick={() => setComponent("Signup")} variant="body2">
+              {"No tines una cuenta aún? Regístrate"}
+            </Link>
           </Grid>
-        </form>
-      </div>
-    );
-  })
-);
+        </Grid>
+      </form>
+    </div>
+  );
+});

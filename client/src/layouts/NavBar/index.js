@@ -1,24 +1,18 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
-import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import Dialog from "@material-ui/core/Dialog";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
 
 import { ScrollTop } from "./ScrollTop";
-import { Login } from "../../components/Auth/Login";
-
-ScrollTop.propTypes = {
-  window: PropTypes.func,
-};
+import { AuthDialog } from "../../components/Auth/AuthDialog";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -40,51 +34,51 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const NavBar = (props) => {
-  const classes = useStyles();
+export const NavBar = connect((state) => ({ user: state.user }))(
+  withRouter(({ user, history }) => {
+    const classes = useStyles();
 
-  const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [component, setComponent] = useState("Login");
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+    const handleProfileMenuOpen = () => {
+      user ? history.push("/profile") : setOpen(true);
+    };
 
-  const handleProfileMenuOpen = () => {
-    // Si NO hay usuario se abre el dialogo // Si hay usuario se va al perfil
-    setOpen(true);
-  };
+    const handleClose = () => {
+      setOpen(false);
+      setTimeout(() => {
+        setComponent("Login");
+      }, 500);
+    };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+    return (
+      <div>
+        <AppBar className={classes.navbar}>
+          <Toolbar className={classes.toolbar}>
+            <Typography variant="h6" className={classes.title}>
+              Iron Wellness!
+            </Typography>
+            <div className={classes.section}>
+              <Button color="inherit">Inicio</Button>
+              <Button color="inherit">MyWellness! Home</Button>
+              <Button color="inherit">Centros</Button>
+              <IconButton onClick={handleProfileMenuOpen} color="inherit">
+                <AccountCircle />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <Toolbar id="back-to-top" className={classes.hidden} />
+        <ScrollTop />
 
-  return (
-    <div>
-      <AppBar className={classes.navbar}>
-        <Toolbar className={classes.toolbar}>
-          <Typography variant="h6" className={classes.title}>
-            Iron Wellness!
-          </Typography>
-          <div className={classes.section}>
-            <Button color="inherit">Inicio</Button>
-            <Button color="inherit">MyWellness! Home</Button>
-            <Button color="inherit">Centros</Button>
-            <IconButton onClick={handleProfileMenuOpen} color="inherit">
-              <AccountCircle />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <Toolbar id="back-to-top" className={classes.hidden} />
-      <ScrollTop {...props} />
-
-      <Dialog
-        fullScreen={fullScreen}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="responsive-dialog-title"
-      >
-        <Login />
-      </Dialog>
-    </div>
-  );
-};
+        <AuthDialog
+          open={open}
+          component={component}
+          setComponent={setComponent}
+          handleClose={handleClose}
+        />
+      </div>
+    );
+  })
+);

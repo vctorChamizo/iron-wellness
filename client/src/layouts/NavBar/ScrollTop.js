@@ -2,7 +2,6 @@ import React from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import PropTypes from "prop-types";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import Zoom from "@material-ui/core/Zoom";
 import Fab from "@material-ui/core/Fab";
@@ -16,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const ScrollTop = ({ window }) => {
+export const ScrollTop = () => {
   const classes = useStyles();
 
   const trigger = useScrollTrigger({
-    target: window ? window() : undefined,
+    target: undefined,
     disableHysteresis: true,
     threshold: 100,
   });
