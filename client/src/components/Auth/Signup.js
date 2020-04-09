@@ -19,11 +19,11 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 
-import { EMAIL_PATTERN, USERNAME } from "../../../lib/patterns";
-
-const Alert = (props) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
+import {
+  EMAIL_PATTERN,
+  USERNAME_PATTERN,
+  PASSWORD_PATTERN,
+} from "../../../lib/patterns";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
+
 export const Signup = connect()(({ dispatch, setComponent }) => {
   const classes = useStyles();
 
@@ -65,17 +69,32 @@ export const Signup = connect()(({ dispatch, setComponent }) => {
     //   if (error.response.data.status == "UserExists") setErros();
     // }
   };
-
   if (!_.isEmpty(errors)) {
+    if (errors.username) {
+      errors.username.helperText =
+        errors.username.type === "required"
+          ? "El campo no puede ser vacio"
+          : "Usuario inválido. Debe contener mas de 3 carateres.";
+    }
+
     if (errors.email) {
       errors.email.helperText =
         errors.email.type === "required"
           ? "El campo no puede ser vacio"
-          : "Email o usuario inválido";
+          : "Email inválido";
     }
 
-    if (errors.password)
-      errors.password.helperText = "El campo no puede ser vacio";
+    if (errors.password) {
+      errors.password.helperText =
+        errors.password.type === "required"
+          ? "El campo no puede ser vacio"
+          : "Contrasela inválida. Debe contener mas de 6 caracteres, números, mayúsculas y minúsculas.";
+    }
+
+    if (errors.name) errors.name.helperText = "El campo no puede ser vacio";
+
+    if (errors.surname)
+      errors.surname.helperText = "El campo no puede ser vacio";
   }
 
   const [error, setError] = useState(false);
@@ -105,7 +124,7 @@ export const Signup = connect()(({ dispatch, setComponent }) => {
           autoFocus
           inputRef={register({
             required: true,
-            pattern: USERNAME,
+            pattern: USERNAME_PATTERN,
           })}
           error={errors.username ? true : false}
           helperText={errors.username ? errors.username.helperText : ""}
@@ -131,7 +150,7 @@ export const Signup = connect()(({ dispatch, setComponent }) => {
           label="Contraseña"
           name="password"
           type="password"
-          inputRef={register({ required: true })}
+          inputRef={register({ required: true, pattern: PASSWORD_PATTERN })}
           error={errors.password ? true : false}
           helperText={errors.password ? errors.password.helperText : ""}
         />
@@ -161,14 +180,13 @@ export const Signup = connect()(({ dispatch, setComponent }) => {
         </div>
         <MuiPickersUtilsProvider utils={DateFnsUtils} variant="outlined">
           <KeyboardDatePicker
-            fullWidth
-            margin="dense"
-            disableToolbar
             variant="outlined"
-            format="MM/dd/yyyy"
+            fullWidth
             margin="normal"
-            id="date-picker-inline"
+            disableToolbar
+            format="MM/dd/yyyy"
             label="Fecha de nacimiento"
+            name="date"
             value={selectedDate}
             onChange={() => handleDateChange}
             KeyboardButtonProps={{
