@@ -41,16 +41,8 @@ export const NavBar = connect((state) => ({ user: state.user }))(
     const [open, setOpen] = useState(false);
     const [component, setComponent] = useState("Login");
 
-    const handleProfileMenuOpen = () => {
+    const handleProfileMenuOpen = () =>
       user ? history.push("/profile") : setOpen(true);
-    };
-
-    const handleClose = () => {
-      setOpen(false);
-      setTimeout(() => {
-        setComponent("Login");
-      }, 500);
-    };
 
     return (
       <div>
@@ -76,7 +68,7 @@ export const NavBar = connect((state) => ({ user: state.user }))(
           open={open}
           component={component}
           setComponent={setComponent}
-          handleClose={handleClose}
+          setOpen={setOpen}
         />
       </div>
     );

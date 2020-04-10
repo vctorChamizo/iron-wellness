@@ -3,6 +3,9 @@ import { connect } from "react-redux";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 
+import { login } from "../../../lib/api/auth.api";
+import { useSetUser } from "../../../lib/redux/action";
+
 import { makeStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
@@ -12,8 +15,7 @@ import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-
-import { EMAIL_PATTERN, USERNAME } from "../../../lib/patterns";
+import { withRouter } from "react-router-dom";
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -38,94 +40,99 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Login = connect()(({ dispatch, setComponent }) => {
-  const classes = useStyles();
+//
 
-  const { register, handleSubmit, errors } = useForm();
-  const onSubmit = (data) => {
-    const { username, password } = data;
+export const Login = connect()(
+  withRouter(({ history, dispatch, setComponent, setOpen }) => {
+    const classes = useStyles();
 
-    //   try {
-    //     dispatch(useSetUser(await login(username, password)));
-    //     history.push("/profile");
-    //   } catch (error) {
-    //     if (error.response.statusText == "BadCredentials") setError(true);
-    //   }
-  };
+    const { register, handleSubmit, errors } = useForm();
+    const onSubmit = async (data) => {
+      const { email, password } = data;
 
-  if (!_.isEmpty(errors)) {
-    if (errors.email) {
-      errors.email.helperText =
-        errors.email.type === "required"
-          ? "El campo no puede ser vacio"
-          : "Email o usuario inválido";
+      try {
+        setOpen(false);
+        dispatch(useSetUser(await login(email, password)));
+        return history.push("/profile");
+      } catch (error) {
+        console.log(error.response);
+        if (error.response.data.status == "BadCredentials") setError(true);
+      }
+    };
+
+    if (!_.isEmpty(errors)) {
+      if (errors.email) {
+        console.log(errors.email);
+        errors.email.helperText =
+          errors.email.type === "required"
+            ? "El campo no puede ser vacio"
+            : "Email o usuario inválido";
+      }
+
+      if (errors.password)
+        errors.password.helperText = "El campo no puede ser vacio";
     }
 
-    if (errors.password)
-      errors.password.helperText = "El campo no puede ser vacio";
-  }
+    const [error, setError] = useState(false);
 
-  const [error, setError] = useState(false);
+    const handleClose = () => {
+      setError(false);
+    };
 
-  const handleClose = () => {
-    setError(false);
-  };
-
-  return (
-    <div className={classes.paper}>
-      <Typography component="h1" variant="h4">
-        Login
-      </Typography>
-      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          label="Email o usuario"
-          name="email"
-          autoComplete="email"
-          autoFocus
-          inputRef={register({
-            required: true,
-            pattern: EMAIL_PATTERN,
-            pattern: USERNAME,
-          })}
-          error={errors.email ? true : false}
-          helperText={errors.email ? errors.email.helperText : ""}
-        />
-        <TextField
-          variant="outlined"
-          margin="normal"
-          fullWidth
-          label="Contraseña"
-          name="password"
-          type="password"
-          inputRef={register({ required: true })}
-          error={errors.password ? true : false}
-          helperText={errors.password ? errors.password.helperText : ""}
-        />
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          className={classes.submit}
-        >
+    return (
+      <div className={classes.paper}>
+        <Typography component="h1" variant="h4">
           Login
-        </Button>
-        <Grid container>
-          <Grid item>
-            <Link onClick={() => setComponent("Signup")} variant="body2">
-              {"No tines una cuenta aún? Regístrate."}
-            </Link>
+        </Typography>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Email o usuario"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            inputRef={register({
+              required: true,
+            })}
+            error={errors.email ? true : false}
+            helperText={errors.email ? errors.email.helperText : ""}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            label="Contraseña"
+            name="password"
+            type="password"
+            inputRef={register({ required: true })}
+            error={errors.password ? true : false}
+            helperText={errors.password ? errors.password.helperText : ""}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Login
+          </Button>
+          <Grid container>
+            <Grid item>
+              <Link onClick={() => setComponent("Signup")} variant="body2">
+                {"No tines una cuenta aún? Regístrate."}
+              </Link>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
-      <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          The user or password are incorrect.
-        </Alert>
-      </Snackbar>
-    </div>
-  );
-});
+        </form>
+        <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            El usuario o la contraseñas son incorrectos.
+          </Alert>
+        </Snackbar>
+      </div>
+    );
+  })
+);

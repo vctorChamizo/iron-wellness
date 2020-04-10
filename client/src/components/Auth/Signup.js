@@ -63,6 +63,7 @@ export const Signup = connect()(({ dispatch, setComponent }) => {
     console.log(data);
 
     // try {
+    //setOpen(false);
     //   dispatch(useSetUser(await signup(state)));
     //   history.push("/profile");
     // } catch (error) {

@@ -1,5 +1,5 @@
-import { withoutLogged } from "../../lib/protectedRoutes";
+import React from "react";
 
 import { Home } from "../components/Home/index";
 
-export const HomePage = withoutLogged(Home);
+export const HomePage = () => <Home />;
