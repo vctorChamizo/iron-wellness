@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 
-import { login } from "../../../lib/api/auth.api";
+import { login, socialLogin } from "../../../lib/api/auth.api";
 import { useSetUser } from "../../../lib/redux/action";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  social: {},
 }));
 
 //
@@ -79,6 +80,17 @@ export const Login = connect()(
       setError(false);
     };
 
+    const handleClickSocilLogin = async () => {
+      try {
+        setOpen(false);
+        dispatch(useSetUser(await socialLogin()));
+        return history.push("/profile");
+      } catch (error) {
+        console.log(error.response);
+        if (error.response.data.status == "BadCredentials") setError(true);
+      }
+    };
+
     return (
       <div className={classes.paper}>
         <Typography component="h1" variant="h4">
@@ -118,6 +130,15 @@ export const Login = connect()(
             className={classes.submit}
           >
             Login
+          </Button>
+
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            onClick={handleClickSocilLogin}
+          >
+            Google
           </Button>
           <Grid container>
             <Grid item>

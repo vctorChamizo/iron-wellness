@@ -16,6 +16,7 @@ import { AuthDialog } from "../../components/Auth/AuthDialog";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
+    zIndex: theme.zIndex.drawer + 1,
     background: "rgba(79, 82, 88, 0.6)",
     padding: "2.5vh 2vw",
   },
