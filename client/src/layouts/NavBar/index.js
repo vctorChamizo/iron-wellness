@@ -16,14 +16,13 @@ import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import HomeIcon from "@material-ui/icons/Home";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import MoreIcon from "@material-ui/icons/MoreVert";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
     zIndex: theme.zIndex.drawer + 1,
-    background: "rgba(79, 82, 88, 0.6)",
     padding: "2.5vh 2vw",
   },
   toolbar: {
@@ -34,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
   hidden: {
     padding: "2.5vh 2vw",
   },
+  title: {
+    color: theme.palette.primaryText,
+  },
   section: {
     width: "33%",
     display: "flex",
@@ -43,12 +45,20 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
     [theme.breakpoints.up("md")]: {
       display: "flex",
+      justifyContent: "space-between",
+      width: "33%",
     },
   },
   sectionMobile: {
     display: "flex",
     [theme.breakpoints.up("md")]: {
       display: "none",
+    },
+  },
+  homeButton: {
+    "&:hover": {
+      background: "#fff",
+      color: theme.palette.primary.main,
     },
   },
 }));
@@ -64,17 +74,19 @@ export const NavBar = connect((state) => ({ user: state.user }))(
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const mobileMenuId = "primary-search-account-menu-mobile";
 
-    const handleProfileMenuOpen = () =>
-      user ? history.push("/profile") : setOpenDialog(true);
-
     const handleClick = (event) => {
+      handleMobileMenuClose();
       switch (event) {
         case "root":
           return history.push("/");
         case "home":
-          return history.push("/home");
+          user ? history.push("/home") : setOpenDialog(true);
+          break;
         case "centers":
           return history.push("/centers");
+        case "profile":
+          user ? history.push("/profile") : setOpenDialog(true);
+          break;
       }
     };
 
@@ -93,34 +105,22 @@ export const NavBar = connect((state) => ({ user: state.user }))(
         open={isMobileMenuOpen}
         onClose={handleMobileMenuClose}
       >
-        <MenuItem>
-          <IconButton aria-label="show 11 new notifications" color="inherit">
-            <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+        <MenuItem onClick={() => handleClick("home")}>
+          <IconButton color="inherit">
+            <HomeIcon />
           </IconButton>
-          <p>My Wellness! Home</p>
+          <p>My Wellness!</p>
         </MenuItem>
 
-        <MenuItem>
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            color="inherit"
-          >
+        <MenuItem onClick={() => handleClick("centers")}>
+          <IconButton color="inherit">
             <FitnessCenterIcon />
           </IconButton>
           <p>Centros</p>
         </MenuItem>
 
-        <MenuItem>
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            color="inherit"
-          >
+        <MenuItem onClick={() => handleClick("profile")}>
+          <IconButton color="inherit">
             <AccountCircle />
           </IconButton>
           <p>Perfil</p>
@@ -133,7 +133,7 @@ export const NavBar = connect((state) => ({ user: state.user }))(
         <AppBar className={classes.navbar}>
           <Toolbar className={classes.toolbar}>
             <Button onClick={() => handleClick("root")}>
-              <Typography variant="h5" className={classes.title}>
+              <Typography variant="h4" className={classes.title}>
                 Iron Wellness!
               </Typography>
             </Button>
@@ -142,13 +142,21 @@ export const NavBar = connect((state) => ({ user: state.user }))(
               <Button onClick={() => handleClick("root")} color="inherit">
                 Inicio
               </Button>
-              <Button onClick={() => handleClick("home")} color="inherit">
+              <Button
+                className={classes.homeButton}
+                variant="outlined"
+                onClick={() => handleClick("home")}
+                color="inherit"
+              >
                 MyWellness! Home
               </Button>
               <Button onClick={() => handleClick("centers")} color="inherit">
                 Centros
               </Button>
-              <IconButton onClick={() => handleProfileMenuOpen} color="inherit">
+              <IconButton
+                onClick={() => handleClick("profile")}
+                color="inherit"
+              >
                 <AccountCircle />
               </IconButton>
             </div>

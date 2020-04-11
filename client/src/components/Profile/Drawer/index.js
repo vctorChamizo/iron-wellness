@@ -78,7 +78,7 @@ export const Menu = ({ setComponent, user, history, dispatch }) => {
           <div className={classes.wrappetAvatar}>
             <Avatar alt="Avatar" src={user.image} className={classes.large} />
             <Typography variant="subtitle1" display="block" gutterBottom>
-              {user.name} {user.surname}
+              {user.name}
             </Typography>
           </div>
 

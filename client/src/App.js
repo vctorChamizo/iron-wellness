@@ -2,14 +2,16 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import { withAuthentication } from "../lib/withAthetication";
+import { withAuthentication } from "../lib/withAuthentication";
 import { theme } from "../theme/index";
 
 import "./App.css";
 
-import { HomePage } from "./pages/Home.page";
-import { ProfilePage } from "./pages/Profile.page";
 import { NavBar } from "../src/layouts/NavBar/index";
+import { RootPage } from "./pages/Root.page";
+import { HomePage } from "./pages/Home.page";
+import { CentersPage } from "./pages/Centers.page";
+import { ProfilePage } from "./pages/Profile.page";
 
 export const App = withAuthentication(() => (
   <ThemeProvider theme={theme}>

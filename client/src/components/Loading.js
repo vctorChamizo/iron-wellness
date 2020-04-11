@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Loading = (open) => {
+export const Loading = ({ open }) => {
   const classes = useStyles();
 
   return (

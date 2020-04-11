@@ -5,13 +5,16 @@ import _ from "lodash";
 
 import { validateForm } from "../../../lib/validation/validateForm";
 
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 
 import Grid from "@material-ui/core/Grid";
+import EditIcon from "@material-ui/icons/Edit";
+import Button from "@material-ui/core/Button";
+import Link from "@material-ui/core/Link";
 import Avatar from "@material-ui/core/Avatar";
+import Badge from "@material-ui/core/Badge";
 import TextField from "@material-ui/core/TextField";
 import DateFnsUtils from "@date-io/date-fns";
-import { FormButton } from "../FormButton";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -56,7 +59,22 @@ const useStyles = makeStyles((theme) => ({
   drawerContainer: {
     overflow: "auto",
   },
+  editButton: {
+    background: theme.palette.primary.main,
+    color: theme.palette.primaryText,
+  },
+  submit: {
+    marginTop: "5vh",
+  },
 }));
+
+const SmallAvatar = withStyles((theme) => ({
+  root: {
+    width: 35,
+    height: 35,
+    border: `2px solid ${theme.palette.background.paper}`,
+  },
+}))(Avatar);
 
 export const Edit = ({ user }) => {
   const classes = useStyles();
@@ -85,11 +103,22 @@ export const Edit = ({ user }) => {
     <Grid container spacing={3}>
       <Grid item xs={12} sm={6}>
         <div className={classes.wrapper}>
-          <Avatar
-            alt="Remy Sharp"
-            src="/static/images/avatar/1.jpg"
-            className={classes.large}
-          />
+          <Badge
+            overlap="circle"
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            badgeContent={
+              <SmallAvatar>
+                <Button className={classes.editButton}>
+                  <EditIcon />
+                </Button>
+              </SmallAvatar>
+            }
+          >
+            <Avatar alt="Avatar" src={user.image} className={classes.large} />
+          </Badge>
         </div>
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -164,7 +193,15 @@ export const Edit = ({ user }) => {
             />
           </MuiPickersUtilsProvider>
 
-          <FormButton message="Actualizar perfil" />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            Actualizar perfil
+          </Button>
         </form>
       </Grid>
     </Grid>
