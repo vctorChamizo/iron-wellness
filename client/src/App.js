@@ -8,7 +8,7 @@ import { theme } from "../theme/index";
 import "./App.css";
 
 import { HomePage } from "./pages/Home.page";
-import { ProfilePage } from "./pages/user/Profile.page";
+import { ProfilePage } from "./pages/Profile.page";
 import { NavBar } from "../src/layouts/NavBar/index";
 
 export const App = withAuthentication(() => (
@@ -16,7 +16,9 @@ export const App = withAuthentication(() => (
     <Router>
       <NavBar></NavBar>
       <Switch>
-        <Route path="/" exact component={HomePage} />
+        <Route path="/" exact component={RootPage} />
+        <Route path="/home" component={HomePage} />
+        <Route path="/centers" component={CentersPage} />
         <Route path="/profile" component={ProfilePage} />
       </Switch>
     </Router>

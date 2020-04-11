@@ -62,7 +62,8 @@ export const Login = connect()(
 
     const onSubmit = async ({ email, password }) => {
       try {
-        dispatch(useSetUser(await login(email, password)));
+        const { data } = await login(email, password);
+        dispatch(useSetUser(data));
         setOpenDialog(false);
         return history.push("/profile");
       } catch (error) {
@@ -76,8 +77,6 @@ export const Login = connect()(
         setOpenDialog(false);
         return history.push("/profile");
       } catch (error) {
-        console.log(error);
-        console.log(error.response);
         if (error.response.data.status === "BadCredentials") setOpenError(true);
       }
     };

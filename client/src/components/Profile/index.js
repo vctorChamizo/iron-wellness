@@ -7,6 +7,7 @@ import { Edit } from "./Edit";
 import { Classes } from "./Classes";
 import { Calendar } from "./Calendar";
 import { Menu } from "./Drawer/index";
+import { Loading } from "../Loading";
 
 import { makeStyles } from "@material-ui/core/styles";
 

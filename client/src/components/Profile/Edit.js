@@ -64,8 +64,6 @@ export const Edit = ({ user }) => {
   const { register, handleSubmit, errors } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-
     // try {
     //setOpen(false);
     //   dispatch(useSetUser(await signup(state)));

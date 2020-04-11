@@ -1,5 +1,4 @@
-import React from "react";
-
+import { withLogged } from "../../lib/protectedRoutes";
 import { Home } from "../components/Home/index";
 
-export const HomePage = () => <Home />;
+export const HomePage = () => withLogged(Home);

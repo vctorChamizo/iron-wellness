@@ -52,8 +52,6 @@ const listDrawer = ["classes", "calendar", "profile"];
 export const Menu = ({ setComponent, user, history, dispatch }) => {
   const classes = useStyles();
 
-  console.log(user);
-
   const handleClick = async (key) => {
     if (key === "logout") {
       try {
