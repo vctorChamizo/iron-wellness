@@ -39,11 +39,11 @@ export const NavBar = connect((state) => ({ user: state.user }))(
   withRouter(({ user, history }) => {
     const classes = useStyles();
 
-    const [open, setOpen] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
     const [component, setComponent] = useState("Login");
 
     const handleProfileMenuOpen = () =>
-      user ? history.push("/profile") : setOpen(true);
+      user ? history.push("/profile") : setOpenDialog(true);
 
     return (
       <div>
@@ -66,10 +66,10 @@ export const NavBar = connect((state) => ({ user: state.user }))(
         <ScrollTop />
 
         <AuthDialog
-          open={open}
+          open={openDialog}
           component={component}
           setComponent={setComponent}
-          setOpen={setOpen}
+          setOpenDialog={setOpenDialog}
         />
       </div>
     );

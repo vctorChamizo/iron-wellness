@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { useForm } from "react-hook-form";
+import { withRouter } from "react-router-dom";
 import _ from "lodash";
 
 import { login, socialLogin } from "../../../lib/api/auth.api";
 import { useSetUser } from "../../../lib/redux/action";
+import { validateForm } from "../../../lib/validation/validateForm";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -15,18 +17,14 @@ import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { withRouter } from "react-router-dom";
-
-const Alert = (props) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
+import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
   },
   paper: {
-    margin: theme.spacing(8, 4),
+    margin: theme.spacing(4, 4),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -38,62 +36,59 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  social: {},
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
+  link: {
+    marginTop: "2.5vh",
+  },
+  wrapperDivider: {
+    margin: "2.5vh 0",
+    color: "grey",
+  },
 }));
 
-//
+const Alert = (props) => {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+};
 
 export const Login = connect()(
-  withRouter(({ history, dispatch, setComponent, setOpen }) => {
+  withRouter(({ history, dispatch, setComponent, setOpenDialog }) => {
     const classes = useStyles();
 
+    const [openError, setOpenError] = useState(false);
     const { register, handleSubmit, errors } = useForm();
-    const onSubmit = async (data) => {
-      const { email, password } = data;
 
+    const onSubmit = async ({ email, password }) => {
       try {
-        setOpen(false);
         dispatch(useSetUser(await login(email, password)));
+        setOpenDialog(false);
         return history.push("/profile");
       } catch (error) {
-        console.log(error.response);
-        if (error.response.data.status == "BadCredentials") setError(true);
+        if (error.response.data.status === "BadCredentials") setOpenError(true);
       }
     };
 
-    if (!_.isEmpty(errors)) {
-      if (errors.email) {
-        console.log(errors.email);
-        errors.email.helperText =
-          errors.email.type === "required"
-            ? "El campo no puede ser vacio"
-            : "Email o usuario inválido";
-      }
-
-      if (errors.password)
-        errors.password.helperText = "El campo no puede ser vacio";
-    }
-
-    const [error, setError] = useState(false);
-
-    const handleClose = () => {
-      setError(false);
-    };
-
-    const handleClickSocilLogin = async () => {
+    const handleClickSocialLogin = async () => {
       try {
-        setOpen(false);
         dispatch(useSetUser(await socialLogin()));
+        setOpenDialog(false);
         return history.push("/profile");
       } catch (error) {
+        console.log(error);
         console.log(error.response);
-        if (error.response.data.status == "BadCredentials") setError(true);
+        if (error.response.data.status === "BadCredentials") setOpenError(true);
       }
     };
+
+    if (!_.isEmpty(errors)) validateForm(errors);
+
+    const handleCloseError = () => setOpenError(false);
 
     return (
       <div className={classes.paper}>
-        <Typography component="h1" variant="h4">
+        <Typography component="h2" variant="h5">
           Login
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
@@ -108,8 +103,8 @@ export const Login = connect()(
             inputRef={register({
               required: true,
             })}
-            error={errors.email ? true : false}
-            helperText={errors.email ? errors.email.helperText : ""}
+            error={errors?.email ? true : false}
+            helperText={errors?.email ? errors.email.helperText : ""}
           />
           <TextField
             variant="outlined"
@@ -119,8 +114,8 @@ export const Login = connect()(
             name="password"
             type="password"
             inputRef={register({ required: true })}
-            error={errors.password ? true : false}
-            helperText={errors.password ? errors.password.helperText : ""}
+            error={errors?.password ? true : false}
+            helperText={errors?.password ? errors.password.helperText : ""}
           />
           <Button
             type="submit"
@@ -132,24 +127,37 @@ export const Login = connect()(
             Login
           </Button>
 
-          <Button
-            type="button"
-            fullWidth
-            variant="contained"
-            onClick={handleClickSocilLogin}
-          >
-            Google
-          </Button>
+          <div className={classes.wrapperDivider}>
+            <Typography variant="subtitle1">Login con Google</Typography>
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={handleClickSocialLogin}
+            >
+              <Link href="http://localhost:3000/auth/google">
+                <Avatar
+                  className={classes.small}
+                  alt="Google Icon"
+                  src="https://res.cloudinary.com/vctorchzr/image/upload/v1586540216/google-logo_guigav.png"
+                />
+              </Link>
+            </Button>
+          </div>
+
           <Grid container>
-            <Grid item>
+            <Grid item className={classes.link}>
               <Link onClick={() => setComponent("Signup")} variant="body2">
                 {"No tines una cuenta aún? Regístrate."}
               </Link>
             </Grid>
           </Grid>
         </form>
-        <Snackbar open={error} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error">
+        <Snackbar
+          open={openError}
+          autoHideDuration={6000}
+          onClose={handleCloseError}
+        >
+          <Alert onClose={handleCloseError} severity="error">
             El usuario o la contraseñas son incorrectos.
           </Alert>
         </Snackbar>
