@@ -16,13 +16,9 @@ export const login = async (username, password) =>
 
 export const socialLogin = async () => await api.get("/auth/google");
 
-export const upload = async (file) => await api.post("/user/upload", { file });
-
-export const edit = async () => await api.post("/user/edit", { user });
-
-export const logout = async () => await api.get("/auth/logout");
-
 export const loggedin = async () => {
   const result = await api.get("/auth/loggedin");
   return result.status === 204 ? null : result.data;
 };
+
+export const logout = async () => await api.get("/auth/logout");

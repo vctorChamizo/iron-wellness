@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import _ from "lodash";
 
 import { validateForm } from "../../../lib/validation/validateForm";
+import { edit } from "../../../lib/api/user.api";
 
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 
@@ -15,6 +16,8 @@ import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import TextField from "@material-ui/core/TextField";
 import DateFnsUtils from "@date-io/date-fns";
+import Snackbar from "@material-ui/core/Snackbar";
+import Slide from "@material-ui/core/Slide";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -76,28 +79,53 @@ const SmallAvatar = withStyles((theme) => ({
   },
 }))(Avatar);
 
+function TransitionUp(props) {
+  return <Slide {...props} direction="up" />;
+}
+
 export const Edit = ({ user }) => {
   const classes = useStyles();
 
-  const { register, handleSubmit, errors } = useForm();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState();
+  const [transition, setTransition] = useState(undefined);
+  const [selectedDate, setSelectedDate] = useState(user.date);
 
-  const onSubmit = (data) => {
-    // try {
-    //setOpen(false);
-    //   dispatch(useSetUser(await signup(state)));
-    //   history.push("/profile");
-    // } catch (error) {
-    //   if (error.response.data.status == "UserExists") setErros();
-    // }
+  const { register, handleSubmit, errors } = useForm({
+    defaultValues: {
+      username: user.username,
+      email: user.email,
+      name: user.name,
+      surname: user.surname,
+      date: selectedDate,
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const editedUser = await edit(Object.assign(user, data));
+      handleOpen("El usuario se ha modificado correctamente");
+      dispatch(useSetUser(editedUser.data));
+    } catch (error) {
+      if (error.response) {
+        setTransition(() => TransitionUp);
+        if (error.response.data.status === "UserExists")
+          handleOpen("El usuario ya existe");
+        else handleOpen("Esta operación no está permitida");
+      }
+    }
   };
 
   if (!_.isEmpty(errors)) validateForm(errors);
 
-  const [selectedDate, setSelectedDate] = useState(user.date);
+  const handleDateChange = (date) => setSelectedDate(date);
 
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
+  const handleOpen = (text) => {
+    setMessage(text);
+    setOpen(true);
   };
+
+  const handleClose = () => setOpen(false);
 
   return (
     <Grid container spacing={3}>
@@ -129,7 +157,6 @@ export const Edit = ({ user }) => {
             fullWidth
             label="Usuario"
             name="username"
-            value={user.username}
             inputRef={register({
               required: true,
               pattern: USERNAME_PATTERN,
@@ -143,7 +170,6 @@ export const Edit = ({ user }) => {
             fullWidth
             label="Email"
             name="email"
-            value={user.email}
             autoComplete="email"
             inputRef={register({
               required: true,
@@ -159,7 +185,6 @@ export const Edit = ({ user }) => {
             margin="normal"
             label="Nombre"
             name="name"
-            value={user.name}
             inputRef={register({ required: true })}
             error={errors.name ? true : false}
             helperText={errors.name ? errors.name.helperText : ""}
@@ -170,7 +195,6 @@ export const Edit = ({ user }) => {
             margin="normal"
             label="Apellido"
             name="surname"
-            value={user.surname}
             inputRef={register({ required: true })}
             error={errors.surname ? true : false}
             helperText={errors.surname ? errors.surname.helperText : ""}
@@ -185,7 +209,6 @@ export const Edit = ({ user }) => {
               format="MM/dd/yyyy"
               label="Fecha de nacimiento"
               name="date"
-              value={selectedDate}
               onChange={() => handleDateChange}
               KeyboardButtonProps={{
                 "aria-label": "change date",
@@ -204,6 +227,12 @@ export const Edit = ({ user }) => {
           </Button>
         </form>
       </Grid>
+      <Snackbar
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={transition}
+        message={message}
+      />
     </Grid>
   );
 };

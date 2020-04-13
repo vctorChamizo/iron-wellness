@@ -42,29 +42,25 @@ export const Classes = () => {
       </Typography>
 
       <List className={classes.list}>
-        {[0, 1].map((value) => {
-          const labelId = `checkbox-list-label-${value}`;
+        {[0, 1].map((value) => (
+          <Paper key={value} className={classes.paper}>
+            <ListItem
+              className={classes.item}
+              key={value}
+              role={undefined}
+              button
+              onClick={handleClick(value)}
+            >
+              <ListItemText primary={`Line item ${value + 1}`} />
 
-          return (
-            <Paper className={classes.paper}>
-              <ListItem
-                className={classes.item}
-                key={value}
-                role={undefined}
-                button
-                onClick={handleClick(value)}
-              >
-                <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="comments">
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </Paper>
-          );
-        })}
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="comments">
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          </Paper>
+        ))}
       </List>
     </div>
   );
