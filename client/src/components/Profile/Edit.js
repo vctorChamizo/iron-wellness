@@ -9,12 +9,12 @@ import { edit } from "../../../lib/api/user.api";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 
 import Grid from "@material-ui/core/Grid";
-import EditIcon from "@material-ui/icons/Edit";
 import Button from "@material-ui/core/Button";
-import Link from "@material-ui/core/Link";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
 import DateFnsUtils from "@date-io/date-fns";
 import Snackbar from "@material-ui/core/Snackbar";
 import Slide from "@material-ui/core/Slide";
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "5vh",
     width: "100%",
     display: "flex",
-    flexDirection: "column",
     justifyContent: "center",
   },
   container: {
@@ -40,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
   },
   large: {
     margin: "5vh 0",
-    width: theme.spacing(40),
-    height: theme.spacing(40),
+    width: "20vw",
+    height: "20vw",
   },
   wrapper: {
     display: "flex",
@@ -69,19 +68,17 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     marginTop: "5vh",
   },
-}));
-
-const SmallAvatar = withStyles((theme) => ({
-  root: {
-    width: 35,
-    height: 35,
-    border: `2px solid ${theme.palette.background.paper}`,
+  input: {
+    display: "none",
   },
-}))(Avatar);
+}));
 
 function TransitionUp(props) {
   return <Slide {...props} direction="up" />;
 }
+
+const cloudinary = require("cloudinary-core");
+const cl = cloudinary.Cloudinary.new({ cloud_name: "driuopbnh" });
 
 export const Edit = ({ user }) => {
   const classes = useStyles();
@@ -116,6 +113,21 @@ export const Edit = ({ user }) => {
     }
   };
 
+  const onSubmitPicture = (values) => {
+    console.log(values);
+    const myAvatar = values.avatar[0];
+    console.log(myAvatar);
+    changeAvatar(myAvatar)
+      .then((res) => {
+        console.log("Changed File");
+        setUser(res.data.user);
+      })
+      .catch((e) => {
+        console.log("Error uploading file");
+        console.log(e);
+      });
+  };
+
   if (!_.isEmpty(errors)) validateForm(errors);
 
   const handleDateChange = (date) => setSelectedDate(date);
@@ -129,28 +141,40 @@ export const Edit = ({ user }) => {
 
   return (
     <Grid container spacing={3}>
-      <Grid item xs={12} sm={6}>
-        <div className={classes.wrapper}>
-          <Badge
-            overlap="circle"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            badgeContent={
-              <SmallAvatar>
-                <Button className={classes.editButton}>
-                  <EditIcon />
-                </Button>
-              </SmallAvatar>
-            }
-          >
-            <Avatar alt="Avatar" src={user.image} className={classes.large} />
-          </Badge>
-        </div>
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+        <Grid item xs={12} sm={6}>
+          <div className={classes.wrapper}>
+            <Badge
+              overlap="circle"
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              badgeContent={
+                <>
+                  <input
+                    accept="image/*"
+                    className={classes.input}
+                    id="icon-button-file"
+                    type="file"
+                  />
+                  <label htmlFor="icon-button-file">
+                    <IconButton
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <PhotoCamera />
+                    </IconButton>
+                  </label>
+                </>
+              }
+            >
+              <Avatar alt="Avatar" src={user.image} className={classes.large} />
+            </Badge>
+          </div>
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -225,8 +249,8 @@ export const Edit = ({ user }) => {
           >
             Actualizar perfil
           </Button>
-        </form>
-      </Grid>
+        </Grid>
+      </form>
       <Snackbar
         open={open}
         onClose={handleClose}
