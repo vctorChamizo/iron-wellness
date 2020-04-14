@@ -122,23 +122,24 @@ router.get("/logout", isLoggedIn(), async (req, res, next) => {
 });
 
 router.get("/loggedin", async (req, res) => {
-  return req.user
-    ? res
-        .status(200)
-        .json(
-          _.pick(req.user, [
-            "_id",
-            "username",
-            "email",
-            "name",
-            "surname",
-            "date",
-            "type",
-            "image",
-            "classes",
-          ])
-        )
-    : res.status(204).json("NoContent");
+  if (req.user) {
+    try {
+      const user = await User.findOne({ _id: req.user._id })
+        .populate({
+          path: "classes",
+          select: ["_id", "name", "date"],
+        })
+        .select("_id username email name surname date image type");
+
+      return user
+        ? res.status(200).json(user)
+        : res.status(400).json({ status: "BadRequest" });
+    } catch (e) {
+      return e.name === "CastError"
+        ? res.status(400).json({ status: "BadRequest" })
+        : next(e);
+    }
+  } else return res.status(204).json("NoContent");
 });
 
 module.exports = router;

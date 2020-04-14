@@ -12,6 +12,7 @@ import { RootPage } from "./pages/Root.page";
 import { HomePage } from "./pages/Home.page";
 import { CentersPage } from "./pages/Centers.page";
 import { ProfilePage } from "./pages/Profile.page";
+import { ClassPage } from "./pages/Class.page";
 
 export const App = withAuthentication(() => (
   <ThemeProvider theme={theme}>
@@ -22,6 +23,7 @@ export const App = withAuthentication(() => (
         <Route path="/home" component={HomePage} />
         <Route path="/centers" component={CentersPage} />
         <Route path="/profile" component={ProfilePage} />
+        <Route path="/class/:id" component={ClassPage} />
       </Switch>
     </Router>
   </ThemeProvider>

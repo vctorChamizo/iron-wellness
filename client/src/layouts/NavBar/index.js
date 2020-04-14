@@ -5,14 +5,14 @@ import { withRouter } from "react-router-dom";
 import { ScrollTop } from "./ScrollTop";
 import { AuthDialog } from "../../components/Auth/AuthDialog";
 
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
+import Avatar from "@material-ui/core/Avatar";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       display: "flex",
       justifyContent: "space-between",
-      width: "33%",
+      width: "40%",
     },
   },
   sectionMobile: {
@@ -60,6 +60,10 @@ const useStyles = makeStyles((theme) => ({
       background: "#fff",
       color: theme.palette.primary.main,
     },
+  },
+  small: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
   },
 }));
 
@@ -121,7 +125,15 @@ export const NavBar = connect((state) => ({ user: state.user }))(
 
         <MenuItem onClick={() => handleClick("profile")}>
           <IconButton color="inherit">
-            <AccountCircle />
+            {user?.image ? (
+              <Avatar
+                alt="Avatar"
+                src={user?.image.url}
+                className={classes.small}
+              />
+            ) : (
+              <AccountCircle />
+            )}
           </IconButton>
           <p>Perfil</p>
         </MenuItem>
@@ -133,7 +145,7 @@ export const NavBar = connect((state) => ({ user: state.user }))(
         <AppBar className={classes.navbar}>
           <Toolbar className={classes.toolbar}>
             <Button onClick={() => handleClick("root")}>
-              <Typography variant="h4" className={classes.title}>
+              <Typography variant="h4" component="h1" className={classes.title}>
                 Iron Wellness!
               </Typography>
             </Button>
@@ -157,7 +169,15 @@ export const NavBar = connect((state) => ({ user: state.user }))(
                 onClick={() => handleClick("profile")}
                 color="inherit"
               >
-                <AccountCircle />
+                {user?.image ? (
+                  <Avatar
+                    alt="Avatar"
+                    src={user?.image.url}
+                    className={classes.small}
+                  />
+                ) : (
+                  <AccountCircle />
+                )}
               </IconButton>
             </div>
             <div className={classes.sectionMobile}>

@@ -136,11 +136,13 @@ router.put("/:id", async (req, res, next) => {
     if (req.user.type === "ADMIN" || req.user._id != req.params.id)
       return res.status(406).json({ status: "NotAcceptable" });
 
-    const checkUser = await User.findOne({
-      $or: [{ email: user.email }, { username: user.username }],
-    });
+    const checkEmail = await User.findOne({ email: user.email });
+    const checkUsername = await User.findOne({ username: user.username });
 
-    if (checkUser._id == user._id) {
+    if (
+      (!checkEmail || checkEmail._id == user._id) &&
+      (!checkUsername || checkUsername._id == user._id)
+    ) {
       const updatedUser = await User.findByIdAndUpdate(
         { _id: req.params.id },
         {

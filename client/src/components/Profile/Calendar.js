@@ -9,6 +9,7 @@ import "@fullcalendar/core/main.css";
 import "@fullcalendar/daygrid/main.css";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { DialogTitle } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
@@ -20,22 +21,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Calendar = ({ events }) => {
+export const Calendar = ({ events, history }) => {
   const classes = useStyles();
 
-  const handeClick = (info) => {
-    console.log(info);
-  };
+  const handeClick = ({ event }) => history.push(event.id);
+
+  const handleMouseEnter = () =>
+    (document.getElementById("calendar").style.cursor = "pointer");
+
+  const handleMouseLeave = () =>
+    (document.getElementById("calendar").style.cursor = "default");
 
   const headerView = {
     left: "title",
     right: "today, prevYear,prev,next,nextYear",
   };
 
-  const formatedEvents = {}; //events.map((e) => {});
+  const formatedEvents = events.map((e) => {
+    const date = new Date(e.date);
+    const formatDate = `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}-${date.getDate()}`;
+
+    return {
+      title: e.name,
+      id: e._id,
+      start: formatDate,
+      color: "#ff500b",
+    };
+  });
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.wrapper} id="calendar">
       <FullCalendar
         defaultView="dayGridMonth"
         plugins={[dayGridPlugin, timeGridPlugin]}
@@ -44,6 +61,8 @@ export const Calendar = ({ events }) => {
         timeZone="UTC"
         locales={[esLocale]}
         eventClick={handeClick}
+        eventMouseEnter={handleMouseEnter}
+        eventMouseLeave={handleMouseLeave}
         events={formatedEvents}
       />
     </div>

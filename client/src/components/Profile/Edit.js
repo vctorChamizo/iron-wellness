@@ -87,7 +87,7 @@ export const Edit = ({ user, dispatch }) => {
   const [openMessage, setOpenMessage] = useState(false);
   const [severity, setSeverity] = useState();
 
-  const [imagePath, setImagePath] = useState(user.image.url);
+  const [imagePath, setImagePath] = useState(user.image?.url);
 
   const { register, handleSubmit, errors, control } = useForm({
     defaultValues: {
@@ -104,11 +104,14 @@ export const Edit = ({ user, dispatch }) => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      const editedUser = await edit(Object.assign(user, data));
+      const updatedUser = Object.assign(user, data);
+      console.log(updatedUser);
+      await edit(updatedUser);
       setLoading(false);
       handleSanckBar("Perfil actualizado", "success");
-      dispatch(useSetUser(editedUser.data));
+      dispatch(useSetUser(updatedUser));
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         if (error.response.data.status === "UserExists")
           handleSanckBar("El usuario ya existe", "error");

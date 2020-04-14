@@ -13,10 +13,11 @@ export const withAuthentication = (Component) => () => {
   useEffect(() => {
     loggedin()
       .then((data) => {
+        console.log(data);
         if (data) store.dispatch(useSetUser(data));
       })
       .catch((e) => console.error(e.response?.statusText))
-      .finally(() => setLoading(false));
+      .finally(setLoading(false));
   }, []);
 
   return (
