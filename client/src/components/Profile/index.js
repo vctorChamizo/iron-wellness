@@ -35,11 +35,11 @@ export const Profile = connect((state) => ({ user: state.user }))(
         <Grid container spacing={3}>
           <Grid item xs={12} sm={10}>
             {component === "classes" ? (
-              <Classes setComponent={setComponent} />
+              <Classes />
             ) : component === "profile" ? (
-              <Edit setComponent={setComponent} user={user} />
+              <Edit user={user} dispatch={dispatch} />
             ) : (
-              <Calendar setComponent={setComponent} />
+              <Calendar />
             )}
           </Grid>
         </Grid>

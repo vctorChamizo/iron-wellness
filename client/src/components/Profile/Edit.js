@@ -1,33 +1,38 @@
 import "date-fns";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 
 import { validateForm } from "../../../lib/validation/validateForm";
-import { edit } from "../../../lib/api/user.api";
+import { edit, upload } from "../../../lib/api/user.api";
+import { useSetUser } from "../../../lib/redux/action";
 
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import DateFnsUtils from "@date-io/date-fns";
-import Snackbar from "@material-ui/core/Snackbar";
-import Slide from "@material-ui/core/Slide";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 
+import { Loading } from "../Loading";
+import { SnackBar } from "../Snackbar/index";
+
 import { EMAIL_PATTERN, USERNAME_PATTERN } from "../../../lib/patterns";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: "5vh 0 0 5vw",
+  },
   form: {
-    paddingTop: "5vh",
     width: "100%",
     display: "flex",
     justifyContent: "center",
@@ -73,190 +78,213 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TransitionUp(props) {
-  return <Slide {...props} direction="up" />;
-}
-
-const cloudinary = require("cloudinary-core");
-const cl = cloudinary.Cloudinary.new({ cloud_name: "driuopbnh" });
-
-export const Edit = ({ user }) => {
+export const Edit = ({ user, dispatch }) => {
   const classes = useStyles();
 
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState();
-  const [transition, setTransition] = useState(undefined);
-  const [selectedDate, setSelectedDate] = useState(user.date);
+  const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, errors } = useForm({
+  const [message, setMessage] = useState();
+  const [openMessage, setOpenMessage] = useState(false);
+  const [severity, setSeverity] = useState();
+
+  const [imagePath, setImagePath] = useState(user.image.url);
+
+  const { register, handleSubmit, errors, control } = useForm({
     defaultValues: {
       username: user.username,
       email: user.email,
       name: user.name,
       surname: user.surname,
-      date: selectedDate,
+      date: user.date,
     },
   });
 
+  if (!_.isEmpty(errors)) validateForm(errors);
+
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
       const editedUser = await edit(Object.assign(user, data));
-      handleOpen("El usuario se ha modificado correctamente");
+      setLoading(false);
+      handleSanckBar("Perfil actualizado", "success");
       dispatch(useSetUser(editedUser.data));
     } catch (error) {
       if (error.response) {
-        setTransition(() => TransitionUp);
         if (error.response.data.status === "UserExists")
-          handleOpen("El usuario ya existe");
-        else handleOpen("Esta operación no está permitida");
+          handleSanckBar("El usuario ya existe", "error");
+        else handleSanckBar("Esta operación no está permitida", "error");
       }
     }
   };
 
-  const onSubmitPicture = (values) => {
-    console.log(values);
-    const myAvatar = values.avatar[0];
-    console.log(myAvatar);
-    changeAvatar(myAvatar)
-      .then((res) => {
-        console.log("Changed File");
-        setUser(res.data.user);
-      })
-      .catch((e) => {
-        console.log("Error uploading file");
-        console.log(e);
-      });
+  const onSumbitPicture = async (data) => {
+    if (data.avatar[0]) {
+      setLoading(true);
+      const updatedUser = await upload(data.avatar[0]);
+      dispatch(useSetUser(updatedUser.data));
+      setImagePath(updatedUser.data.image.url);
+      setLoading(false);
+      handleSanckBar("Foto de perfil actualizada", "success");
+    } else
+      handleSanckBar(
+        "La foto de perfil no se ha cargado correctamente",
+        "error"
+      );
   };
 
-  if (!_.isEmpty(errors)) validateForm(errors);
-
-  const handleDateChange = (date) => setSelectedDate(date);
-
-  const handleOpen = (text) => {
-    setMessage(text);
-    setOpen(true);
+  const handleSanckBar = (message, severity) => {
+    setMessage(message);
+    setSeverity(severity);
+    setOpenMessage(true);
   };
-
-  const handleClose = () => setOpen(false);
 
   return (
-    <Grid container spacing={3}>
-      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-        <Grid item xs={12} sm={6}>
-          <div className={classes.wrapper}>
-            <Badge
-              overlap="circle"
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              badgeContent={
-                <>
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    id="icon-button-file"
-                    type="file"
-                  />
-                  <label htmlFor="icon-button-file">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload picture"
-                      component="span"
-                    >
-                      <PhotoCamera />
-                    </IconButton>
-                  </label>
-                </>
-              }
-            >
-              <Avatar alt="Avatar" src={user.image} className={classes.large} />
-            </Badge>
-          </div>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Usuario"
-            name="username"
-            inputRef={register({
-              required: true,
-              pattern: USERNAME_PATTERN,
-            })}
-            error={errors.username ? true : false}
-            helperText={errors.username ? errors.username.helperText : ""}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            label="Email"
-            name="email"
-            autoComplete="email"
-            inputRef={register({
-              required: true,
-              pattern: EMAIL_PATTERN,
-            })}
-            error={errors.email ? true : false}
-            helperText={errors.email ? errors.email.helperText : ""}
-          />
+    <>
+      <Loading open={loading} />
+      <Grid className={classes.root}>
+        <Typography variant="h3" gutterBottom>
+          Perfil
+        </Typography>
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+          <Grid item xs={12} sm={6}>
+            <div className={classes.wrapper}>
+              <Badge
+                overlap="circle"
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                badgeContent={
+                  <>
+                    <input
+                      accept="image/*"
+                      className={classes.input}
+                      id="icon-button-file"
+                      type="file"
+                      name="avatar"
+                      ref={register()}
+                      onChange={handleSubmit(onSumbitPicture)}
+                    />
+                    <label htmlFor="icon-button-file">
+                      <IconButton
+                        color="primary"
+                        aria-label="upload picture"
+                        component="span"
+                      >
+                        <PhotoCamera />
+                      </IconButton>
+                    </label>
+                  </>
+                }
+              >
+                <Avatar
+                  alt="Avatar"
+                  src={imagePath}
+                  className={classes.large}
+                />
+              </Badge>
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label="Usuario"
+              name="username"
+              inputRef={register({
+                required: true,
+                pattern: USERNAME_PATTERN,
+              })}
+              error={errors.username ? true : false}
+              helperText={errors.username ? errors.username.helperText : ""}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              label="Email"
+              name="email"
+              autoComplete="email"
+              inputRef={register({
+                required: true,
+                pattern: EMAIL_PATTERN,
+              })}
+              error={errors.email ? true : false}
+              helperText={errors.email ? errors.email.helperText : ""}
+            />
 
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Nombre"
-            name="name"
-            inputRef={register({ required: true })}
-            error={errors.name ? true : false}
-            helperText={errors.name ? errors.name.helperText : ""}
-          />
-          <TextField
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            label="Apellido"
-            name="surname"
-            inputRef={register({ required: true })}
-            error={errors.surname ? true : false}
-            helperText={errors.surname ? errors.surname.helperText : ""}
-          />
-
-          <MuiPickersUtilsProvider utils={DateFnsUtils} variant="outlined">
-            <KeyboardDatePicker
+            <TextField
               variant="outlined"
               fullWidth
               margin="normal"
-              disableToolbar
-              format="MM/dd/yyyy"
-              label="Fecha de nacimiento"
-              name="date"
-              onChange={() => handleDateChange}
-              KeyboardButtonProps={{
-                "aria-label": "change date",
-              }}
+              label="Nombre"
+              name="name"
+              inputRef={register({ required: true })}
+              error={errors.name ? true : false}
+              helperText={errors.name ? errors.name.helperText : ""}
             />
-          </MuiPickersUtilsProvider>
+            <TextField
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              label="Apellido"
+              name="surname"
+              inputRef={register({ required: true })}
+              error={errors.surname ? true : false}
+              helperText={errors.surname ? errors.surname.helperText : ""}
+            />
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Actualizar perfil
-          </Button>
-        </Grid>
-      </form>
-      <Snackbar
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={transition}
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Controller
+                as={KeyboardDatePicker}
+                name="reactSelect"
+                control={control}
+                onChange={(selected) => selected[1]}
+                fullWidth
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                name="date"
+                label="Fecha de nacimiento"
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+              />
+              {/* <KeyboardDatePicker
+                fullWidth
+                variant="inline"
+                format="MM/dd/yyyy"
+                margin="normal"
+                name="date"
+                label="Fecha de nacimiento"
+                onChange={handleDateChange}
+                KeyboardButtonProps={{
+                  "aria-label": "change date",
+                }}
+                value={selectedDate}
+                ref={register({ required: true })}
+              /> */}
+            </MuiPickersUtilsProvider>
+
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Actualizar perfil
+            </Button>
+          </Grid>
+        </form>
+      </Grid>
+      <SnackBar
         message={message}
+        severity={severity}
+        openMessage={openMessage}
+        setOpenMessage={setOpenMessage}
       />
-    </Grid>
+    </>
   );
 };

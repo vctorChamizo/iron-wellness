@@ -49,7 +49,7 @@ router.post(
     try {
       if (!req.file) return res.status(400).json({ status: "BadRequest" });
 
-      const updatedUser = await Users.findByIdAndUpdate(
+      const updatedUser = await User.findByIdAndUpdate(
         req.user._id,
         { image: req.file },
         { new: true }
@@ -136,7 +136,11 @@ router.put("/:id", async (req, res, next) => {
     if (req.user.type === "ADMIN" || req.user._id != req.params.id)
       return res.status(406).json({ status: "NotAcceptable" });
 
-    if (!(await User.findOne({ email: user.email, username: user.username }))) {
+    const checkUser = await User.findOne({
+      $or: [{ email: user.email }, { username: user.username }],
+    });
+
+    if (checkUser._id == user._id) {
       const updatedUser = await User.findByIdAndUpdate(
         { _id: req.params.id },
         {

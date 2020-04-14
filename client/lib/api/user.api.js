@@ -6,7 +6,11 @@ const api = axios.create({
   withCredentials: true,
 });
 
-export const upload = async (file) => await api.post("/users/upload", { file });
+export const upload = async (file) => {
+  const data = new FormData();
+  data.append("profileImage", file);
+  return await api.post("/users/upload", data);
+};
 
 export const edit = async (user) =>
   await api.put(`users/${user._id}`, { user });
