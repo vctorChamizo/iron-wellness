@@ -6,7 +6,7 @@ const _ = require("lodash");
 const uploadCloud = multer({
   storage: cloudinaryStorage({
     cloudinary,
-    folder: "iron-wellness",
+    folder: "iron-wellness/avatar",
     allowedFormats: ["jpg", "png"],
     filename: function (req, file, cb) {
       const userID = _.get(req, "user._id");
