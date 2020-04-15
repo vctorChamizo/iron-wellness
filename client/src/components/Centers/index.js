@@ -48,6 +48,19 @@ export const Centers = () => {
           </Typography>
         </div>
       </section>
+      <section className={classes.background}>
+        <div className={classes.wrapperMain}>
+          <Typography variant="h2" component="h2">
+            CENTROS
+          </Typography>
+          <Typography variant="subtitle1">
+            Disfruta en Iron Wellness de los mejores Clubs deportivos y de ocio.
+          </Typography>
+          <Typography variant="subtitle1">
+            Elige tu centro y empieza a disfrutar.
+          </Typography>
+        </div>
+      </section>
       <section></section>
     </>
   );

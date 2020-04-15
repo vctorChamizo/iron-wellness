@@ -10,8 +10,8 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 const useStyles = makeStyles((theme) => ({
   root: {
     position: "fixed",
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
+    bottom: theme.spacing(4),
+    right: theme.spacing(4),
   },
 }));
 
@@ -29,9 +29,7 @@ export const ScrollTop = () => {
       "#back-to-top"
     );
 
-    if (anchor) {
-      anchor.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    if (anchor) anchor.scrollIntoView({ behavior: "smooth", block: "center" });
   };
 
   return (

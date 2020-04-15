@@ -19,6 +19,9 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import MoreIcon from "@material-ui/icons/MoreVert";
+import Slide from "@material-ui/core/Slide";
+import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -67,8 +70,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function HideOnScroll(props) {
+  const { children, window } = props;
+  const trigger = useScrollTrigger({ target: window ? window() : undefined });
+
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      {children}
+    </Slide>
+  );
+}
+
+HideOnScroll.propTypes = {
+  children: PropTypes.element.isRequired,
+  window: PropTypes.func,
+};
+
 export const NavBar = connect((state) => ({ user: state.user }))(
-  withRouter(({ user, history }) => {
+  withRouter(({ user, history, props }) => {
     const classes = useStyles();
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -142,57 +161,63 @@ export const NavBar = connect((state) => ({ user: state.user }))(
 
     return (
       <div>
-        <AppBar className={classes.navbar}>
-          <Toolbar className={classes.toolbar}>
-            <Button onClick={() => handleClick("root")}>
-              <Typography variant="h4" component="h1" className={classes.title}>
-                Iron Wellness!
-              </Typography>
-            </Button>
+        <HideOnScroll {...props}>
+          <AppBar className={classes.navbar}>
+            <Toolbar className={classes.toolbar}>
+              <Button onClick={() => handleClick("root")}>
+                <Typography
+                  variant="h4"
+                  component="h1"
+                  className={classes.title}
+                >
+                  Iron Wellness!
+                </Typography>
+              </Button>
 
-            <div className={classes.sectionDesktop}>
-              <Button onClick={() => handleClick("root")} color="inherit">
-                Inicio
-              </Button>
-              <Button
-                className={classes.homeButton}
-                variant="outlined"
-                onClick={() => handleClick("home")}
-                color="inherit"
-              >
-                MyWellness! Home
-              </Button>
-              <Button onClick={() => handleClick("centers")} color="inherit">
-                Centros
-              </Button>
-              <IconButton
-                onClick={() => handleClick("profile")}
-                color="inherit"
-              >
-                {user?.image ? (
-                  <Avatar
-                    alt="Avatar"
-                    src={user?.image.url}
-                    className={classes.small}
-                  />
-                ) : (
-                  <AccountCircle />
-                )}
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
+              <div className={classes.sectionDesktop}>
+                <Button onClick={() => handleClick("root")} color="inherit">
+                  Inicio
+                </Button>
+                <Button
+                  className={classes.homeButton}
+                  variant="outlined"
+                  onClick={() => handleClick("home")}
+                  color="inherit"
+                >
+                  MyWellness! Home
+                </Button>
+                <Button onClick={() => handleClick("centers")} color="inherit">
+                  Centros
+                </Button>
+                <IconButton
+                  onClick={() => handleClick("profile")}
+                  color="inherit"
+                >
+                  {user?.image ? (
+                    <Avatar
+                      alt="Avatar"
+                      src={user?.image.url}
+                      className={classes.small}
+                    />
+                  ) : (
+                    <AccountCircle />
+                  )}
+                </IconButton>
+              </div>
+              <div className={classes.sectionMobile}>
+                <IconButton
+                  aria-label="show more"
+                  aria-controls={mobileMenuId}
+                  aria-haspopup="true"
+                  onClick={handleMobileMenuOpen}
+                  color="inherit"
+                >
+                  <MoreIcon />
+                </IconButton>
+              </div>
+            </Toolbar>
+          </AppBar>
+        </HideOnScroll>
         {renderMobileMenu}
         <Toolbar id="back-to-top" className={classes.hidden} />
         <ScrollTop />
