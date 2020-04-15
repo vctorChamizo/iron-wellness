@@ -3,9 +3,11 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { ScrollTop } from "./ScrollTop";
+import { HideOnScroll } from "./HideOnScroll";
 import { AuthDialog } from "../../components/Auth/AuthDialog";
 
 import { makeStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
 
 import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
@@ -19,9 +21,6 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import HomeIcon from "@material-ui/icons/Home";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import MoreIcon from "@material-ui/icons/MoreVert";
-import Slide from "@material-ui/core/Slide";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -69,17 +68,6 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(4),
   },
 }));
-
-function HideOnScroll(props) {
-  const { children, window } = props;
-  const trigger = useScrollTrigger({ target: window ? window() : undefined });
-
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      {children}
-    </Slide>
-  );
-}
 
 HideOnScroll.propTypes = {
   children: PropTypes.element.isRequired,

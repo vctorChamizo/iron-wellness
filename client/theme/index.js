@@ -23,7 +23,7 @@ export const theme = createMuiTheme({
     },
     h2: {
       fontWeight: 500,
-      fontSize: "5.5em",
+      fontSize: "5.5rem",
       lineHeight: 1.167,
       letterSpacing: "-0.01562em",
     },
