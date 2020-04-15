@@ -34,9 +34,9 @@ export const theme = createMuiTheme({
       letterSpacing: "-0.01562em",
     },
     h4: {
-      fontWeight: 500,
-      fontSize: "1rem",
-      lineHeight: 1.167,
+      fontWeight: 900,
+      fontSize: "1.5rem",
+      lineHeight: 3.5,
       letterSpacing: "-0.01562em",
     },
     subtitle1: {
@@ -46,6 +46,16 @@ export const theme = createMuiTheme({
       lineHeight: 1.5,
       letterSpacing: "-0.01562em",
       fontStyle: "italic",
+    },
+    overline: {
+      fontFamily: '"Roboto", sans-serif',
+      fontWeight: 100,
+      fontSize: "1.2rem",
+      lineHeight: 1.5,
+    },
+    body2: {
+      fontSize: "1.2rem",
+      lineHeight: 2.5,
     },
   },
 });

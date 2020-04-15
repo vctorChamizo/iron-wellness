@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import { getCenters } from "../../../lib/api/center.api";
+
+import { Loading } from "../Loading";
 
 import { makeStyles } from "@material-ui/core/styles";
 
 import Typography from "@material-ui/core/Typography";
+import { CardCenter } from "./Card";
 
 const useStyles = makeStyles({
   background: {
@@ -10,20 +15,44 @@ const useStyles = makeStyles({
     backgroundPosition: "center",
     backgroundSize: "cover",
   },
-  wrapperMain: {
+  wrapperTitle: {
     backgroundColor: "rgba(0,0,0,0.7)",
     color: "#fff",
     padding: "30vh 0 40vh 10vw",
+  },
+  wrapperCenters: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexWrap: "wrap",
+    padding: "2.5vh 2.5vw",
+  },
+  wrapper: {
+    margin: "5vh 2.5vw",
   },
 });
 
 export const Centers = () => {
   const classes = useStyles();
 
+  const [loading, setLoading] = useState(true);
+  const [centers, setCenters] = useState([]);
+
+  useEffect(() => {
+    getCenters()
+      .then(({ data }) => {
+        console.log(data);
+        setCenters(data);
+      })
+      .catch((e) => console.error(e.response?.statusText))
+      .finally(setLoading(false));
+  }, []);
+
   return (
     <>
+      <Loading open={loading} />
       <section className={classes.background}>
-        <div className={classes.wrapperMain}>
+        <div className={classes.wrapperTitle}>
           <Typography variant="h2" component="h2">
             CENTROS
           </Typography>
@@ -36,7 +65,13 @@ export const Centers = () => {
         </div>
       </section>
 
-      <section></section>
+      <section className={classes.wrapperCenters}>
+        {centers.map((e) => (
+          <div data-aos="zoom-in" className={classes.wrapper}>
+            <CardCenter key={e._id} center={e} />
+          </div>
+        ))}
+      </section>
     </>
   );
 };

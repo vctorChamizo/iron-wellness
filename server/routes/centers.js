@@ -9,7 +9,9 @@ const Center = require("../models/Center");
 
 router.get("/", async (req, res, next) => {
   try {
-    return res.status(200).json(await Center.find().select("_id name city"));
+    return res
+      .status(200)
+      .json(await Center.find().select("_id name city community image"));
   } catch (e) {
     return next(e);
   }
