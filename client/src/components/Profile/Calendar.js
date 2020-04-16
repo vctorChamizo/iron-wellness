@@ -9,7 +9,6 @@ import "@fullcalendar/core/main.css";
 import "@fullcalendar/daygrid/main.css";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { DialogTitle } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {

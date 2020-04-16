@@ -120,14 +120,14 @@ export const NavBar = connect((state) => ({ user: state.user }))(
           <IconButton color="inherit">
             <HomeIcon />
           </IconButton>
-          <p>My Wellness!</p>
+          <Typography variant="h3">MyWellness!</Typography>
         </MenuItem>
 
         <MenuItem onClick={() => handleClick("centers")}>
           <IconButton color="inherit">
             <FitnessCenterIcon />
           </IconButton>
-          <p>Centros</p>
+          <Typography variant="h3">Centros</Typography>
         </MenuItem>
 
         <MenuItem onClick={() => handleClick("profile")}>
@@ -142,7 +142,7 @@ export const NavBar = connect((state) => ({ user: state.user }))(
               <AccountCircle />
             )}
           </IconButton>
-          <p>Perfil</p>
+          <Typography variant="h3">Perfil</Typography>
         </MenuItem>
       </Menu>
     );
@@ -153,18 +153,14 @@ export const NavBar = connect((state) => ({ user: state.user }))(
           <AppBar className={classes.navbar}>
             <Toolbar className={classes.toolbar}>
               <Button onClick={() => handleClick("root")}>
-                <Typography
-                  variant="h4"
-                  component="h1"
-                  className={classes.title}
-                >
-                  Iron Wellness!
+                <Typography variant="h1" className={classes.title}>
+                  Iron Wellness !
                 </Typography>
               </Button>
 
               <div className={classes.sectionDesktop}>
                 <Button onClick={() => handleClick("root")} color="inherit">
-                  Inicio
+                  <Typography variant="h3">Inicio</Typography>
                 </Button>
                 <Button
                   className={classes.homeButton}
@@ -172,10 +168,10 @@ export const NavBar = connect((state) => ({ user: state.user }))(
                   onClick={() => handleClick("home")}
                   color="inherit"
                 >
-                  MyWellness! Home
+                  <Typography variant="h3">MyWellness! Home</Typography>
                 </Button>
                 <Button onClick={() => handleClick("centers")} color="inherit">
-                  Centros
+                  <Typography variant="h3">Centros</Typography>
                 </Button>
                 <IconButton
                   onClick={() => handleClick("profile")}

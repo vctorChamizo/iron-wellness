@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { CardCenter } from "./Card";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   background: {
     backgroundImage: `url(${"https://res.cloudinary.com/vctorchzr/image/upload/v1586957613/iron-wellness/components/centers/centers-main_j3wnzs.jpg"})`,
     backgroundPosition: "center",
@@ -21,6 +21,7 @@ const useStyles = makeStyles({
     padding: "30vh 0 40vh 10vw",
   },
   wrapperCenters: {
+    backgroundColor: theme.palette.contrast.main,
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
@@ -30,7 +31,7 @@ const useStyles = makeStyles({
   wrapper: {
     margin: "5vh 2.5vw",
   },
-});
+}));
 
 export const Centers = () => {
   const classes = useStyles();
@@ -40,10 +41,7 @@ export const Centers = () => {
 
   useEffect(() => {
     getCenters()
-      .then(({ data }) => {
-        console.log(data);
-        setCenters(data);
-      })
+      .then(({ data }) => setCenters(data))
       .catch((e) => console.error(e.response?.statusText))
       .finally(setLoading(false));
   }, []);
@@ -67,8 +65,8 @@ export const Centers = () => {
 
       <section className={classes.wrapperCenters}>
         {centers.map((e) => (
-          <div data-aos="zoom-in" className={classes.wrapper}>
-            <CardCenter key={e._id} center={e} />
+          <div key={e._id} data-aos="zoom-in" className={classes.wrapper}>
+            <CardCenter center={e} />
           </div>
         ))}
       </section>
