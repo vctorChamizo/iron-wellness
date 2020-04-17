@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   media: {
@@ -17,7 +17,36 @@ const useStyles = makeStyles((theme) => ({
     height: "55vh",
   },
   content: {
-    textAlign: "center",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    borderTop: "1vh solid #ff500b",
+  },
+  divider: {
+    margin: "2.5vh 0",
+    width: "20%",
+    backgroundColor: theme.palette.primary.main,
+  },
+  title: {
+    margin: "0",
+    marginTop: "2.5vh",
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: "500",
+    fontSize: "1.3rem",
+  },
+  city: {
+    margin: "0",
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: "100",
+  },
+  community: {
+    margin: "0",
+    marginTop: "2.5vh",
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: "100",
+    fontSize: "1.1rem",
+    textTransform: "uppercase",
   },
 }));
 
@@ -29,16 +58,13 @@ export const CardCenter = ({ center }) => {
       <CardMedia
         className={classes.media}
         image={center.image?.url || " "}
-        title="Paella dish"
+        title={center.name}
       />
       <CardContent className={classes.content}>
-        <Typography variant="h4">{center.name}</Typography>
-        <Typography variant="body2" display="block">
-          {center.city}
-        </Typography>
-        <Typography variant="overline" display="block">
-          {center.community}
-        </Typography>
+        <p className={classes.title}>{center.name}</p>
+        <Divider className={classes.divider} />
+        <p className={classes.city}>{center.city}</p>
+        <p className={classes.community}>{center.community}</p>
       </CardContent>
     </Card>
   );
