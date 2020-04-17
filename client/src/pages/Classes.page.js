@@ -1,5 +1,5 @@
 import { withLogged } from "../../lib/protectedRoutes";
 
-import { Training } from "../components/Training/index";
+import { Classes } from "../components/Classes/index";
 
-export const TrainingPage = withLogged(Training);
+export const ClassesPage = withLogged(Classes);
