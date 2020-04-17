@@ -17,7 +17,7 @@ const useStyles = makeStyles({
 export const Slider = ({ slideData }) => {
   const classes = useStyles();
 
-  const [state, setState] = useState({ current: 0 });
+  const [state, setState] = useState({ current: slideData.length / 2 });
 
   const handlePreviousClick = () => {
     const previous = state.current - 1;

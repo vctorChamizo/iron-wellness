@@ -36,6 +36,12 @@ export const theme = createMuiTheme({
       lineHeight: 1.167,
       letterSpacing: "-0.01562em",
     },
+    h4: {
+      fontWeight: 300,
+      fontSize: "2.5rem",
+      lineHeight: 1.167,
+      letterSpacing: "-0.01562em",
+    },
     subtitle1: {
       fontFamily: '"Roboto", sans-serif',
       fontWeight: 100,

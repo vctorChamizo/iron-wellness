@@ -4,11 +4,13 @@ import { withRouter } from "react-router-dom";
 
 import { AuthDialog } from "../Auth/AuthDialog";
 import { Slider } from "./Slider";
+import { Footer } from "../../layouts/Footer";
 
 import { makeStyles } from "@material-ui/core/styles";
 
 import Typography from "@material-ui/core/Typography";
 import { Button } from "@material-ui/core";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   backgroundMain: {
@@ -21,13 +23,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
     padding: "20vh 0 30vh 10vw",
     fontSize: "2.5rem",
-  },
-  wrapperCenters: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexWrap: "wrap",
-    padding: "2.5vh 2.5vw",
   },
   homeTitle: {
     fontFamily: '"Roboto", sans-serif',
@@ -55,8 +50,47 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   backgroundMiddle: {
-    height: "100vh",
+    height: "90vh",
     padding: "5vh 0",
+  },
+  wrapperMiddle: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    textAlign: "center",
+    padding: "2.5vh 0 5vh 0",
+    color: theme.palette.secondary.main,
+  },
+  divider: {
+    margin: "5vh 0",
+    width: "60%",
+    backgroundColor: theme.palette.primary.main,
+  },
+  paragraph: {
+    margin: "0",
+    lineHeight: "2em",
+  },
+  backgroundLast: {
+    backgroundImage: `url(${"https://res.cloudinary.com/vctorchzr/image/upload/v1587054506/iron-wellness/components/main/main-2_pfq7px.jpg"})`,
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+  },
+  wrapperLast: {
+    backgroundColor: "rgba(0,0,0,0.5)",
+    color: "#fff",
+    padding: "10.5vh 5vw",
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: 100,
+    fontSize: "1.3rem",
+  },
+  bold: {
+    fontWeight: 300,
+    color: theme.palette.primary.main,
+  },
+  trainerParagraph: {
+    margin: "10.5vh 10vw 0 0",
+    width: "60%",
+    lineHeight: "1.5em",
   },
 }));
 
@@ -101,7 +135,6 @@ export const Root = connect((state) => ({ user: state.user }))(
     const [component, setComponent] = useState("Login");
 
     const handleClick = () => {
-      console.log("USER", user);
       user ? history.push("/home") : setOpenDialog(true);
     };
 
@@ -129,11 +162,47 @@ export const Root = connect((state) => ({ user: state.user }))(
         </section>
 
         <section className={classes.backgroundMiddle}>
-          <Typography variant="subtitle1">
-            virtuales e información de interés.
-          </Typography>
+          <div className={classes.wrapperMiddle}>
+            <Typography variant="h4">NUESTROS CENTROS</Typography>
+            <Divider className={classes.divider} />
+            <p className={classes.paragraph}>
+              Disfruta en Iron Wellness de los mejores Clubs deportivos y de
+              ocio.
+              <br />
+              Elige tu centro y empieza a disfrutar.
+            </p>
+
+            <Divider className={classes.divider} />
+          </div>
+
           <Slider heading="Example Slider" slideData={slideData} />
         </section>
+
+        <section className={classes.backgroundLast}>
+          <div className={classes.wrapperLast}>
+            <Typography variant="h2">ENTRENAMIENTOS</Typography>
+
+            <div className={classes.wrapperSubtitle}>
+              <p>
+                Desde el primer momento tendrás diferentes sistemas de
+                entrenamiento.
+              </p>
+
+              <p className={classes.trainerParagraph}>
+                Accede a las{" "}
+                <span className={classes.bold}>clases virtuales</span>, sigue tu{" "}
+                <span className={classes.bold}>plan semanal</span> desde casa o{" "}
+                <span className={classes.bold}>apúntate</span> a la siguiente
+                clase de tu cernto deportivo.
+              </p>
+              <Button className={classes.buttonMain} onClick={handleClick}>
+                Alcanza tus metas!
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <Footer />
 
         <AuthDialog
           open={openDialog}
