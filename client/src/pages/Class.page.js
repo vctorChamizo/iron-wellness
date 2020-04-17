@@ -1,5 +1,5 @@
-import React from "react";
+import { withLogged } from "../../lib/protectedRoutes";
 
-export const ClassPage = () => {
-  return <div>Clases</div>;
-};
+import { Class } from "../components/Training/Class/index";
+
+export const ClassPage = withLogged(Class);

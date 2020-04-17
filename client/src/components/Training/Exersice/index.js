@@ -7,5 +7,9 @@ const useStyles = makeStyles((theme) => ({}));
 export const Exersice = () => {
   const classes = useStyles();
 
-  return <>EXERSICE</>;
+  return (
+    <>
+      <p>EXERSICE</p>
+    </>
+  );
 };

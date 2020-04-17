@@ -9,15 +9,15 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundImage: `url(${"https://res.cloudinary.com/vctorchzr/image/upload/v1587136601/iron-wellness/components/main/main-3_ppfh3r.jpg"})`,
-    backgroundPosition: "center",
+    backgroundImage: `url(${"https://res.cloudinary.com/vctorchzr/image/upload/v1587142858/iron-wellness/components/main/main-4_sp94qq.jpg"})`,
+    backgroundPosition: "bottom",
     backgroundSize: "cover",
   },
   link: {
     textDecoration: "none",
   },
   wrapper: {
-    backgroundColor: "rgba(0,0,0,0.1)",
+    backgroundColor: "rgba(0,0,0,0.2)",
     display: "flex",
     justifyContent: "space-evenly",
     alignItems: "center",
@@ -69,7 +69,7 @@ export const Training = withRouter(({ history }) => {
 
         <Paper
           className={classes.paper}
-          onClick={() => handleClick("exersices")}
+          onClick={() => handleClick("exersice")}
         >
           <img
             className={classes.icon}

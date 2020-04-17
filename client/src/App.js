@@ -16,6 +16,8 @@ import { HomePage } from "./pages/Home.page";
 import { CentersPage } from "./pages/Centers.page";
 import { ProfilePage } from "./pages/Profile.page";
 import { ClassPage } from "./pages/Class.page";
+import { ClassesPage } from "./pages/Classes.page";
+import { ExersicePage } from "./pages/Exersice.page";
 import { TrainingPage } from "./pages/Training.page";
 
 export const App = withAuthentication(() => {
@@ -30,8 +32,10 @@ export const App = withAuthentication(() => {
           <Route path="/home" component={HomePage} />
           <Route path="/centers" component={CentersPage} />
           <Route path="/profile" component={ProfilePage} />
-          <Route path="/class/:id" component={ClassPage} />
           <Route path="/training" component={TrainingPage} />
+          <Route path="/classes" component={ClassesPage} />
+          <Route path="/class/:id" component={ClassPage} />
+          <Route path="/exersice" component={ExersicePage} />
         </Switch>
       </Router>
     </ThemeProvider>
