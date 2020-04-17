@@ -1,9 +1,8 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 
-import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import PersonIcon from "@material-ui/icons/Person";
+import YouTubeIcon from "@material-ui/icons/YouTube";
+import EventNoteIcon from "@material-ui/icons/EventNote";
 import { Paper, Typography } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: `url(${"https://res.cloudinary.com/vctorchzr/image/upload/v1587136601/iron-wellness/components/main/main-3_ppfh3r.jpg"})`,
     backgroundPosition: "center",
     backgroundSize: "cover",
+  },
+  link: {
+    textDecoration: "none",
   },
   wrapper: {
     backgroundColor: "rgba(0,0,0,0.1)",
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Home = withRouter(({ history }) => {
+export const Training = withRouter(({ history }) => {
   const classes = useStyles();
 
   const handleClick = (path) => {
@@ -50,23 +52,30 @@ export const Home = withRouter(({ history }) => {
   return (
     <div className={classes.root}>
       <div className={classes.wrapper}>
-        <Paper className={classes.paper} onClick={() => handleClick("profile")}>
-          <PersonIcon className={classes.icon} />
-          <Typography variant="h4">Perfil</Typography>
+        <Paper className={classes.paper} onClick={() => handleClick("classes")}>
+          <EventNoteIcon className={classes.icon} />
+          <Typography variant="h4">Clases</Typography>
         </Paper>
+        <a
+          className={classes.link}
+          href="https://www.youtube.com/channel/UC7GiwW77J9WNv4CnJ9xGNEA/featured"
+          target="_blank"
+        >
+          <Paper className={classes.paper}>
+            <YouTubeIcon className={classes.icon} />
+            <Typography variant="h4">Clases Virtuales</Typography>
+          </Paper>
+        </a>
+
         <Paper
           className={classes.paper}
-          onClick={() => handleClick("training")}
+          onClick={() => handleClick("exersices")}
         >
-          <FitnessCenterIcon className={classes.icon} />
-          <Typography variant="h4">Entranamiento</Typography>
-        </Paper>
-        <Paper
-          className={classes.paper}
-          onClick={() => handleClick("nutrition")}
-        >
-          <FavoriteBorderIcon className={classes.icon} />
-          <Typography variant="h4">Nutrición</Typography>
+          <img
+            className={classes.icon}
+            src="https://res.cloudinary.com/vctorchzr/image/upload/v1587139011/iron-wellness/logos/exersice_tkvafu.svg"
+          ></img>
+          <Typography variant="h4">Ejercicios</Typography>
         </Paper>
       </div>
     </div>

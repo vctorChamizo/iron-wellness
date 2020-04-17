@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "2.5vh 0",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "space-round",
+    justifyContent: "space-around",
   },
   wrapperFlex: {
     marginTop: "5vh",

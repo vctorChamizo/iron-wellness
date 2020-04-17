@@ -16,6 +16,7 @@ import { HomePage } from "./pages/Home.page";
 import { CentersPage } from "./pages/Centers.page";
 import { ProfilePage } from "./pages/Profile.page";
 import { ClassPage } from "./pages/Class.page";
+import { TrainingPage } from "./pages/Training.page";
 
 export const App = withAuthentication(() => {
   AOS.init();
@@ -30,6 +31,7 @@ export const App = withAuthentication(() => {
           <Route path="/centers" component={CentersPage} />
           <Route path="/profile" component={ProfilePage} />
           <Route path="/class/:id" component={ClassPage} />
+          <Route path="/training" component={TrainingPage} />
         </Switch>
       </Router>
     </ThemeProvider>
