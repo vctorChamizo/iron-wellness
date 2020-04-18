@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "2rem",
     color: theme.palette.primary.main,
   },
+  divider: {
+    margin: "5vh 0",
+  },
 }));
 
 const exersiceData = [
@@ -166,7 +169,7 @@ export const Exersice = () => {
             </div>
           ))}
         </div>
-        <Divider />
+        <Divider className={classes.divider} />
       </section>
       <ExersiceDialog
         image={imageURL}

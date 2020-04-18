@@ -93,11 +93,11 @@ router.get("/:id", async (req, res, next) => {
     const _class = await Class.findOne({ _id: req.params.id })
       .populate({
         path: "students",
-        select: ["_id", "username", "name", "surname"],
+        select: ["_id", "username", "name", "surname", "image"],
       })
       .populate({
         path: "trainer",
-        select: ["_id", "username", "name", "surname", "type"],
+        select: ["_id", "username", "name", "surname", "image"],
       })
       .populate({ path: "activity", select: ["name", "type", "description"] })
       .select("-updatedAt -createdAt -__v");
