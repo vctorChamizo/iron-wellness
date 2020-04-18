@@ -2,12 +2,18 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-export const withoutLogged = (Component, { redirectTo = "/profile" } = {}) =>
-  connect((state) => ({ user: state.user }))(({ user }) =>
-    user ? <Redirect to={redirectTo} /> : <Component />
-  );
+import { Loading } from "../src/components/Loading";
 
 export const withLogged = (Component, { redirectTo = "/" } = {}) =>
-  connect((state) => ({ user: state.user }))(({ user }) => {
-    return user ? <Component /> : <Redirect to={redirectTo} />;
-  });
+  connect((state) => ({
+    loading: state.loading,
+    user: state.user,
+  }))(({ loading, user }) =>
+    loading ? (
+      <Loading open={true} />
+    ) : user ? (
+      <Component />
+    ) : (
+      <Redirect to={redirectTo} />
+    )
+  );

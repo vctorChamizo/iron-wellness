@@ -8,6 +8,12 @@ const reducer = (state = {}, action) => {
     case "SET_USER":
       return { ...state, user: action.user };
 
+    case "USE_LOADING":
+      return state.loading;
+
+    case "SET_LOADING":
+      return { ...state, loading: action.loading };
+
     case "USE_LOGOUT":
       return { ...state, user: undefined };
   }

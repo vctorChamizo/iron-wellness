@@ -1,28 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 
 import { store } from "./redux/store";
 import { loggedin } from "./api/auth.api.js";
-import { useSetUser } from "./redux/action";
-
-import { Loading } from "../src/components/Loading";
+import { useSetUser, useSetLoading } from "./redux/action";
 
 export const withAuthentication = (Component) => () => {
-  const [loading, setLoading] = useState(true);
+  store.dispatch(useSetLoading(true));
 
   useEffect(() => {
     loggedin()
-      .then((data) => {
-        console.log(data);
-        if (data) store.dispatch(useSetUser(data));
-      })
+      .then((data) => (data ? store.dispatch(useSetUser(data)) : undefined))
       .catch((e) => console.error(e.response?.statusText))
-      .finally(setLoading(false));
+      .finally(() => store.dispatch(useSetLoading(false)));
   }, []);
 
   return (
     <Provider store={store}>
-      <Loading open={loading} />
       <Component />
     </Provider>
   );
