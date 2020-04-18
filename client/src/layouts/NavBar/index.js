@@ -79,6 +79,7 @@ export const NavBar = connect((state) => ({ user: state.user }))(
     const classes = useStyles();
 
     const [openDialog, setOpenDialog] = useState(false);
+    const [redirect, setRedirect] = useState(false);
     const [component, setComponent] = useState("Login");
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
@@ -91,11 +92,13 @@ export const NavBar = connect((state) => ({ user: state.user }))(
         case "root":
           return history.push("/");
         case "home":
+          setRedirect("/home");
           user ? history.push("/home") : setOpenDialog(true);
           break;
         case "centers":
           return history.push("/centers");
         case "profile":
+          setRedirect("/profile");
           user ? history.push("/profile") : setOpenDialog(true);
           break;
       }
@@ -211,6 +214,7 @@ export const NavBar = connect((state) => ({ user: state.user }))(
           component={component}
           setComponent={setComponent}
           setOpenDialog={setOpenDialog}
+          redirectTo={redirect}
         />
       </div>
     );

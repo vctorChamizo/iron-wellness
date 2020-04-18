@@ -12,6 +12,7 @@ export const AuthDialog = ({
   component,
   setComponent,
   setOpenDialog,
+  redirectTo,
 }) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -31,9 +32,17 @@ export const AuthDialog = ({
       aria-labelledby="responsive-dialog-title"
     >
       {component === "Login" ? (
-        <Login setComponent={setComponent} setOpenDialog={setOpenDialog} />
+        <Login
+          setComponent={setComponent}
+          setOpenDialog={setOpenDialog}
+          redirectTo={redirectTo}
+        />
       ) : (
-        <Signup setComponent={setComponent} setOpenDialog={setOpenDialog} />
+        <Signup
+          setComponent={setComponent}
+          setOpenDialog={setOpenDialog}
+          redirectTo={redirectTo}
+        />
       )}
     </Dialog>
   );
