@@ -12,7 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
 import TextField from "@material-ui/core/TextField";
@@ -75,6 +75,17 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     display: "none",
+  },
+  title: {
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: "300",
+    fontSize: "3rem",
+    margin: 0,
+    marginBottom: "1.5vh",
+    color: theme.palette.primary.main,
+  },
+  divider: {
+    marginBottom: "2.5vh",
   },
 }));
 
@@ -144,9 +155,9 @@ export const Edit = ({ user, dispatch }) => {
     <>
       <Loading open={loading} />
       <Grid className={classes.root}>
-        <Typography variant="h3" gutterBottom>
-          Perfil
-        </Typography>
+        <p className={classes.title}>PERFIL</p>
+        <Divider className={classes.divider} />
+
         <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <Grid item xs={12} sm={6}>
             <div className={classes.wrapper}>
@@ -253,20 +264,6 @@ export const Edit = ({ user, dispatch }) => {
                   "aria-label": "change date",
                 }}
               />
-              {/* <KeyboardDatePicker
-                fullWidth
-                variant="inline"
-                format="MM/dd/yyyy"
-                margin="normal"
-                name="date"
-                label="Fecha de nacimiento"
-                onChange={handleDateChange}
-                KeyboardButtonProps={{
-                  "aria-label": "change date",
-                }}
-                value={selectedDate}
-                ref={register({ required: true })}
-              /> */}
             </MuiPickersUtilsProvider>
 
             <Button

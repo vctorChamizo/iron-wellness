@@ -25,14 +25,12 @@ export const Admin = connect((state) => ({ user: state.user }))(
   withRouter(({ user, history, dispatch }) => {
     const classes = useStyles();
 
-    const [component, setComponent] = useState("classes");
+    const [component, setComponent] = useState("users");
 
     const ComponentSegreggation = (component) => {
       switch (component) {
         case "profile":
-          return <Profile />;
-        case "users":
-          return <User />;
+          return <Profile user={user} dispatch={dispatch} />;
         case "trainer":
           return <Trainer />;
         case "exersice":
@@ -41,6 +39,8 @@ export const Admin = connect((state) => ({ user: state.user }))(
           return <Center />;
         case "classes":
           return <Class />;
+        case "users":
+          return <User />;
       }
     };
 
