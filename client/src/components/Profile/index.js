@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import { Edit } from "./Edit";
-import { Classes } from "./Classes";
+import { Classes } from "./Classes/index";
 import { Calendar } from "./Calendar";
 import { Menu } from "./Drawer/index";
 
@@ -16,9 +16,10 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
   },
+  grid: {
+    padding: "5vh 5vw",
+  },
 }));
-
-const listDrawer = ["users", "trainer", "centers", "classes", "exersice"];
 
 export const Profile = connect((state) => ({ user: state.user }))(
   withRouter(({ user, history, dispatch }) => {
@@ -29,10 +30,10 @@ export const Profile = connect((state) => ({ user: state.user }))(
     return (
       <div className={classes.root}>
         <Menu setComponent={setComponent} history={history} />
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={10}>
+        <Grid spacing={3}>
+          <Grid xs={12} sm={12} className={classes.grid}>
             {component === "classes" ? (
-              <Classes classesList={user.classes || []} history={history} />
+              <Classes classesList={user.classes || []} />
             ) : component === "profile" ? (
               <Edit user={user} dispatch={dispatch} />
             ) : (

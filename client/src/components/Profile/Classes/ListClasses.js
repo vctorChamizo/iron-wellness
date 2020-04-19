@@ -1,17 +1,13 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import EventIcon from "@material-ui/icons/Event";
-import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
     flexDirection: "column",
     alignItems: "flex-start",
-    padding: "5vh 5vw",
   },
   list: {
     width: "100%",
@@ -31,11 +26,10 @@ const useStyles = makeStyles((theme) => ({
     margin: "2.5vh 0%",
   },
   wrapperClass: {
-    width: "25%",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: "1.5vh",
+    padding: "1.5vh 5vw 0 1.5vw",
   },
   wrapperInfo: {
     display: "flex",
@@ -46,44 +40,38 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "0.5vw",
   },
   title: {
+    color: theme.palette.primary.main,
     fontFamily: '"Roboto", sans-serif',
     fontWeight: "300",
-    fontSize: "1.5rem",
+    fontSize: "1.2rem",
     margin: 0,
-    marginBottom: "1.5vh",
-    color: theme.palette.primary.main,
-    textTransform: "uppercase",
+    paddingTop: "1vh",
   },
-  divider: {
-    marginBottom: "2.5vh",
+  iconAdd: {
+    position: "fixed",
   },
 }));
 
-export const Classes = ({ classesList, history }) => {
+export const ListClasses = withRouter(({ history, classesList }) => {
   const classes = useStyles();
 
-  const handleClick = (id) => () => history.push(`/class/${id}`);
+  const handleClickRedirectClass = (id) => () => history.push(`/class/${id}`);
 
   return (
     <div className={classes.root}>
-      <p className={classes.title}>CLASES</p>
-      <Divider className={classes.divider} />
-
       <List className={classes.list}>
         {classesList.map((value) => {
-          let date = new Date(value.date);
+          const date = new Date(value.date);
 
           return (
-            <Paper key={value} className={classes.paper}>
-              <ListItem
-                className={classes.item}
-                key={value._id}
-                button
-                onClick={handleClick(value._id)}
-              >
-                <Typography variant="h5" gutterBottom>
-                  {value.name}
-                </Typography>
+            <Paper
+              key={value._id}
+              className={classes.paper}
+              onClick={handleClickRedirectClass(value._id)}
+            >
+              <ListItem className={classes.item} button>
+                <p className={classes.title}>{value.name}</p>
+
                 <div className={classes.wrapperClass}>
                   <div className={classes.wrapperInfo}>
                     <EventIcon className={classes.icon} />
@@ -96,17 +84,11 @@ export const Classes = ({ classesList, history }) => {
                   <div className={classes.wrapperInfo}>
                     <QueryBuilderIcon className={classes.icon} />
                     {"  "}
-                    {`${String(date.getHours()).padStart(2, "0")}:${String(
+                    {`${String(date.getHours() - 2).padStart(2, "0")}:${String(
                       date.getMinutes()
                     ).padStart(2, "0")}`}
                   </div>
                 </div>
-
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="comments">
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
               </ListItem>
             </Paper>
           );
@@ -114,4 +96,4 @@ export const Classes = ({ classesList, history }) => {
       </List>
     </div>
   );
-};
+});

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams, withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 
 import { Loading } from "../../Loading";
 import { ListUser } from "./ListUser";
+import { SnackBar } from "../../Snackbar/index";
 
 import { getClass } from "../../../../lib/api/class.api";
 import { addUserClass, removeUserClass } from "../../../../lib/api/user.api";
+import { useSetUser } from "../../../../lib/redux/action";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -131,148 +134,178 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Class = withRouter(({ history }) => {
-  const classes = useStyles();
+export const Class = connect((state) => ({ user: state.user }))(
+  withRouter(({ history, user, dispatch }) => {
+    const classes = useStyles();
 
-  const { id } = useParams();
+    const { id } = useParams();
 
-  const [loading, setLoading] = useState(true);
-  const [dataClass, setDataClass] = useState({});
-  const [userList, setUserList] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [dataClass, setDataClass] = useState({});
+    const [userList, setUserList] = useState([]);
 
-  useEffect(() => {
-    getClass(id)
-      .then(({ data }) => {
-        setDataClass(data);
-        setUserList(data.students);
-      })
-      .catch((e) => {
-        if (e.response?.data.status == "BadRequest") history.push("/notfound");
-      })
-      .finally(setLoading(false));
-  }, []);
+    const [message, setMessage] = useState();
+    const [openMessage, setOpenMessage] = useState(false);
+    const [severity, setSeverity] = useState();
 
-  const date = new Date(dataClass.date);
-  const level =
-    dataClass.level == "BEGGINER"
-      ? "PRINCIPIANTE"
-      : dataClass.level == "MEDIUM"
-      ? "MEDIO"
-      : "PROFESIONAL";
+    useEffect(() => {
+      getClass(id)
+        .then(({ data }) => {
+          setDataClass(data);
+          setUserList(data.students);
+        })
+        .catch((e) => {
+          if (e.response?.data.status == "BadRequest")
+            history.push("/notfound");
+        })
+        .finally(setLoading(false));
+    }, []);
 
-  const place =
-    dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
+    const date = new Date(dataClass.date);
+    const level =
+      dataClass.level == "BEGGINER"
+        ? "PRINCIPIANTE"
+        : dataClass.level == "MEDIUM"
+        ? "MEDIO"
+        : "PROFESIONAL";
 
-  const handlekAddClass = async (id) => {
-    const res = await addUserClass(id);
-    console.log(res);
-  };
+    const place =
+      dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
 
-  const handlekRemoveClass = async (id) => {
-    const res = await removeUserClass(id);
-    console.log(res);
-  };
+    const handlekAddClass = async (id) => {
+      await addUserClass(id);
+      if (userList.findIndex((e) => e._id === user._id)) {
+        const newList = [...userList];
+        newList.push(user);
+        setUserList(newList);
+        user.classes.push(id);
+        dispatch(useSetUser(user));
+        handleSanckBar("Has sido añadido a la clase", "success");
+      } else {
+        handleSanckBar("Ya estás añadido a la clase", "info");
+      }
+    };
 
-  return (
-    <>
-      <Loading open={loading} />
-      <div className={classes.root}>
-        <div>
-          <div className={classes.wrapperTitle}>
-            <p className={classes.title}>{dataClass.name}</p>
-            <div className={classes.wrapperButton}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handlekAddClass(dataClass._id)}
-              >
-                Añadir
-              </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => handlekRemoveClass(dataClass._id)}
-              >
-                Quitar
-              </Button>
+    const handlekRemoveClass = async (id) => {
+      await removeUserClass(id);
+      const index = userList.findIndex((e) => e._id === user._id);
+      setUserList([...userList].splice(index, index));
+      handleSanckBar("Has sido eliminado de la clase", "success");
+    };
+
+    const handleSanckBar = (message, severity) => {
+      setMessage(message);
+      setSeverity(severity);
+      setOpenMessage(true);
+    };
+
+    return (
+      <>
+        <Loading open={loading} />
+        <div className={classes.root}>
+          <div>
+            <div className={classes.wrapperTitle}>
+              <p className={classes.title}>{dataClass.name}</p>
+              <div className={classes.wrapperButton}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handlekAddClass(dataClass._id)}
+                >
+                  Añadir
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => handlekRemoveClass(dataClass._id)}
+                >
+                  Quitar
+                </Button>
+              </div>
+            </div>
+
+            <Divider />
+          </div>
+          <div className={classes.containerInfo}>
+            <div className={classes.wrapperClass}>
+              <div className={classes.wrapperInfo}>
+                <EventIcon className={classes.icon} />
+                {"  "}
+                {`${date.getDate()}-${String(date.getMonth() + 1).padStart(
+                  2,
+                  "0"
+                )}-${date.getFullYear()}`}
+              </div>
+              <div className={classes.wrapperInfo}>
+                <QueryBuilderIcon className={classes.icon} />
+                {"  "}
+                {`${String(date.getHours()).padStart(2, "0")}:${String(
+                  date.getMinutes()
+                ).padStart(2, "0")}`}
+              </div>
+              <div className={classes.wrapperInfo}>
+                <FitnessCenterIcon className={classes.icon} />
+                {"  "}
+                {level}
+              </div>
             </div>
           </div>
 
-          <Divider />
-        </div>
-        <div className={classes.containerInfo}>
-          <div className={classes.wrapperClass}>
-            <div className={classes.wrapperInfo}>
-              <EventIcon className={classes.icon} />
-              {"  "}
-              {`${date.getDate()}-${String(date.getMonth() + 1).padStart(
-                2,
-                "0"
-              )}-${date.getFullYear()}`}
-            </div>
-            <div className={classes.wrapperInfo}>
-              <QueryBuilderIcon className={classes.icon} />
-              {"  "}
-              {`${String(date.getHours()).padStart(2, "0")}:${String(
-                date.getMinutes()
-              ).padStart(2, "0")}`}
-            </div>
-            <div className={classes.wrapperInfo}>
-              <FitnessCenterIcon className={classes.icon} />
-              {"  "}
-              {level}
-            </div>
+          <div className={classes.content}>
+            <Paper className={classes.paper}>
+              <div>
+                <p className={classes.subtitle}>ACTIVIDAD</p>
+                <Divider />
+                <div className={classes.wrapperTrainer}>
+                  <p className={classes.titleTrainer}>
+                    {dataClass.activity?.name}
+                  </p>
+                  <p className={classes.titleDescription}>
+                    {dataClass.activity?.description}
+                  </p>
+                  <Divider className={classes.divider} />
+                  <p className={classes.subtitlePlace}>
+                    ACTIVIDAD <span className={classes.place}>{place}</span>
+                  </p>
+                </div>
+              </div>
+            </Paper>
+            <Paper className={classes.paper}>
+              <div>
+                <p className={classes.subtitle}>ENTRENADOR</p>
+                <Divider />
+                <div className={classes.wrapperTrainer}>
+                  <Avatar
+                    alt="Avatar"
+                    src={dataClass.trainer?.image.url || ""}
+                    className={classes.large}
+                  />
+                  <p className={classes.titleTrainer}>
+                    {dataClass.trainer?.name} {dataClass.trainer?.surname}
+                  </p>
+                  <Divider className={classes.divider} />
+                  <p className={classes.subtitleTrainer}>
+                    {dataClass.trainer?.username}
+                  </p>
+                </div>
+              </div>
+            </Paper>
+            <Paper className={classes.paperUsers}>
+              <div>
+                <p className={classes.subtitle}>PARTICIPANTES</p>
+                <Divider />
+                <ListUser>{userList}</ListUser>
+              </div>
+            </Paper>
           </div>
         </div>
-
-        <div className={classes.content}>
-          <Paper className={classes.paper}>
-            <div>
-              <p className={classes.subtitle}>ACTIVIDAD</p>
-              <Divider />
-              <div className={classes.wrapperTrainer}>
-                <p className={classes.titleTrainer}>
-                  {dataClass.activity?.name}
-                </p>
-                <p className={classes.titleDescription}>
-                  {dataClass.activity?.description}
-                </p>
-                <Divider className={classes.divider} />
-                <p className={classes.subtitlePlace}>
-                  ACTIVIDAD <span className={classes.place}>{place}</span>
-                </p>
-              </div>
-            </div>
-          </Paper>
-          <Paper className={classes.paper}>
-            <div>
-              <p className={classes.subtitle}>ENTRENADOR</p>
-              <Divider />
-              <div className={classes.wrapperTrainer}>
-                <Avatar
-                  alt="Avatar"
-                  src={dataClass.trainer?.image.url || ""}
-                  className={classes.large}
-                />
-                <p className={classes.titleTrainer}>
-                  {dataClass.trainer?.name} {dataClass.trainer?.surname}
-                </p>
-                <Divider className={classes.divider} />
-                <p className={classes.subtitleTrainer}>
-                  {dataClass.trainer?.username}
-                </p>
-              </div>
-            </div>
-          </Paper>
-          <Paper className={classes.paperUsers}>
-            <div>
-              <p className={classes.subtitle}>PARTICIPANTES</p>
-              <Divider />
-              <ListUser>{userList}</ListUser>
-            </div>
-          </Paper>
-        </div>
-      </div>
-    </>
-  );
-});
+        <SnackBar
+          message={message}
+          severity={severity}
+          openMessage={openMessage}
+          setOpenMessage={setOpenMessage}
+        />
+      </>
+    );
+  })
+);

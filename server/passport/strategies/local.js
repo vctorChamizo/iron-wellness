@@ -12,7 +12,12 @@ passport.use(
       try {
         const user = await User.findOne({
           $or: [{ username }, { email: username }],
-        }).select("-updatedAt -createdAt -__v");
+        })
+          .populate({
+            path: "classes",
+            select: ["_id", "name", "date"],
+          })
+          .select("_id username email name surname date image type password");
 
         user && checkHashedPassword(password, user.password)
           ? done(null, user)

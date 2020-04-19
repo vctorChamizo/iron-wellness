@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
 
 export const ListUser = ({ children }) => {
   const classes = useStyles();
-
   return (
     <List className={classes.root}>
       {children.map((e, i) => (
