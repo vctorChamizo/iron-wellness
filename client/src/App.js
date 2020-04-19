@@ -38,7 +38,7 @@ const UserRoutes = () => (
 );
 const AdminRoutes = () => (
   <>
-    <Route path="/" exact component={AdminPage} />
+    <Route path="/profile" exact component={AdminPage} />
   </>
 );
 

@@ -3,9 +3,12 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-// import { Edit } from "./Edit";
-// import { Classes } from "./Classes";
-// import { Calendar } from "./Calendar";
+import { Profile } from "./Components/Profile";
+import { User } from "./Components/User";
+import { Trainer } from "./Components/Trainer";
+import { Class } from "./Components/Class";
+import { Exersice } from "./Components/Exersice";
+import { Center } from "./Components/Center";
 import { Menu } from "./Drawer/index";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -24,6 +27,23 @@ export const Admin = connect((state) => ({ user: state.user }))(
 
     const [component, setComponent] = useState("classes");
 
+    const ComponentSegreggation = (component) => {
+      switch (component) {
+        case "profile":
+          return <Profile />;
+        case "users":
+          return <User />;
+        case "trainer":
+          return <Trainer />;
+        case "exersice":
+          return <Exersice />;
+        case "centers":
+          return <Center />;
+        case "classes":
+          return <Class />;
+      }
+    };
+
     return (
       <div className={classes.root}>
         <Menu
@@ -33,15 +53,9 @@ export const Admin = connect((state) => ({ user: state.user }))(
           dispatch={dispatch}
         />
         <Grid container spacing={3}>
-          {/* <Grid item xs={12} sm={10}>
-            {component === "classes" ? (
-              <Classes classesList={user.classes} history={history} />
-            ) : component === "profile" ? (
-              <Edit user={user} dispatch={dispatch} />
-            ) : (
-              <Calendar events={user.classes} history={history} />
-            )}
-          </Grid> */}
+          <Grid item xs={12} sm={10}>
+            {ComponentSegreggation(component)}
+          </Grid>
         </Grid>
       </div>
     );
