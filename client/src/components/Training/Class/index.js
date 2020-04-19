@@ -142,18 +142,21 @@ export const Class = withRouter(({ history }) => {
   useEffect(() => {
     getClass(id)
       .then(({ data }) => {
-        if (!data) history.push("/notfound");
+        console.log(data);
         setDataClass(data);
         setUserList(data.students);
       })
-      .catch((e) => console.error(e.response?.statusText))
+      .catch((e) => {
+        console.log(e.response);
+        if (e.response?.data.status == "BadRequest") history.push("/notfound");
+      })
       .finally(setLoading(false));
   }, []);
 
   const date = new Date(dataClass.date);
   const level =
     dataClass.level == "BEGGINER"
-      ? "PRINIPIANTE"
+      ? "PRINCIPIANTE"
       : dataClass.level == "MEDIUM"
       ? "MEDIO"
       : "PROFESIONAL";

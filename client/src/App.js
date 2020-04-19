@@ -19,6 +19,7 @@ import { ClassPage } from "./pages/Class.page";
 import { ClassesPage } from "./pages/Classes.page";
 import { ExersicePage } from "./pages/Exersice.page";
 import { TrainingPage } from "./pages/Training.page";
+import { NotFoundPage } from "./pages/NotFound.page";
 
 export const App = withAuthentication(() => {
   AOS.init();
@@ -29,6 +30,7 @@ export const App = withAuthentication(() => {
         <NavBar></NavBar>
         <Switch>
           <Route path="/" exact component={RootPage} />
+          <Route path="/notfound" component={NotFoundPage} />
           <Route path="/home" component={HomePage} />
           <Route path="/centers" component={CentersPage} />
           <Route path="/profile" component={ProfilePage} />
