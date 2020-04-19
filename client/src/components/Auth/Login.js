@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "2.5vh 0",
     color: "grey",
   },
+  redirect: {
+    cursor: "pointer",
+  },
 }));
 
 const Alert = (props) => {
@@ -79,7 +82,7 @@ export const Login = connect()(
           setOpenDialog(false);
           return history.push("/profile");
         } catch (error) {
-          if (error.response.data.status === "BadCredentials")
+          if (error?.response?.data.status === "BadCredentials")
             setOpenError(true);
         }
       };
@@ -130,13 +133,13 @@ export const Login = connect()(
             </Button>
 
             <div className={classes.wrapperDivider}>
-              <Typography variant="subtitle1">Login con Google</Typography>
+              <Typography variant="subtitle2">Login con Google</Typography>
               <Button
                 fullWidth
                 variant="outlined"
                 onClick={handleClickSocialLogin}
               >
-                <Link href="http://localhost:3000/auth/google">
+                <Link>
                   <Avatar
                     className={classes.small}
                     alt="Google Icon"
@@ -148,7 +151,11 @@ export const Login = connect()(
 
             <Grid container>
               <Grid item className={classes.link}>
-                <Link onClick={() => setComponent("Signup")} variant="body2">
+                <Link
+                  onClick={() => setComponent("Signup")}
+                  variant="body2"
+                  className={classes.redirect}
+                >
                   {"No tines una cuenta aún? Regístrate."}
                 </Link>
               </Grid>

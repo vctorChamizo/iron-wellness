@@ -66,6 +66,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "2vh 0",
     color: "grey",
   },
+  redirect: {
+    cursor: "pointer",
+  },
 }));
 
 const Alert = (props) => {
@@ -87,7 +90,7 @@ export const Signup = connect()(
           setOpenDialog(false);
           history.push(redirectTo);
         } catch (error) {
-          if (error.response.data.status == "UserExists") setOpenError(true);
+          if (error.response?.data.status == "UserExists") setOpenError(true);
         }
       };
 
@@ -97,7 +100,7 @@ export const Signup = connect()(
           setOpenDialog(false);
           return history.push("/profile");
         } catch (error) {
-          if (error.response.data.status == "BadCredentials")
+          if (error.response?.data.status == "BadCredentials")
             setOpenError(true);
         }
       };
@@ -205,7 +208,7 @@ export const Signup = connect()(
             </Button>
 
             <div className={classes.wrapperDivider}>
-              <Typography variant="subtitle1">Login con Google</Typography>
+              <Typography variant="subtitle2">Login con Google</Typography>
               <Button
                 fullWidth
                 variant="outlined"
@@ -221,7 +224,11 @@ export const Signup = connect()(
 
             <Grid container>
               <Grid item>
-                <Link onClick={() => setComponent("Login")} variant="body2">
+                <Link
+                  onClick={() => setComponent("Login")}
+                  variant="body2"
+                  className={classes.redirect}
+                >
                   {"Ya tienes una cuenta? Inicia sesión."}
                 </Link>
               </Grid>

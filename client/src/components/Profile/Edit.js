@@ -79,10 +79,11 @@ const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: '"Roboto", sans-serif',
     fontWeight: "300",
-    fontSize: "3rem",
+    fontSize: "1.5rem",
     margin: 0,
     marginBottom: "1.5vh",
     color: theme.palette.primary.main,
+    textTransform: "uppercase",
   },
   divider: {
     marginBottom: "2.5vh",

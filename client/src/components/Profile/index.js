@@ -37,7 +37,7 @@ export const Profile = connect((state) => ({ user: state.user }))(
         <Grid container spacing={3}>
           <Grid item xs={12} sm={10}>
             {component === "classes" ? (
-              <Classes classesList={user.classes} history={history} />
+              <Classes classesList={user.classes || []} history={history} />
             ) : component === "profile" ? (
               <Edit user={user} dispatch={dispatch} />
             ) : (

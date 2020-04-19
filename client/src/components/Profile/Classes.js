@@ -11,6 +11,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 import EventIcon from "@material-ui/icons/Event";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,6 +45,18 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: "0.5vw",
   },
+  title: {
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: "300",
+    fontSize: "1.5rem",
+    margin: 0,
+    marginBottom: "1.5vh",
+    color: theme.palette.primary.main,
+    textTransform: "uppercase",
+  },
+  divider: {
+    marginBottom: "2.5vh",
+  },
 }));
 
 export const Classes = ({ classesList, history }) => {
@@ -53,9 +66,8 @@ export const Classes = ({ classesList, history }) => {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h3" gutterBottom>
-        Clases
-      </Typography>
+      <p className={classes.title}>CLASES</p>
+      <Divider className={classes.divider} />
 
       <List className={classes.list}>
         {classesList.map((value) => {

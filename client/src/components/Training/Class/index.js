@@ -142,12 +142,10 @@ export const Class = withRouter(({ history }) => {
   useEffect(() => {
     getClass(id)
       .then(({ data }) => {
-        console.log(data);
         setDataClass(data);
         setUserList(data.students);
       })
       .catch((e) => {
-        console.log(e.response);
         if (e.response?.data.status == "BadRequest") history.push("/notfound");
       })
       .finally(setLoading(false));

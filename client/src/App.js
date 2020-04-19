@@ -20,6 +20,7 @@ import { ClassPage } from "./pages/Class.page";
 import { ClassesPage } from "./pages/Classes.page";
 import { ExersicePage } from "./pages/Exersice.page";
 import { TrainingPage } from "./pages/Training.page";
+import { NutritionPage } from "./pages/Nutrition.page";
 import { NotFoundPage } from "./pages/NotFound.page";
 import { AdminPage } from "./pages/Admin.page";
 
@@ -34,6 +35,7 @@ const UserRoutes = () => (
     <Route path="/classes" component={ClassesPage} />
     <Route path="/class/:id" component={ClassPage} />
     <Route path="/exersice" component={ExersicePage} />
+    <Route path="/nutrition" component={NutritionPage} />
   </>
 );
 const AdminRoutes = () => (

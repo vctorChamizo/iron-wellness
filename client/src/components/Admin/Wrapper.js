@@ -45,7 +45,7 @@ export const Wrapper = ({ list, object, setObject, type }) => {
 
   console.log(type);
 
-  const formayTitle = (type) => {
+  const formatTitle = (type) => {
     switch (type) {
       case "trainer":
         return "ENTRENADORES";
@@ -62,7 +62,7 @@ export const Wrapper = ({ list, object, setObject, type }) => {
 
   return (
     <div className={classes.root}>
-      <p className={classes.title}>{formayTitle(type)}</p>
+      <p className={classes.title}>{formatTitle(type)}</p>
       <Divider className={classes.divider} />
       <div className={classes.container}>
         <div className={classes.wrapperMain}>
