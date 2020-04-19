@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ItemUser } from "./ItemUser";
+import { Item } from "./Item";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -12,13 +12,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const LisItem = ({ children }) => {
+export const ListItem = ({ children }) => {
   const classes = useStyles();
 
   return (
     <List className={classes.root}>
       {children.map((e, i) => (
-        <ItemUser key={i}>{e}</ItemUser>
+        <Item key={i}>{e}</Item>
       ))}
     </List>
   );

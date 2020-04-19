@@ -12,7 +12,7 @@ export const Item = ({ children }) => {
     <>
       <ListItem alignItems="flex-start">
         <ListItemAvatar>
-          <Avatar alt="Avatar" src={children.image.url} />
+          <Avatar alt="Avatar" src={children.image?.url} />
         </ListItemAvatar>
         <ListItemText primary={name} secondary={children.username} />
       </ListItem>

@@ -8,3 +8,13 @@ const api = axios.create({
 export const getCenters = async () => {
   return await api.get("/centers/");
 };
+
+export const getCenter = async (id) => await api.get(`center/${id}`);
+
+export const addCenter = async (center) =>
+  await api.create(`center/`, { center });
+
+export const editCenter = async (center) =>
+  await api.put(`center/${center._id}`, { center });
+
+export const removeCenter = async (id) => await api.delete(`Center/${id}`);

@@ -133,7 +133,7 @@ router.put("/:id", async (req, res, next) => {
   try {
     const { user } = req.body;
 
-    if (req.user.type === "ADMIN" || req.user._id != req.params.id)
+    if (req.user.type !== "ADMIN" && req.user._id != req.params.id)
       return res.status(406).json({ status: "NotAcceptable" });
 
     const checkEmail = await User.findOne({ email: user.email });

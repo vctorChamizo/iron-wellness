@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 
 import { validateForm } from "../../../lib/validation/validateForm";
-import { edit, upload } from "../../../lib/api/user.api";
+import { editUser, upload } from "../../../lib/api/user.api";
 import { useSetUser } from "../../../lib/redux/action";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -116,7 +116,7 @@ export const Edit = ({ user, dispatch }) => {
     try {
       setLoading(true);
       const updatedUser = Object.assign(user, data);
-      await edit(updatedUser);
+      await editUser(updatedUser);
       setLoading(false);
       handleSanckBar("Perfil actualizado", "success");
       dispatch(useSetUser(updatedUser));

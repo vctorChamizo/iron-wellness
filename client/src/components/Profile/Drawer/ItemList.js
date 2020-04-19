@@ -19,8 +19,6 @@ const useStyles = makeStyles((theme) => ({
 export const ItemList = ({ type, handleClick }) => {
   const classes = useStyles();
 
-  console.log(type);
-
   const handleIcon = (type) => {
     switch (type) {
       case "profile":

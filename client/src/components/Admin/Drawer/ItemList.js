@@ -52,7 +52,7 @@ export const ItemList = ({ type, handleClick }) => {
       case "exersice":
         return "Entrenamientos";
       case "centers":
-        return "Centrtos";
+        return "Centros";
       case "classes":
         return "Clases";
       case "logout":

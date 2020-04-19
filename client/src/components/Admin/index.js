@@ -32,15 +32,15 @@ export const Admin = connect((state) => ({ user: state.user }))(
         case "profile":
           return <Profile user={user} dispatch={dispatch} />;
         case "trainer":
-          return <Trainer />;
+          return <Trainer dispatch={dispatch} />;
         case "exersice":
-          return <Exersice />;
+          return <Exersice dispatch={dispatch} />;
         case "centers":
-          return <Center />;
+          return <Center dispatch={dispatch} />;
         case "classes":
-          return <Class />;
+          return <Class dispatch={dispatch} />;
         case "users":
-          return <User />;
+          return <User dispatch={dispatch} />;
       }
     };
 
@@ -53,7 +53,7 @@ export const Admin = connect((state) => ({ user: state.user }))(
           dispatch={dispatch}
         />
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={10}>
+          <Grid item xs={12} sm={12}>
             {ComponentSegreggation(component)}
           </Grid>
         </Grid>

@@ -205,7 +205,13 @@ export const NavBar = connect((state) => ({ user: state.user }))(
         <HideOnScroll {...props}>
           <AppBar className={classes.navbar}>
             <Toolbar className={classes.toolbar}>
-              <Button onClick={() => handleClick("root")}>
+              <Button
+                onClick={() => {
+                  user?.type === "ADMIN"
+                    ? handleClick("profile")
+                    : handleClick("root");
+                }}
+              >
                 <Typography variant="h1" className={classes.title}>
                   Iron Wellness !
                 </Typography>
