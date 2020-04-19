@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   homeButton: {
+    transition: "linear 0.2s",
     "&:hover": {
       background: "#fff",
       color: theme.palette.primary.main,

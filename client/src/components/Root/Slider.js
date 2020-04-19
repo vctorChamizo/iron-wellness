@@ -43,18 +43,16 @@ export const Slider = ({ slideData }) => {
   return (
     <div className="slider">
       <ul className="slider__wrapper" style={wrapperTransform}>
-        {slideData.map((slide, index) => {
-          return (
-            <Slide
-              key={index}
-              slide={slide}
-              current={current}
-              index={index}
-              handleNextClick={handleNextClick}
-              handlePreviousClick={handlePreviousClick}
-            />
-          );
-        })}
+        {slideData.map((slide, index) => (
+          <Slide
+            key={slide._id}
+            slide={{ src: slide.image.url }}
+            current={current}
+            index={index}
+            handleNextClick={handleNextClick}
+            handlePreviousClick={handlePreviousClick}
+          />
+        ))}
       </ul>
 
       <div className="slider__controls">

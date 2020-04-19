@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
+import { getCenters } from "../../../lib/api/center.api";
+
+import { Loading } from "../Loading";
 import { AuthDialog } from "../Auth/AuthDialog";
 import { Slider } from "./Slider";
 import { Footer } from "../../layouts/Footer";
@@ -92,54 +95,39 @@ const useStyles = makeStyles((theme) => ({
     width: "60%",
     lineHeight: "1.5em",
   },
+  titleCenters: {
+    cursor: "pointer",
+    transition: "linear 0.2s",
+    "&:hover": {
+      color: theme.palette.primary.main,
+    },
+  },
 }));
-
-const slideData = [
-  {
-    src:
-      "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-2_fcclno.jpg",
-    headline: "Image",
-  },
-  {
-    src:
-      "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-3_bwipvh.jpg",
-    headline: "centerImage",
-  },
-  {
-    src:
-      "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-5_kkrzpg.jpg",
-    headline: "centerImage",
-  },
-  {
-    src:
-      "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-1_jmdzf3.jpg",
-    headline: "centerImage",
-  },
-  {
-    src:
-      "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-4_c4bcye.jpg",
-    headline: "center",
-  },
-  {
-    src:
-      "https://res.cloudinary.com/vctorchzr/image/upload/v1586980229/iron-wellness/components/centers/center-6_cs3rok.jpg",
-    headline: "centerImage",
-  },
-];
 
 export const Root = connect((state) => ({ user: state.user }))(
   withRouter(({ user, history }) => {
     const classes = useStyles();
 
+    const [loading, setLoading] = useState(true);
+    const [centers, setCenters] = useState([]);
+
+    useEffect(() => {
+      getCenters()
+        .then(({ data }) => setCenters(data))
+        .catch((e) => console.error(e.response?.statusText))
+        .finally(setLoading(false));
+    }, []);
+
     const [openDialog, setOpenDialog] = useState(false);
     const [component, setComponent] = useState("Login");
 
-    const handleClick = () => {
-      user ? history.push("/home") : setOpenDialog(true);
+    const handleClick = (path) => {
+      user ? history.push(`/${path}`) : setOpenDialog(true);
     };
 
     return (
       <>
+        <Loading open={loading} />
         <section className={classes.backgroundMain}>
           <div className={classes.wrapperTitle}>
             <p className={classes.homeTitle}>
@@ -155,7 +143,10 @@ export const Root = connect((state) => ({ user: state.user }))(
                 virtuales e información de interés.
               </Typography>
             </div>
-            <Button className={classes.buttonMain} onClick={handleClick}>
+            <Button
+              className={classes.buttonMain}
+              onClick={() => handleClick("home")}
+            >
               Únete a nosotros!
             </Button>
           </div>
@@ -163,7 +154,13 @@ export const Root = connect((state) => ({ user: state.user }))(
 
         <section className={classes.backgroundMiddle}>
           <div className={classes.wrapperMiddle}>
-            <Typography variant="h4">NUESTROS CENTROS</Typography>
+            <Typography
+              variant="h4"
+              className={classes.titleCenters}
+              onClick={() => history.push("/centers")}
+            >
+              NUESTROS CENTROS
+            </Typography>
             <Divider className={classes.divider} />
             <p className={classes.paragraph}>
               Disfruta en Iron Wellness de los mejores Clubs deportivos y de
@@ -175,7 +172,7 @@ export const Root = connect((state) => ({ user: state.user }))(
             <Divider className={classes.divider} />
           </div>
 
-          <Slider heading="Example Slider" slideData={slideData} />
+          <Slider heading="Example Slider" slideData={centers} />
         </section>
 
         <section className={classes.backgroundLast}>
@@ -195,7 +192,10 @@ export const Root = connect((state) => ({ user: state.user }))(
                 <span className={classes.bold}>apúntate</span> a la siguiente
                 clase de tu cernto deportivo.
               </p>
-              <Button className={classes.buttonMain} onClick={handleClick}>
+              <Button
+                className={classes.buttonMain}
+                onClick={() => handleClick("training")}
+              >
                 Alcanza tus metas!
               </Button>
             </div>
