@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -12,10 +13,10 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({}));
 
-export const Calendar = ({ events, history }) => {
+export const Calendar = withRouter(({ history, events }) => {
   const classes = useStyles();
 
-  const handeClick = ({ event }) => history.push(event.id);
+  const handeClick = ({ event }) => history.push(`class/${event.id}`);
 
   const handleMouseEnter = () =>
     (document.getElementById("calendar").style.cursor = "pointer");
@@ -59,4 +60,4 @@ export const Calendar = ({ events, history }) => {
       />
     </div>
   );
-};
+});

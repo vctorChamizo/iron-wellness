@@ -105,7 +105,6 @@ export const Edit = ({ user, dispatch }) => {
     try {
       setLoading(true);
       const updatedUser = Object.assign(user, data);
-      console.log(updatedUser);
       await edit(updatedUser);
       setLoading(false);
       handleSanckBar("Perfil actualizado", "success");

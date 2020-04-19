@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, withRouter } from "react-router-dom";
 
 import { Loading } from "../../Loading";
 import { ListUser } from "./ListUser";
@@ -13,6 +13,8 @@ import Paper from "@material-ui/core/Paper";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import EventIcon from "@material-ui/icons/Event";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +27,16 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "300",
     fontSize: "3rem",
     color: theme.palette.primary.main,
+  },
+  wrapperTitle: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  wrapperButton: {
+    width: "20%",
+    display: "flex",
+    justifyContent: "space-evenly",
   },
   content: {
     display: "flex",
@@ -71,9 +83,54 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
     textAlign: "center",
   },
+  large: {
+    width: "13vh",
+    height: "13vh",
+  },
+  wrapperTrainer: {
+    padding: "2.5vh 0",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleTrainer: {
+    marginTop: "5vh",
+    fontFamily: '"Roboto", sans-serif',
+    fontSize: "1.5rem",
+    textTransform: "uppercase",
+    fontWeight: "300",
+  },
+  subtitleTrainer: {
+    marginTop: "4.5vh",
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: "500",
+    color: theme.palette.secondary.main,
+  },
+  divider: {
+    width: "20%",
+    backgroundColor: theme.palette.primary.main,
+  },
+  subtitlePlace: {
+    margin: 0,
+    marginTop: "5vh",
+  },
+  place: {
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: "500",
+    color: theme.palette.primary.main,
+  },
+  titleDescription: {
+    textAlign: "center",
+    margin: "2.5vh 0 5vh 0",
+    fontFamily: '"Roboto", sans-serif',
+    fontSize: "1rem",
+    fontWeight: "100",
+    color: theme.palette.secondary.main,
+  },
 }));
 
-export const Class = () => {
+export const Class = withRouter(({ history }) => {
   const classes = useStyles();
 
   const { id } = useParams();
@@ -85,14 +142,13 @@ export const Class = () => {
   useEffect(() => {
     getClass(id)
       .then(({ data }) => {
+        if (!data) history.push("/notfound");
         setDataClass(data);
         setUserList(data.students);
       })
       .catch((e) => console.error(e.response?.statusText))
       .finally(setLoading(false));
   }, []);
-
-  console.log(dataClass);
 
   const date = new Date(dataClass.date);
   const level =
@@ -102,12 +158,26 @@ export const Class = () => {
       ? "MEDIO"
       : "PROFESIONAL";
 
+  const place =
+    dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
+
   return (
     <>
       <Loading open={loading} />
       <div className={classes.root}>
         <div>
-          <p className={classes.title}>{dataClass.name}</p>
+          <div className={classes.wrapperTitle}>
+            <p className={classes.title}>{dataClass.name}</p>
+            <div className={classes.wrapperButton}>
+              <Button variant="contained" color="primary">
+                Añadir
+              </Button>
+              <Button variant="outlined" color="secondary">
+                Quitar
+              </Button>
+            </div>
+          </div>
+
           <Divider />
         </div>
         <div className={classes.containerInfo}>
@@ -140,12 +210,38 @@ export const Class = () => {
             <div>
               <p className={classes.subtitle}>ACTIVIDAD</p>
               <Divider />
+              <div className={classes.wrapperTrainer}>
+                <p className={classes.titleTrainer}>
+                  {dataClass.activity?.name}
+                </p>
+                <p className={classes.titleDescription}>
+                  {dataClass.activity?.description}
+                </p>
+                <Divider className={classes.divider} />
+                <p className={classes.subtitlePlace}>
+                  ACTIVIDAD <span className={classes.place}>{place}</span>
+                </p>
+              </div>
             </div>
           </Paper>
           <Paper className={classes.paper}>
             <div>
               <p className={classes.subtitle}>ENTRENADOR</p>
               <Divider />
+              <div className={classes.wrapperTrainer}>
+                <Avatar
+                  alt="Avatar"
+                  src={dataClass.trainer?.image.url || ""}
+                  className={classes.large}
+                />
+                <p className={classes.titleTrainer}>
+                  {dataClass.trainer?.name} {dataClass.trainer?.surname}
+                </p>
+                <Divider className={classes.divider} />
+                <p className={classes.subtitleTrainer}>
+                  {dataClass.trainer?.username}
+                </p>
+              </div>
             </div>
           </Paper>
           <Paper className={classes.paperUsers}>
@@ -159,4 +255,4 @@ export const Class = () => {
       </div>
     </>
   );
-};
+});

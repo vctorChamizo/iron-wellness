@@ -6,9 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
-import AddBoxIcon from "@material-ui/icons/AddBox";
 import EventIcon from "@material-ui/icons/Event";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: "1.5vh",
+    padding: "1.5vh 5vw 0 1.5vw",
   },
   wrapperInfo: {
     display: "flex",
@@ -58,8 +56,6 @@ export const ListClasses = withRouter(({ history, classesList }) => {
   const classes = useStyles();
 
   const handleClickRedirectClass = (id) => () => history.push(`/class/${id}`);
-
-  const handleClickAddClass = (id) => () => console.log("añade");
 
   return (
     <div className={classes.root}>
@@ -88,17 +84,10 @@ export const ListClasses = withRouter(({ history, classesList }) => {
                   <div className={classes.wrapperInfo}>
                     <QueryBuilderIcon className={classes.icon} />
                     {"  "}
-                    {`${String(date.getHours()).padStart(2, "0")}:${String(
+                    {`${String(date.getHours() - 2).padStart(2, "0")}:${String(
                       date.getMinutes()
                     ).padStart(2, "0")}`}
                   </div>
-
-                  <IconButton edge="end" arial="Añadir">
-                    <AddBoxIcon
-                      text="Añadir"
-                      // onClick={() => handleClickAddClass(value._id)}
-                    />
-                  </IconButton>
                 </div>
               </ListItem>
             </Paper>
