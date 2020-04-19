@@ -5,6 +5,7 @@ import { Loading } from "../../Loading";
 import { ListUser } from "./ListUser";
 
 import { getClass } from "../../../../lib/api/class.api";
+import { addUserClass, removeUserClass } from "../../../../lib/api/user.api";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -162,6 +163,16 @@ export const Class = withRouter(({ history }) => {
   const place =
     dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
 
+  const handlekAddClass = async (id) => {
+    const res = await addUserClass(id);
+    console.log(res);
+  };
+
+  const handlekRemoveClass = async (id) => {
+    const res = await removeUserClass(id);
+    console.log(res);
+  };
+
   return (
     <>
       <Loading open={loading} />
@@ -170,10 +181,18 @@ export const Class = withRouter(({ history }) => {
           <div className={classes.wrapperTitle}>
             <p className={classes.title}>{dataClass.name}</p>
             <div className={classes.wrapperButton}>
-              <Button variant="contained" color="primary">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handlekAddClass(dataClass._id)}
+              >
                 Añadir
               </Button>
-              <Button variant="outlined" color="secondary">
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => handlekRemoveClass(dataClass._id)}
+              >
                 Quitar
               </Button>
             </div>

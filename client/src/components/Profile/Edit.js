@@ -101,6 +101,8 @@ export const Edit = ({ user, dispatch }) => {
 
   const [imagePath, setImagePath] = useState(user.image?.url);
 
+  console.log(user);
+
   const { register, handleSubmit, errors, control } = useForm({
     defaultValues: {
       username: user.username,
@@ -116,11 +118,10 @@ export const Edit = ({ user, dispatch }) => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      const updatedUser = Object.assign(user, data);
-      await editUser(updatedUser);
+      const updatedUser = await editUser(Object.assign(user, data));
+      dispatch(useSetUser(updatedUser.data));
       setLoading(false);
       handleSanckBar("Perfil actualizado", "success");
-      dispatch(useSetUser(updatedUser));
     } catch (error) {
       setLoading(false);
       if (error.response) {

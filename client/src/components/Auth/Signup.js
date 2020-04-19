@@ -1,7 +1,7 @@
+import "date-fns";
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import "date-fns";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
 
@@ -81,14 +81,15 @@ export const Signup = connect()(
       const classes = useStyles();
 
       const [openError, setOpenError] = useState(false);
-      const [selectedDate, setSelectedDate] = useState();
-      const { register, handleSubmit, errors } = useForm();
+      const { register, handleSubmit, errors, control } = useForm();
 
       const onSubmit = async (data) => {
         try {
-          dispatch(useSetUser(await signup(data)));
+          const newUser = await signup(data);
+          dispatch(useSetUser(newUser.data));
           setOpenDialog(false);
           history.push(redirectTo);
+          setComponent("Login");
         } catch (error) {
           if (error.response?.data.status == "UserExists") setOpenError(true);
         }
@@ -108,8 +109,6 @@ export const Signup = connect()(
       if (!_.isEmpty(errors)) validateForm(errors);
 
       const handleCloseError = () => setOpenError(false);
-
-      const handleDateChange = (date) => setSelectedDate(date);
 
       return (
         <div className={classes.paper}>
@@ -180,17 +179,18 @@ export const Signup = connect()(
                 helperText={errors.surname ? errors.surname.helperText : ""}
               />
             </div>
-            <MuiPickersUtilsProvider utils={DateFnsUtils} variant="outlined">
-              <KeyboardDatePicker
-                variant="outlined"
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <Controller
+                as={KeyboardDatePicker}
+                name="reactSelect"
+                control={control}
+                onChange={(selected) => selected[1]}
                 fullWidth
-                margin="normal"
-                disableToolbar
+                variant="inline"
                 format="MM/dd/yyyy"
-                label="Fecha de nacimiento"
+                margin="normal"
                 name="date"
-                value={selectedDate}
-                onChange={() => handleDateChange}
+                label="Fecha de nacimiento"
                 KeyboardButtonProps={{
                   "aria-label": "change date",
                 }}

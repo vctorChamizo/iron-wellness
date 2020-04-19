@@ -23,3 +23,8 @@ export const upload = async (file) => {
   data.append("profileImage", file);
   return await api.post("/users/upload", data);
 };
+
+export const addUserClass = async (id) => await api.get(`users/addclass/${id}`);
+
+export const removeUserClass = async (id) =>
+  await api.get(`users/removeclass/${id}`);

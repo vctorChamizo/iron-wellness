@@ -28,12 +28,7 @@ export const Profile = connect((state) => ({ user: state.user }))(
 
     return (
       <div className={classes.root}>
-        <Menu
-          setComponent={setComponent}
-          user={user}
-          history={history}
-          dispatch={dispatch}
-        />
+        <Menu setComponent={setComponent} history={history} />
         <Grid container spacing={3}>
           <Grid item xs={12} sm={10}>
             {component === "classes" ? (

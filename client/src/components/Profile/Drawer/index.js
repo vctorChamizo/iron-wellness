@@ -13,6 +13,7 @@ import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
 import Avatar from "@material-ui/core/Avatar";
+import { connect } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -55,52 +56,52 @@ const useStyles = makeStyles((theme) => ({
 
 const listDrawer = ["classes", "calendar", "profile"];
 
-export const Menu = ({ setComponent, user, history, dispatch }) => {
-  const classes = useStyles();
+export const Menu = connect((state) => ({ user: state.user }))(
+  ({ setComponent, user, history, dispatch }) => {
+    const classes = useStyles();
 
-  const handleClick = async (key) => {
-    if (key === "logout") {
-      try {
-        await logout();
-        dispatch(useLogout());
-        history.push("/");
-      } catch (error) {
-        // Controlar los errores
-      }
-    } else setComponent(key);
-  };
+    const handleClick = async (key) => {
+      if (key === "logout") {
+        try {
+          await logout();
+          dispatch(useLogout());
+          history.push("/");
+        } catch (error) {}
+      } else setComponent(key);
+    };
 
-  return (
-    <Drawer
-      className={classes.drawer}
-      variant="permanent"
-      classes={{
-        paper: classes.drawerPaper,
-      }}
-    >
-      <Toolbar className={classes.toolbar} />
-      <div className={classes.drawerContainer}>
-        <List>
-          <div className={classes.wrappetAvatar}>
-            <Avatar
-              alt="Avatar"
-              src={user.image?.url}
-              className={classes.large}
-            />
-            <p className={classes.titleName}>{user.name}</p>
-          </div>
+    return (
+      <Drawer
+        className={classes.drawer}
+        variant="permanent"
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <Toolbar className={classes.toolbar} />
+        <div className={classes.drawerContainer}>
+          <List>
+            <div className={classes.wrappetAvatar}>
+              <Avatar
+                alt="Avatar"
+                src={user.image?.url}
+                className={classes.large}
+              />
+              <p className={classes.titleName}>{user.name}</p>
+            </div>
 
-          <Divider />
+            <Divider />
 
-          {listDrawer.map((e) => (
-            <ItemList key={e} type={e} handleClick={handleClick}></ItemList>
-          ))}
+            {listDrawer.map((e) => (
+              <ItemList key={e} type={e} handleClick={handleClick}></ItemList>
+            ))}
 
-          <Divider />
+            <Divider />
 
-          <ItemList type="logout" handleClick={handleClick} />
-        </List>
-      </div>
-    </Drawer>
-  );
-};
+            <ItemList type="logout" handleClick={handleClick} />
+          </List>
+        </div>
+      </Drawer>
+    );
+  }
+);
