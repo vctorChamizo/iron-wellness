@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { Edit } from "./Edit";
-import { Classes } from "./Classes";
-import { Calendar } from "./Calendar";
+// import { Edit } from "./Edit";
+// import { Classes } from "./Classes";
+// import { Calendar } from "./Calendar";
 import { Menu } from "./Drawer/index";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -18,9 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const listDrawer = ["users", "trainer", "centers", "classes", "exersice"];
-
-export const Profile = connect((state) => ({ user: state.user }))(
+export const Admin = connect((state) => ({ user: state.user }))(
   withRouter(({ user, history, dispatch }) => {
     const classes = useStyles();
 
@@ -35,7 +33,7 @@ export const Profile = connect((state) => ({ user: state.user }))(
           dispatch={dispatch}
         />
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={10}>
+          {/* <Grid item xs={12} sm={10}>
             {component === "classes" ? (
               <Classes classesList={user.classes} history={history} />
             ) : component === "profile" ? (
@@ -43,7 +41,7 @@ export const Profile = connect((state) => ({ user: state.user }))(
             ) : (
               <Calendar events={user.classes} history={history} />
             )}
-          </Grid>
+          </Grid> */}
         </Grid>
       </div>
     );

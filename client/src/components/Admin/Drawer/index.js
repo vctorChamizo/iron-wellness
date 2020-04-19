@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   drawer: {
+    overflowY: "scroll",
     width: drawerWidth,
     flexShrink: 0,
   },
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const listDrawer = ["classes", "calendar", "profile"];
+const listDrawer = ["users", "trainer", "centers", "classes", "exersice"];
 
 export const Menu = ({ setComponent, user, history, dispatch }) => {
   const classes = useStyles();
@@ -65,7 +66,7 @@ export const Menu = ({ setComponent, user, history, dispatch }) => {
         dispatch(useLogout());
         history.push("/");
       } catch (error) {
-        // Controlar los errores
+        console.error(error?.response.textStatus);
       }
     } else setComponent(key);
   };
@@ -89,7 +90,6 @@ export const Menu = ({ setComponent, user, history, dispatch }) => {
             />
             <p className={classes.titleName}>{user.name}</p>
           </div>
-
           <Divider />
 
           {listDrawer.map((e) => (
@@ -98,6 +98,7 @@ export const Menu = ({ setComponent, user, history, dispatch }) => {
 
           <Divider />
 
+          <ItemList type="profile" handleClick={handleClick} />
           <ItemList type="logout" handleClick={handleClick} />
         </List>
       </div>

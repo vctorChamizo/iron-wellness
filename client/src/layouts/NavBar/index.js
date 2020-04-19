@@ -75,6 +75,55 @@ HideOnScroll.propTypes = {
   window: PropTypes.func,
 };
 
+const mobileMenuId = "primary-search-account-menu-mobile";
+
+const NavBarOptions = ({ user, handleClick, handleMobileMenuOpen }) => {
+  const classes = useStyles();
+
+  return (
+    <>
+      <div className={classes.sectionDesktop}>
+        <Button onClick={() => handleClick("root")} color="inherit">
+          <Typography variant="h3">Inicio</Typography>
+        </Button>
+        <Button
+          className={classes.homeButton}
+          variant="outlined"
+          onClick={() => handleClick("home")}
+          color="inherit"
+        >
+          <Typography variant="h3">MyWellness! Home</Typography>
+        </Button>
+        <Button onClick={() => handleClick("centers")} color="inherit">
+          <Typography variant="h3">Centros</Typography>
+        </Button>
+        <IconButton onClick={() => handleClick("profile")} color="inherit">
+          {user?.image ? (
+            <Avatar
+              alt="Avatar"
+              src={user?.image.url}
+              className={classes.small}
+            />
+          ) : (
+            <AccountCircle />
+          )}
+        </IconButton>
+      </div>
+      <div className={classes.sectionMobile}>
+        <IconButton
+          aria-label="show more"
+          aria-controls={mobileMenuId}
+          aria-haspopup="true"
+          onClick={handleMobileMenuOpen}
+          color="inherit"
+        >
+          <MoreIcon />
+        </IconButton>
+      </div>
+    </>
+  );
+};
+
 export const NavBar = connect((state) => ({ user: state.user }))(
   withRouter(({ user, history, props }) => {
     const classes = useStyles();
@@ -161,48 +210,15 @@ export const NavBar = connect((state) => ({ user: state.user }))(
                   Iron Wellness !
                 </Typography>
               </Button>
-
-              <div className={classes.sectionDesktop}>
-                <Button onClick={() => handleClick("root")} color="inherit">
-                  <Typography variant="h3">Inicio</Typography>
-                </Button>
-                <Button
-                  className={classes.homeButton}
-                  variant="outlined"
-                  onClick={() => handleClick("home")}
-                  color="inherit"
-                >
-                  <Typography variant="h3">MyWellness! Home</Typography>
-                </Button>
-                <Button onClick={() => handleClick("centers")} color="inherit">
-                  <Typography variant="h3">Centros</Typography>
-                </Button>
-                <IconButton
-                  onClick={() => handleClick("profile")}
-                  color="inherit"
-                >
-                  {user?.image ? (
-                    <Avatar
-                      alt="Avatar"
-                      src={user?.image.url}
-                      className={classes.small}
-                    />
-                  ) : (
-                    <AccountCircle />
-                  )}
-                </IconButton>
-              </div>
-              <div className={classes.sectionMobile}>
-                <IconButton
-                  aria-label="show more"
-                  aria-controls={mobileMenuId}
-                  aria-haspopup="true"
-                  onClick={handleMobileMenuOpen}
-                  color="inherit"
-                >
-                  <MoreIcon />
-                </IconButton>
-              </div>
+              {user?.type === "ADMIN" ? (
+                <></>
+              ) : (
+                <NavBarOptions
+                  user={user}
+                  handleClick={handleClick}
+                  handleMobileMenuOpen={handleMobileMenuOpen}
+                />
+              )}
             </Toolbar>
           </AppBar>
         </HideOnScroll>

@@ -9,6 +9,9 @@ import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import TodayIcon from "@material-ui/icons/Today";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
+import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
+import BusinessIcon from "@material-ui/icons/Business";
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -19,15 +22,19 @@ const useStyles = makeStyles((theme) => ({
 export const ItemList = ({ type, handleClick }) => {
   const classes = useStyles();
 
-  console.log(type);
-
   const handleIcon = (type) => {
     switch (type) {
       case "profile":
         return <AccountBoxIcon />;
-      case "classes":
+      case "users":
+        return <PeopleAltIcon />;
+      case "trainer":
+        return <AccessibilityNewIcon />;
+      case "exersice":
         return <FitnessCenterIcon />;
-      case "calendar":
+      case "centers":
+        return <BusinessIcon />;
+      case "classes":
         return <TodayIcon />;
       case "logout":
         return <ExitToAppIcon />;
@@ -36,14 +43,20 @@ export const ItemList = ({ type, handleClick }) => {
 
   const handleTitle = (type) => {
     switch (type) {
+      case "users":
+        return "Usuarios";
       case "profile":
         return "Perfil";
+      case "trainer":
+        return "Entrenador";
+      case "exersice":
+        return "Entrenamientos";
+      case "centers":
+        return "Centrtos";
       case "classes":
         return "Clases";
-      case "calendar":
-        return "Calendario";
       case "logout":
-        return "CerrarSesion";
+        return "Cerrar Sesion";
     }
   };
 

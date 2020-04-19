@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 
 import "../node_modules/aos/dist/aos.css";
 import AOS from "aos";
@@ -20,26 +21,39 @@ import { ClassesPage } from "./pages/Classes.page";
 import { ExersicePage } from "./pages/Exersice.page";
 import { TrainingPage } from "./pages/Training.page";
 import { NotFoundPage } from "./pages/NotFound.page";
+import { AdminPage } from "./pages/Admin.page";
 
-export const App = withAuthentication(() => {
+const UserRoutes = () => (
+  <>
+    <Route path="/" exact component={RootPage} />
+    <Route path="/notfound" component={NotFoundPage} />
+    <Route path="/home" component={HomePage} />
+    <Route path="/centers" component={CentersPage} />
+    <Route path="/profile" component={ProfilePage} />
+    <Route path="/training" component={TrainingPage} />
+    <Route path="/classes" component={ClassesPage} />
+    <Route path="/class/:id" component={ClassPage} />
+    <Route path="/exersice" component={ExersicePage} />
+  </>
+);
+const AdminRoutes = () => (
+  <>
+    <Route path="/" exact component={AdminPage} />
+  </>
+);
+
+const AppRole = connect((state) => ({ user: state.user }))(({ user }) => {
   AOS.init();
-
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <NavBar></NavBar>
         <Switch>
-          <Route path="/" exact component={RootPage} />
-          <Route path="/notfound" component={NotFoundPage} />
-          <Route path="/home" component={HomePage} />
-          <Route path="/centers" component={CentersPage} />
-          <Route path="/profile" component={ProfilePage} />
-          <Route path="/training" component={TrainingPage} />
-          <Route path="/classes" component={ClassesPage} />
-          <Route path="/class/:id" component={ClassPage} />
-          <Route path="/exersice" component={ExersicePage} />
+          {user?.type === "ADMIN" ? <AdminRoutes /> : <UserRoutes />}
         </Switch>
       </Router>
     </ThemeProvider>
   );
 });
+
+export const App = withAuthentication(() => <AppRole />);
