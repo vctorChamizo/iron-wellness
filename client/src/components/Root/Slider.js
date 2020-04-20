@@ -17,25 +17,14 @@ const useStyles = makeStyles({
 export const Slider = ({ slideData }) => {
   const classes = useStyles();
 
-  const [state, setState] = useState({ current: slideData.length / 2 });
+  const [current, setCurrent] = useState(1);
 
-  const handlePreviousClick = () => {
-    const previous = state.current - 1;
+  const handlePreviousClick = () =>
+    setCurrent(current - 1 < 0 ? slideData.length - 1 : current - 1);
 
-    setState({
-      current: previous < 0 ? slideData.length - 1 : previous,
-    });
-  };
+  const handleNextClick = () =>
+    setCurrent(current + 1 === slideData.length ? 0 : current + 1);
 
-  const handleNextClick = () => {
-    const next = state.current + 1;
-
-    setState({
-      current: next === slideData.length ? 0 : next,
-    });
-  };
-
-  const { current } = state;
   const wrapperTransform = {
     transform: `translateX(-${current * (100 / slideData.length)}%)`,
   };

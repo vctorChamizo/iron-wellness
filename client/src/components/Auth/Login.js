@@ -18,6 +18,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,6 +51,10 @@ const useStyles = makeStyles((theme) => ({
   redirect: {
     cursor: "pointer",
   },
+  progress: {
+    marginTop: "2.5vh",
+    width: "100%",
+  },
 }));
 
 const Alert = (props) => {
@@ -63,16 +68,21 @@ export const Login = connect()(
 
       const [openError, setOpenError] = useState(false);
       const { register, handleSubmit, errors } = useForm();
+      const [loading, setLoading] = useState(false);
 
       const onSubmit = async ({ email, password }) => {
+        setLoading(true);
         try {
           const { data } = await login(email, password);
           dispatch(useSetUser(data));
+          setLoading(false);
           setOpenDialog(false);
           return history.push(redirectTo);
         } catch (error) {
           if (error.response.data.status === "BadCredentials")
             setOpenError(true);
+
+          setLoading(false);
         }
       };
 
@@ -159,8 +169,10 @@ export const Login = connect()(
                   {"No tines una cuenta aún? Regístrate."}
                 </Link>
               </Grid>
+              {loading && <LinearProgress className={classes.progress} />}
             </Grid>
           </form>
+
           <Snackbar
             open={openError}
             autoHideDuration={6000}

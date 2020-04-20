@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Dialog from "@material-ui/core/Dialog";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -25,25 +25,27 @@ export const AuthDialog = ({
   };
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="responsive-dialog-title"
-    >
-      {component === "Login" ? (
-        <Login
-          setComponent={setComponent}
-          setOpenDialog={setOpenDialog}
-          redirectTo={redirectTo}
-        />
-      ) : (
-        <Signup
-          setComponent={setComponent}
-          setOpenDialog={setOpenDialog}
-          redirectTo={redirectTo}
-        />
-      )}
-    </Dialog>
+    <>
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        {component === "Login" ? (
+          <Login
+            setComponent={setComponent}
+            setOpenDialog={setOpenDialog}
+            redirectTo={redirectTo}
+          />
+        ) : (
+          <Signup
+            setComponent={setComponent}
+            setOpenDialog={setOpenDialog}
+            redirectTo={redirectTo}
+          />
+        )}
+      </Dialog>
+    </>
   );
 };

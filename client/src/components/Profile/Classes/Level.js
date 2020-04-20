@@ -9,7 +9,7 @@ import Divider from "@material-ui/core/Divider";
 const useStyles = makeStyles((theme) => ({
   wrapperLevel: {
     width: "33%",
-    padding: "2.5vh 2.5vw",
+    padding: "2.5vh 1.5vw",
   },
   divider: {
     margin: "2.5vh 0",
@@ -23,7 +23,7 @@ export const Level = ({ title, list }) => {
 
   return (
     <div className={classes.wrapperLevel}>
-      <p>{title}</p>
+      {title}
       <Divider className={classes.divider} />
       <ListClasses classesList={list} />
     </div>

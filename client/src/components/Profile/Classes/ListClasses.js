@@ -23,13 +23,13 @@ const useStyles = makeStyles((theme) => ({
     display: "block",
   },
   paper: {
-    margin: "2.5vh 0%",
+    margin: "2.5vh 0",
   },
   wrapperClass: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "1.5vh 5vw 0 1.5vw",
+    padding: "1.5vh 1.5vw 0 1.5vw",
   },
   wrapperInfo: {
     display: "flex",
@@ -46,9 +46,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.2rem",
     margin: 0,
     paddingTop: "1vh",
-  },
-  iconAdd: {
-    position: "fixed",
   },
 }));
 

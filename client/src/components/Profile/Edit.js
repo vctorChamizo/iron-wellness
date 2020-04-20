@@ -101,8 +101,6 @@ export const Edit = ({ user, dispatch }) => {
 
   const [imagePath, setImagePath] = useState(user.image?.url);
 
-  console.log(user);
-
   const { register, handleSubmit, errors, control } = useForm({
     defaultValues: {
       username: user.username,

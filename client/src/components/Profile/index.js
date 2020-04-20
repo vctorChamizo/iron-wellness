@@ -10,13 +10,12 @@ import { Menu } from "./Drawer/index";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import Grid from "@material-ui/core/Grid";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
   },
-  grid: {
+  container: {
+    width: "100%",
     padding: "5vh 5vw",
   },
 }));
@@ -30,17 +29,15 @@ export const Profile = connect((state) => ({ user: state.user }))(
     return (
       <div className={classes.root}>
         <Menu setComponent={setComponent} history={history} />
-        <Grid spacing={3}>
-          <Grid xs={12} sm={12} className={classes.grid}>
-            {component === "classes" ? (
-              <Classes classesList={user.classes || []} />
-            ) : component === "profile" ? (
-              <Edit user={user} dispatch={dispatch} />
-            ) : (
-              <Calendar events={user.classes} history={history} />
-            )}
-          </Grid>
-        </Grid>
+        <div className={classes.container}>
+          {component === "classes" ? (
+            <Classes classesList={user.classes || []} />
+          ) : component === "profile" ? (
+            <Edit user={user} dispatch={dispatch} />
+          ) : (
+            <Calendar events={user.classes} history={history} />
+          )}
+        </div>
       </div>
     );
   })

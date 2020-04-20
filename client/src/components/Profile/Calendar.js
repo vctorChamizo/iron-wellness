@@ -10,7 +10,7 @@ import "@fullcalendar/daygrid/main.css";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   wrapper: {
     position: "fixed",
     top: "17.5vh",
@@ -18,12 +18,12 @@ const useStyles = makeStyles((theme) => ({
     right: "2.5vw",
     bottom: "2.5vh",
   },
-}));
+});
 
 export const Calendar = ({ events, history }) => {
   const classes = useStyles();
 
-  const handeClick = ({ event }) => history.push(event.id);
+  const handeClick = ({ event }) => history.push(`/class/${event.id}`);
 
   const handleMouseEnter = () =>
     (document.getElementById("calendar").style.cursor = "pointer");

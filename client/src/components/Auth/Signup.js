@@ -19,6 +19,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
@@ -69,6 +70,10 @@ const useStyles = makeStyles((theme) => ({
   redirect: {
     cursor: "pointer",
   },
+  progress: {
+    marginTop: "2.5vh",
+    width: "100%",
+  },
 }));
 
 const Alert = (props) => {
@@ -82,16 +87,20 @@ export const Signup = connect()(
 
       const [openError, setOpenError] = useState(false);
       const { register, handleSubmit, errors, control } = useForm();
+      const [loading, setLoading] = useState(false);
 
       const onSubmit = async (data) => {
+        setLoading(true);
         try {
           const newUser = await signup(data);
           dispatch(useSetUser(newUser.data));
+          setLoading(false);
           setOpenDialog(false);
           history.push(redirectTo);
           setComponent("Login");
         } catch (error) {
           if (error.response?.data.status == "UserExists") setOpenError(true);
+          setLoading(false);
         }
       };
 
@@ -232,6 +241,7 @@ export const Signup = connect()(
                   {"Ya tienes una cuenta? Inicia sesión."}
                 </Link>
               </Grid>
+              {loading && <LinearProgress className={classes.progress} />}
             </Grid>
           </form>
           <Snackbar

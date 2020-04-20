@@ -172,7 +172,7 @@ export const Root = connect((state) => ({ user: state.user }))(
             <Divider className={classes.divider} />
           </div>
 
-          <Slider heading="Example Slider" slideData={centers} />
+          <Slider slideData={centers} />
         </section>
 
         <section className={classes.backgroundLast}>
