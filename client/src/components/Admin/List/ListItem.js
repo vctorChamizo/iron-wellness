@@ -10,15 +10,20 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
+  item: {
+    margin: "1.5vh 1.5vw",
+  },
 }));
 
-export const ListItem = ({ children }) => {
+export const ListItem = ({ children, type }) => {
   const classes = useStyles();
 
   return (
     <List className={classes.root}>
       {children.map((e, i) => (
-        <Item key={i}>{e}</Item>
+        <div key={i} className={classes.item}>
+          <Item type={type}>{e}</Item>
+        </div>
       ))}
     </List>
   );

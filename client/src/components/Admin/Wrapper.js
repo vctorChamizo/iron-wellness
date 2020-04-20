@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
     width: "50%",
   },
   paper: {
-    padding: "1.5vh 1.5vw",
+    overflowY: "scroll",
+    height: "62.5vh",
   },
   title: {
     fontFamily: '"Roboto", sans-serif',
@@ -40,10 +41,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Wrapper = ({ list, object, setObject, type }) => {
+export const Wrapper = ({
+  list,
+  object,
+  setObject,
+  setList,
+  type,
+  handleAdd,
+  handleGet,
+  handleEdit,
+  handleRemove,
+}) => {
   const classes = useStyles();
-
-  console.log(type);
 
   const formatTitle = (type) => {
     switch (type) {
@@ -67,11 +76,17 @@ export const Wrapper = ({ list, object, setObject, type }) => {
       <div className={classes.container}>
         <div className={classes.wrapperMain}>
           <Paper className={classes.paper}>
-            <ListItem>{list}</ListItem>
+            <ListItem type={type}>{list}</ListItem>
           </Paper>
         </div>
         <div className={classes.wrapperForm}>
-          <Form type={type} object={object} setOnject={setObject} />
+          <Form
+            type={type}
+            object={object}
+            setObject={setObject}
+            handleAdd={handleAdd}
+            handleEdit={handleEdit}
+          />
         </div>
       </div>
     </div>

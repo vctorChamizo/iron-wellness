@@ -11,7 +11,7 @@ export const getUsersByType = async (type) =>
 
 export const getUser = async (id) => await api.get(`users/${id}`);
 
-export const addUser = async (user) => await api.create(`users/`, { user });
+export const addUser = async (user) => await api.post(`users/`, { user });
 
 export const editUser = async (user) =>
   await api.put(`users/${user._id}`, { user });

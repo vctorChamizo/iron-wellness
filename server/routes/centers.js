@@ -4,6 +4,7 @@ const _ = require("lodash");
 const router = express.Router();
 
 const { isAdmin, isLoggedIn } = require("../middleware/account-middleware");
+const uploadCloud = require("../middleware/uploader-middleware");
 
 const Center = require("../models/Center");
 
@@ -17,27 +18,43 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
-  try {
-    const { name, street, city, community } = req.body.center;
+router.post(
+  "/create",
+  isLoggedIn(),
+  isAdmin(),
+  uploadCloud.single("centerImage"),
+  async (req, res, next) => {
+    try {
+      console.log(req.body.center.avatar);
 
-    if (!(await Center.findOne({ name }))) {
-      const newCenter = await Center.create({ name, street, city, community });
-      return res
-        .status(201)
-        .json(
-          _.pick(newCenter, ["_id", "name", "street", "city", "community"])
-        );
-    } else
-      return res.status(401).json({
-        status: "CenterExists",
-      });
-  } catch (e) {
-    return e.name === "ValidationError"
-      ? res.status(400).json({ status: "ValidationError", error: e.errors })
-      : next(e);
+      if (!req.file) return res.status(400).json({ status: "BadRequest" });
+
+      const { name, street, city, community } = req.body.center;
+
+      if (!(await Center.findOne({ name }))) {
+        const newCenter = await Center.create({
+          name,
+          street,
+          city,
+          community,
+        });
+
+        return res
+          .status(201)
+          .json(
+            _.pick(newCenter, ["_id", "name", "street", "city", "community"])
+          );
+      } else
+        return res.status(401).json({
+          status: "CenterExists",
+        });
+    } catch (e) {
+      return e.name === "ValidationError"
+        ? res.status(400).json({ status: "ValidationError", error: e.errors })
+        : next(e);
+    }
   }
-});
+);
 
 router.get("/:id", async (req, res, next) => {
   try {

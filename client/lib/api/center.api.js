@@ -11,8 +11,11 @@ export const getCenters = async () => {
 
 export const getCenter = async (id) => await api.get(`center/${id}`);
 
-export const addCenter = async (center) =>
-  await api.create(`center/`, { center });
+export const addCenter = async (center) => {
+  const data = new FormData();
+  data.append("centerImage", center.avatar[0]);
+  return await api.post("/centers/create", { data, center });
+};
 
 export const editCenter = async (center) =>
   await api.put(`center/${center._id}`, { center });

@@ -1,5 +1,5 @@
 import "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 
@@ -7,13 +7,12 @@ import { validateForm } from "../../../../lib/validation/validateForm";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { Loading } from "../../Loading";
-import { SnackBar } from "../../Snackbar/index";
 import { FormUser } from "./FormUser";
-import { FormTrainer } from "./FormTrainer";
 import { FormClass } from "./FormClass";
 import { FormExersice } from "./FormExersice";
 import { FormCenter } from "./FormCenter";
+
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -22,52 +21,30 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     justifyContent: "center",
   },
+  editButton: {
+    background: theme.palette.primary.main,
+    color: theme.palette.primaryText,
+  },
+  submit: {
+    marginTop: "2.5vh",
+  },
 }));
 
-export const Form = ({ type, object, setObject }) => {
+export const Form = ({ type, object, setObject, handleAdd, handleEdit }) => {
   const classes = useStyles();
 
-  console.log(type);
+  const button = object?.name ? "Actualizar" : "Crear";
 
-  const [loading, setLoading] = useState(false);
-
-  const [message, setMessage] = useState();
-  const [openMessage, setOpenMessage] = useState(false);
-  const [severity, setSeverity] = useState();
-
-  const { register, handleSubmit, errors, control } = useForm({});
+  const { register, handleSubmit, errors, control, reset } = useForm({});
 
   if (!_.isEmpty(errors)) validateForm(errors);
 
-  const onSubmit = async (data) => {
-    try {
-      setLoading(true);
-    } catch (error) {
-      setLoading(false);
-      if (error.response) {
-        if (error.response.data.status === "UserExists")
-          handleSanckBar("El usuario ya existe", "error");
-        else handleSanckBar("Esta operación no está permitida", "error");
-      }
-    }
-  };
-
-  const handleSanckBar = (message, severity) => {
-    setMessage(message);
-    setSeverity(severity);
-    setOpenMessage(true);
-  };
+  const onSubmit = async (data, e) =>
+    button === "Crear" ? handleAdd(data, e) : handleEdit(data, e);
 
   const formSegreggation = (type) => {
     switch (type) {
       case "trainer":
-        return <FormTrainer object={object} setObject={setObject} />;
-      case "exersice":
-        return <FormExersice object={object} setObject={setObject} />;
-      case "centers":
-        return <FormCenter object={object} setObject={setObject} />;
-      case "classes":
-        return <FormClass object={object} setObject={setObject} />;
       case "user":
         return (
           <FormUser
@@ -78,21 +55,34 @@ export const Form = ({ type, object, setObject }) => {
             control={control}
           />
         );
+      case "exersice":
+        return <FormExersice object={object} setObject={setObject} />;
+      case "center":
+        return (
+          <FormCenter
+            object={object}
+            setObject={setObject}
+            register={register}
+            errors={errors}
+          />
+        );
+      case "classes":
+        return <FormClass object={object} setObject={setObject} />;
     }
   };
 
   return (
-    <>
-      <Loading open={loading} />
-      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-        {formSegreggation(type)}
-      </form>
-      <SnackBar
-        message={message}
-        severity={severity}
-        openMessage={openMessage}
-        setOpenMessage={setOpenMessage}
-      />
-    </>
+    <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+      {formSegreggation(type)}
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}
+      >
+        {button}
+      </Button>
+    </form>
   );
 };

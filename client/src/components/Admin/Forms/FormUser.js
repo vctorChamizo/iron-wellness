@@ -3,9 +3,6 @@ import React from "react";
 import { Controller } from "react-hook-form";
 import _ from "lodash";
 
-import { makeStyles } from "@material-ui/core/styles";
-
-import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -13,21 +10,13 @@ import {
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 
-import { EMAIL_PATTERN, USERNAME_PATTERN } from "../../../../lib/patterns";
+import {
+  EMAIL_PATTERN,
+  USERNAME_PATTERN,
+  PASSWORD_PATTERN,
+} from "../../../../lib/patterns";
 
-const useStyles = makeStyles((theme) => ({
-  editButton: {
-    background: theme.palette.primary.main,
-    color: theme.palette.primaryText,
-  },
-  submit: {
-    marginTop: "5vh",
-  },
-}));
-
-export const FormUser = ({ object, setObject, register, errors, control }) => {
-  const classes = useStyles();
-
+export const FormUser = ({ register, errors, control }) => {
   return (
     <>
       <TextField
@@ -57,7 +46,17 @@ export const FormUser = ({ object, setObject, register, errors, control }) => {
         error={errors.email ? true : false}
         helperText={errors.email ? errors.email.helperText : ""}
       />
-
+      <TextField
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        label="Contraseña"
+        name="password"
+        type="password"
+        inputRef={register({ required: true, pattern: PASSWORD_PATTERN })}
+        error={errors.password ? true : false}
+        helperText={errors.password ? errors.password.helperText : ""}
+      />
       <TextField
         variant="outlined"
         fullWidth
@@ -96,16 +95,6 @@ export const FormUser = ({ object, setObject, register, errors, control }) => {
           }}
         />
       </MuiPickersUtilsProvider>
-
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-      >
-        Actualizar perfil
-      </Button>
     </>
   );
 };

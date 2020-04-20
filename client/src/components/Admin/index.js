@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import { Profile } from "./Components/Profile";
 import { User } from "./Components/User";
 import { Trainer } from "./Components/Trainer";
 import { Class } from "./Components/Class";
@@ -29,8 +28,6 @@ export const Admin = connect((state) => ({ user: state.user }))(
 
     const ComponentSegreggation = (component) => {
       switch (component) {
-        case "profile":
-          return <Profile user={user} dispatch={dispatch} />;
         case "trainer":
           return <Trainer dispatch={dispatch} />;
         case "exersice":

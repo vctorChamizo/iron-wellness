@@ -5,7 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
 import TodayIcon from "@material-ui/icons/Today";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -24,8 +23,6 @@ export const ItemList = ({ type, handleClick }) => {
 
   const handleIcon = (type) => {
     switch (type) {
-      case "profile":
-        return <AccountBoxIcon />;
       case "users":
         return <PeopleAltIcon />;
       case "trainer":
@@ -45,8 +42,6 @@ export const ItemList = ({ type, handleClick }) => {
     switch (type) {
       case "users":
         return "Usuarios";
-      case "profile":
-        return "Perfil";
       case "trainer":
         return "Entrenador";
       case "exersice":
