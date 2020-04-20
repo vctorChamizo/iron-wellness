@@ -35,7 +35,7 @@ export const Profile = connect((state) => ({ user: state.user }))(
           ) : component === "profile" ? (
             <Edit user={user} dispatch={dispatch} />
           ) : (
-            <Calendar events={user.classes} history={history} />
+            <Calendar events={user?.classes || []} history={history} />
           )}
         </div>
       </div>

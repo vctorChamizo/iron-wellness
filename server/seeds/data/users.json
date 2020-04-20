@@ -3,36 +3,18 @@
     "username": "admin",
     "email": "admin@admin.es",
     "password": "123",
-    "name": "admin",
-    "surname": "admin",
-    "date": "2000-01-01",
+    "name": "Administrador",
+    "surname": "Administrador",
+    "date": "1996-02-19",
     "type": "ADMIN"
   },
   {
     "username": "trainer",
-    "email": "trainer@prueba.es",
+    "email": "trainer@trainer.es",
     "password": "123",
-    "name": "trainer",
-    "surname": "trainer",
-    "date": "2000-01-01",
+    "name": "Alba",
+    "surname": "Martinez",
+    "date": "1996-01-21",
     "type": "TRAINER"
-  },
-  {
-    "username": "client1",
-    "email": "client1@client.es",
-    "password": "123",
-    "name": "client1",
-    "surname": "client1",
-    "date": "2000-01-01",
-    "type": "CLIENT"
-  },
-  {
-    "username": "client2",
-    "email": "client2@client.es",
-    "password": "123",
-    "name": "client2",
-    "surname": "client2",
-    "date": "2000-01-01",
-    "type": "CLIENT"
   }
 ]

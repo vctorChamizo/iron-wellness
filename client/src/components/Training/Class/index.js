@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Loading } from "../../Loading";
 import { ListUser } from "./ListUser";
 import { SnackBar } from "../../Snackbar/index";
+import { DialogOption } from "./DialogOption";
 
 import { getClass } from "../../../../lib/api/class.api";
 import { addUserClass, removeUserClass } from "../../../../lib/api/user.api";
@@ -90,6 +91,7 @@ const useStyles = makeStyles((theme) => ({
   large: {
     width: "13vh",
     height: "13vh",
+    margin: "4.5vh 0 6.5vh 0",
   },
   wrapperTrainer: {
     padding: "2.5vh 0",
@@ -148,6 +150,9 @@ export const Class = connect((state) => ({ user: state.user }))(
     const [openMessage, setOpenMessage] = useState(false);
     const [severity, setSeverity] = useState();
 
+    const [openDialog, setOpenDialog] = useState(false);
+    const [classSelected, setClassSelected] = useState({});
+
     useEffect(() => {
       getClass(id)
         .then(({ data }) => {
@@ -189,7 +194,7 @@ export const Class = connect((state) => ({ user: state.user }))(
       }
     };
 
-    const handlekRemoveClass = async (_class) => {
+    const handleRemoveClass = async (_class) => {
       await removeUserClass(_class._id);
 
       const index = userList.findIndex((e) => e._id === user._id);
@@ -198,9 +203,10 @@ export const Class = connect((state) => ({ user: state.user }))(
       const indexClassUser = user.classes.findIndex(
         (e) => e._id === _class._id
       );
-      user.classes.splice(indexClassUser, indexClassUser);
+      user.classes.splice(indexClassUser, 1);
       dispatch(useSetUser(user));
 
+      setOpenDialog(false);
       handleSanckBar("Has sido eliminado de la clase", "success");
     };
 
@@ -209,6 +215,13 @@ export const Class = connect((state) => ({ user: state.user }))(
       setSeverity(severity);
       setOpenMessage(true);
     };
+
+    const handleClickOpenDialog = (_class) => {
+      setOpenDialog(true);
+      setClassSelected(_class);
+    };
+
+    const handleCloseDialog = () => setOpenDialog(false);
 
     return (
       <>
@@ -228,7 +241,7 @@ export const Class = connect((state) => ({ user: state.user }))(
                 <Button
                   variant="outlined"
                   color="secondary"
-                  onClick={() => handlekRemoveClass(dataClass)}
+                  onClick={() => handleClickOpenDialog(dataClass)}
                 >
                   Quitar
                 </Button>
@@ -291,12 +304,9 @@ export const Class = connect((state) => ({ user: state.user }))(
                     src={dataClass.trainer?.image.url || ""}
                     className={classes.large}
                   />
+                  <Divider className={classes.divider} />
                   <p className={classes.titleTrainer}>
                     {dataClass.trainer?.name} {dataClass.trainer?.surname}
-                  </p>
-                  <Divider className={classes.divider} />
-                  <p className={classes.subtitleTrainer}>
-                    {dataClass.trainer?.username}
                   </p>
                 </div>
               </div>
@@ -315,6 +325,12 @@ export const Class = connect((state) => ({ user: state.user }))(
           severity={severity}
           openMessage={openMessage}
           setOpenMessage={setOpenMessage}
+        />
+        <DialogOption
+          openDialog={openDialog}
+          handleCloseDialog={handleCloseDialog}
+          handleRemoveClass={handleRemoveClass}
+          classSelected={classSelected}
         />
       </>
     );
