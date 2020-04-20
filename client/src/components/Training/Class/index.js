@@ -172,24 +172,35 @@ export const Class = connect((state) => ({ user: state.user }))(
     const place =
       dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
 
-    const handlekAddClass = async (id) => {
-      await addUserClass(id);
+    const handlekAddClass = async (_class) => {
       if (userList.findIndex((e) => e._id === user._id)) {
+        await addUserClass(_class._id);
+
         const newList = [...userList];
         newList.push(user);
         setUserList(newList);
-        user.classes.push(id);
+
+        user.classes.push(_class);
         dispatch(useSetUser(user));
+
         handleSanckBar("Has sido añadido a la clase", "success");
       } else {
         handleSanckBar("Ya estás añadido a la clase", "info");
       }
     };
 
-    const handlekRemoveClass = async (id) => {
-      await removeUserClass(id);
+    const handlekRemoveClass = async (_class) => {
+      await removeUserClass(_class._id);
+
       const index = userList.findIndex((e) => e._id === user._id);
       setUserList([...userList].splice(index, index));
+
+      const indexClassUser = user.classes.findIndex(
+        (e) => e._id === _class._id
+      );
+      user.classes.splice(indexClassUser, indexClassUser);
+      dispatch(useSetUser(user));
+
       handleSanckBar("Has sido eliminado de la clase", "success");
     };
 
@@ -210,14 +221,14 @@ export const Class = connect((state) => ({ user: state.user }))(
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => handlekAddClass(dataClass._id)}
+                  onClick={() => handlekAddClass(dataClass)}
                 >
                   Añadir
                 </Button>
                 <Button
                   variant="outlined"
                   color="secondary"
-                  onClick={() => handlekRemoveClass(dataClass._id)}
+                  onClick={() => handlekRemoveClass(dataClass)}
                 >
                   Quitar
                 </Button>
