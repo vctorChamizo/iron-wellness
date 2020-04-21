@@ -18,5 +18,5 @@ module.exports = {
   isLoggedIn,
   isLoggedOut,
   isAdmin,
-  isClient
+  isClient,
 };

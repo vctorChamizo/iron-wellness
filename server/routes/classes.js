@@ -65,15 +65,17 @@ router.post("/create", isLoggedIn(), isAdmin(), async (req, res, next) => {
 
       return res
         .status(201)
-        .json(newClass, [
-          "_id",
-          "name",
-          "activity",
-          "trainer",
-          "date",
-          "level",
-          "size",
-        ]);
+        .json(
+          _.pick(newClass, [
+            "_id",
+            "name",
+            "activity",
+            "trainer",
+            "date",
+            "level",
+            "size",
+          ])
+        );
     }
 
     return res.status(400).json({ status: "BadRequest" });
@@ -91,11 +93,11 @@ router.get("/:id", async (req, res, next) => {
     const _class = await Class.findOne({ _id: req.params.id })
       .populate({
         path: "students",
-        select: ["_id", "username", "name", "surname"],
+        select: ["_id", "username", "name", "surname", "image"],
       })
       .populate({
         path: "trainer",
-        select: ["_id", "username", "name", "surname", "type"],
+        select: ["_id", "username", "name", "surname", "image"],
       })
       .populate({ path: "activity", select: ["name", "type", "description"] })
       .select("-updatedAt -createdAt -__v");

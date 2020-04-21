@@ -45,6 +45,7 @@ const userSchema = new mongoose.Schema(
     type: {
       type: String,
       required: "Type is required",
+      default: "CLIENT",
       enum: ["ADMIN", "TRAINER", "CLIENT"],
     },
     classes: [{ type: mongoose.ObjectId, ref: "Class" }],

@@ -1,19 +1,19 @@
 const multer = require("multer");
 const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key: process.env.CLOUDINARY_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET
-});
+const _ = require("lodash");
 
 const uploadCloud = multer({
   storage: cloudinaryStorage({
     cloudinary,
-    folder: "iron-wellness",
-    allowedFormats: ["jpg", "png"]
-  })
+    folder: "iron-wellness/avatar",
+    allowedFormats: ["jpg", "png"],
+    filename: function (req, file, cb) {
+      const userID = _.get(req, "user._id");
+      const userFile = userID ? `avatar${userID}` : file;
+      cb(undefined, userFile);
+    },
+  }),
 });
 
 module.exports = uploadCloud;
