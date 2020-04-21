@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+const http = require("http");
+const {
+  handleServerError,
+  handleNotFoundError
+} = require("../middleware/error-middleware");
+
+const app = require("../app");
+
+const Sentry = require("@sentry/node");
+Sentry.init({
+  dsn: "https://4842cf9f4a9f4beb89742e66ebf66fd2@sentry.io/5188744"
+});
+
+app.use(handleNotFoundError);
+app.use(handleServerError);
+
+let server = http.createServer(app);
+
+server.on("error", error => {
+  if (error.syscall !== "listen") throw error;
+
+  switch (error.code) {
+    case "EACCES":
+      console.error(`Port ${process.env.PORT} requires elevated privileges`);
+      process.exit(1);
+
+    case "EADDRINUSE":
+      console.error(`Port ${process.env.PORT} is already in use`);
+      process.exit(1);
+
+    default:
+      throw error;
+  }
+});
+
+server.listen(process.env.PORT, () => {
+  console.log(`Listening on http://localhost: ${process.env.PORT}`);
+});

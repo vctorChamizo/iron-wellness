@@ -1,0 +1,20 @@
+[
+  {
+    "username": "admin",
+    "email": "admin@admin.es",
+    "password": "123",
+    "name": "Administrador",
+    "surname": "Administrador",
+    "date": "1996-02-19",
+    "type": "ADMIN"
+  },
+  {
+    "username": "trainer",
+    "email": "trainer@trainer.es",
+    "password": "123",
+    "name": "Alba",
+    "surname": "Martinez",
+    "date": "1996-01-21",
+    "type": "TRAINER"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Wellness! - Getafe",
+    "street": "C/Pensamiento",
+    "city": "Getafe",
+    "community": "Madrid",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-2_fcclno.jpg"
+    }
+  },
+  {
+    "name": "Wellness! - Legazpi",
+    "street": "C/Pensamiento",
+    "city": "Madrid",
+    "community": "Madrid",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-3_bwipvh.jpg"
+    }
+  },
+  {
+    "name": "Wellness! - Fuenlabrada",
+    "street": "C/Pensamiento",
+    "city": "Fuenlabrada",
+    "community": "Madrid",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-5_kkrzpg.jpg"
+    }
+  },
+  {
+    "name": "Wellness! - Torrejón",
+    "street": "C/Pensamiento",
+    "city": "Torrejón de Ardoz",
+    "community": "Madrid",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-1_jmdzf3.jpg"
+    }
+  },
+  {
+    "name": "Wellness! - Parla",
+    "street": "C/Pensamiento",
+    "city": "Parla",
+    "community": "Madrid",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1586980230/iron-wellness/components/centers/center-4_c4bcye.jpg"
+    }
+  },
+  {
+    "name": "Wellness! - Leganés",
+    "street": "C/Pensamiento",
+    "city": "Leganés",
+    "community": "Madrid",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1586980229/iron-wellness/components/centers/center-6_cs3rok.jpg"
+    }
+  }
+]

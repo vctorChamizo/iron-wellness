@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Crossfit",
+    "description": "Resistencia, fuerza física, flexibilidad, potencia, equilibrio... ¡Todo en uno!",
+    "type": "OUTDOOR"
+  },
+  {
+    "name": "Yoga",
+    "description": "En el yoga, cuerpo, mente y espíritu se fortalecen y serenan con la práctica de las asanas, la respiración y la meditación.",
+    "type": "INDOOR"
+  }
+]
