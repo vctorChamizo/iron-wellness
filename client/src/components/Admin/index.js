@@ -6,8 +6,7 @@ import { withRouter } from "react-router-dom";
 import { User } from "./Components/User";
 import { Trainer } from "./Components/Trainer";
 import { Class } from "./Components/Class";
-import { Exersice } from "./Components/Exersice";
-import { Center } from "./Components/Center";
+import { Activity } from "./Components/Activity";
 import { Menu } from "./Drawer/index";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -28,12 +27,10 @@ export const Admin = connect((state) => ({ user: state.user }))(
 
     const ComponentSegreggation = (component) => {
       switch (component) {
-        case "trainer":
+        case "trainers":
           return <Trainer dispatch={dispatch} />;
-        case "exersice":
-          return <Exersice dispatch={dispatch} />;
-        case "centers":
-          return <Center dispatch={dispatch} />;
+        case "activities":
+          return <Activity dispatch={dispatch} />;
         case "classes":
           return <Class dispatch={dispatch} />;
         case "users":

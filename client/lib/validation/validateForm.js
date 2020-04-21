@@ -24,5 +24,11 @@ export const validateForm = (errors) => {
 
   if (errors.surname) errors.surname.helperText = "El campo no puede ser vacio";
 
+  if (errors.description)
+    errors.description.helperText = "El campo no puede ser vacio";
+
+  if (errors.type)
+    errors.description.helperText = "El campo no puede ser vacio";
+
   return errors;
 };

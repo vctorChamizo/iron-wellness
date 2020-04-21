@@ -9,30 +9,26 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
 import EventIcon from "@material-ui/icons/Event";
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
-    justifyContent: "flex-start",
-    flexDirection: "column",
-    alignItems: "flex-start",
-  },
-  list: {
-    width: "100%",
-  },
-  item: {
-    display: "block",
+    padding: "1.5vh 1.5vw",
   },
   wrapperClass: {
     display: "flex",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "center",
-    padding: "1.5vh 1.5vw 0 1.5vw",
+    paddingTop: "1.5vh",
   },
   wrapperInfo: {
+    color: "#555",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingRight: "1.5vw",
   },
   icon: {
     marginRight: "0.5vw",
@@ -45,38 +41,42 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     paddingTop: "1vh",
   },
+  item: {
+    display: "block",
+  },
 }));
 
-export const Item = ({ children, type }) => {
+export const Item = ({ children, type, handleRemove }) => {
   const classes = useStyles();
 
   const ContentUser = ({ children }) => (
     <>
-      <ListItem button>
-        <ListItemAvatar>
-          <Avatar alt="Avatar" src={children.image?.url || ""} />
-        </ListItemAvatar>
-        <ListItemText
-          primary={children.name + " " + children.surname}
-          secondary={children.username}
-        />
-      </ListItem>
+      <ListItemAvatar>
+        <Avatar alt="Avatar" src={children.image?.url || ""} />
+      </ListItemAvatar>
+      <ListItemText
+        primary={children.name + " " + children.surname}
+        secondary={children.username}
+      />
     </>
   );
 
-  const ContentExersice = ({ children }) => <></>;
+  const ContentActivity = ({ children }) => (
+    <div>
+      <p className={classes.title}>{children.name}</p>
+      <ListItemText secondary={children.type} />
+    </div>
+  );
 
   const ContentClass = ({ children }) => {
     const date = new Date(children.date);
 
     return (
-      <ListItem className={classes.item} button>
+      <div className={classes.item}>
         <p className={classes.title}>{children.name}</p>
-
         <div className={classes.wrapperClass}>
           <div className={classes.wrapperInfo}>
             <EventIcon className={classes.icon} />
-            {"  "}
             {`${date.getDate()}-${String(date.getMonth() + 1).padStart(
               2,
               "0"
@@ -84,40 +84,41 @@ export const Item = ({ children, type }) => {
           </div>
           <div className={classes.wrapperInfo}>
             <QueryBuilderIcon className={classes.icon} />
-            {"  "}
             {`${String(date.getHours() - 2).padStart(2, "0")}:${String(
               date.getMinutes()
             ).padStart(2, "0")}`}
           </div>
         </div>
-      </ListItem>
+      </div>
     );
   };
-
-  const ContentCenter = ({ children }) => (
-    <>
-      <ListItem button>
-        <ListItemAvatar>
-          <Avatar alt="Avatar" src={children?.image.url} />
-        </ListItemAvatar>
-        <ListItemText primary={children.name} secondary={children.city} />
-      </ListItem>
-    </>
-  );
 
   const contentSegreggation = (type, children) => {
     switch (type) {
       case "trainer":
       case "user":
         return <ContentUser>{children}</ContentUser>;
-      case "exersice":
-        return <ContentExersice>{children}</ContentExersice>;
-      case "center":
-        return <ContentCenter>{children}</ContentCenter>;
+      case "activity":
+        return <ContentActivity>{children}</ContentActivity>;
       case "class":
         return <ContentClass>{children}</ContentClass>;
     }
   };
 
-  return <Paper>{contentSegreggation(type, children)}</Paper>;
+  return (
+    <Paper>
+      <ListItem button className={classes.root}>
+        {contentSegreggation(type, children)}
+        <ListItemSecondaryAction>
+          <IconButton
+            edge="end"
+            aria-label="delete"
+            onClick={() => handleRemove(children._id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Paper>
+  );
 };

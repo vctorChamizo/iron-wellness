@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import {
   getUsersByType,
-  getUser,
   addUser,
-  updateUser,
   removeUser,
 } from "../../../../lib/api/user.api";
 
@@ -15,7 +13,6 @@ import { SnackBar } from "../../Snackbar/index";
 export const Trainer = () => {
   const [loading, setLoading] = useState(true);
   const [trainers, setTrainers] = useState([]);
-  const [object, setObject] = useState({});
 
   const [message, setMessage] = useState();
   const [openMessage, setOpenMessage] = useState(false);
@@ -56,23 +53,34 @@ export const Trainer = () => {
     setLoading(false);
   };
 
-  const handleGet = async (data) => {};
+  const handleRemove = async (data) => {
+    setLoading(true);
+    try {
+      await removeUser(data);
 
-  const handleEdit = async (data) => {};
+      const newTrainers = [...trainers];
+      const index = trainers.findIndex((e) => e._id === data);
+      newTrainers.splice(index, 1);
+      setTrainers(newTrainers);
 
-  const handleRemove = async (data) => {};
+      handleSanckBar(
+        "El entrenador ha sido eliminado correctamente",
+        "success"
+      );
+    } catch (error) {
+      if (error.response) {
+      }
+    }
+    setLoading(false);
+  };
 
   return (
     <>
       <Loading open={loading} />
       <Wrapper
-        object={object}
-        setObject={setObject}
         list={trainers}
         setList={setTrainers}
         handleAdd={handleAdd}
-        handleGet={handleGet}
-        handleEdit={handleEdit}
         handleRemove={handleRemove}
         type={"trainer"}
       ></Wrapper>

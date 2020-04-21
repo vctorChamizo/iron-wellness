@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import {
   getUsersByType,
-  getUser,
   addUser,
-  updateUser,
   removeUser,
 } from "../../../../lib/api/user.api";
 
@@ -15,7 +13,6 @@ import { SnackBar } from "../../Snackbar/index";
 export const User = () => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
-  const [object, setObject] = useState({});
 
   const [message, setMessage] = useState();
   const [openMessage, setOpenMessage] = useState(false);
@@ -56,23 +53,31 @@ export const User = () => {
     setLoading(false);
   };
 
-  const handleGet = async (data) => {};
+  const handleRemove = async (data) => {
+    setLoading(true);
+    try {
+      await removeUser(data);
 
-  const handleEdit = async (data) => {};
+      const newUsers = [...users];
+      const index = users.findIndex((e) => e._id === data);
+      newUsers.splice(index, 1);
+      setUsers(newUsers);
 
-  const handleRemove = async (data) => {};
+      handleSanckBar("El usuario ha sido eliminado correctamente", "success");
+    } catch (error) {
+      if (error.response) {
+      }
+    }
+    setLoading(false);
+  };
 
   return (
     <>
       <Loading open={loading} />
       <Wrapper
-        object={object}
-        setObject={setObject}
         list={users}
         setList={setUsers}
         handleAdd={handleAdd}
-        handleGet={handleGet}
-        handleEdit={handleEdit}
         handleRemove={handleRemove}
         type={"user"}
       ></Wrapper>

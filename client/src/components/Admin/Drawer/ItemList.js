@@ -10,7 +10,6 @@ import TodayIcon from "@material-ui/icons/Today";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
-import BusinessIcon from "@material-ui/icons/Business";
 
 const useStyles = makeStyles((theme) => ({
   item: {
@@ -25,12 +24,10 @@ export const ItemList = ({ type, handleClick }) => {
     switch (type) {
       case "users":
         return <PeopleAltIcon />;
-      case "trainer":
+      case "trainers":
         return <AccessibilityNewIcon />;
-      case "exersice":
+      case "activities":
         return <FitnessCenterIcon />;
-      case "centers":
-        return <BusinessIcon />;
       case "classes":
         return <TodayIcon />;
       case "logout":
@@ -42,12 +39,10 @@ export const ItemList = ({ type, handleClick }) => {
     switch (type) {
       case "users":
         return "Usuarios";
-      case "trainer":
-        return "Entrenador";
-      case "exersice":
-        return "Entrenamientos";
-      case "centers":
-        return "Centros";
+      case "trainers":
+        return "Entrenadores";
+      case "activities":
+        return "Actividades";
       case "classes":
         return "Clases";
       case "logout":

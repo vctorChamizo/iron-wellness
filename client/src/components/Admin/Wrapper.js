@@ -41,27 +41,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Wrapper = ({
-  list,
-  object,
-  setObject,
-  setList,
-  type,
-  handleAdd,
-  handleGet,
-  handleEdit,
-  handleRemove,
-}) => {
+export const Wrapper = ({ type, list, handleAdd, handleRemove }) => {
   const classes = useStyles();
 
   const formatTitle = (type) => {
     switch (type) {
       case "trainer":
         return "ENTRENADORES";
-      case "exersice":
-        return "EJERCICIOS";
-      case "center":
-        return "CENTROS";
+      case "activity":
+        return "ACTIVIDADES";
       case "class":
         return "CLASES";
       case "user":
@@ -76,17 +64,13 @@ export const Wrapper = ({
       <div className={classes.container}>
         <div className={classes.wrapperMain}>
           <Paper className={classes.paper}>
-            <ListItem type={type}>{list}</ListItem>
+            <ListItem type={type} handleRemove={handleRemove}>
+              {list}
+            </ListItem>
           </Paper>
         </div>
         <div className={classes.wrapperForm}>
-          <Form
-            type={type}
-            object={object}
-            setObject={setObject}
-            handleAdd={handleAdd}
-            handleEdit={handleEdit}
-          />
+          <Form type={type} handleAdd={handleAdd} />
         </div>
       </div>
     </div>

@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const listDrawer = ["users", "trainer", "centers", "classes", "exersice"];
+const listDrawer = ["users", "trainers", "activities", "classes"];
 
 export const Menu = ({ setComponent, user, history, dispatch }) => {
   const classes = useStyles();

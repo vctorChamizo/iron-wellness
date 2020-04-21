@@ -16,8 +16,6 @@ export const addUser = async (user) => await api.post(`users/`, { user });
 export const editUser = async (user) =>
   await api.put(`users/${user._id}`, { user });
 
-export const removeUser = async (id) => await api.delete(`users/${id}`);
-
 export const upload = async (file) => {
   const data = new FormData();
   data.append("profileImage", file);
@@ -28,3 +26,5 @@ export const addUserClass = async (id) => await api.get(`users/addclass/${id}`);
 
 export const removeUserClass = async (id) =>
   await api.get(`users/removeclass/${id}`);
+
+export const removeUser = async (id) => await api.delete(`users/${id}`);

@@ -9,17 +9,18 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import { FormUser } from "./FormUser";
 import { FormClass } from "./FormClass";
-import { FormExersice } from "./FormExersice";
-import { FormCenter } from "./FormCenter";
+import { FormActivity } from "./FormActivity";
 
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%",
+    height: "70vh",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    alignItems: "space-between",
   },
   editButton: {
     background: theme.palette.primary.main,
@@ -30,44 +31,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Form = ({ type, object, setObject, handleAdd, handleEdit }) => {
+export const Form = ({ type, handleAdd }) => {
   const classes = useStyles();
 
-  const button = object?.name ? "Actualizar" : "Crear";
-
-  const { register, handleSubmit, errors, control, reset } = useForm({});
+  const { register, handleSubmit, errors, control } = useForm({});
 
   if (!_.isEmpty(errors)) validateForm(errors);
 
-  const onSubmit = async (data, e) =>
-    button === "Crear" ? handleAdd(data, e) : handleEdit(data, e);
+  const onSubmit = async (data, e) => handleAdd(data, e);
 
   const formSegreggation = (type) => {
     switch (type) {
       case "trainer":
       case "user":
         return (
-          <FormUser
-            object={object}
-            setObject={setObject}
-            register={register}
-            errors={errors}
-            control={control}
-          />
+          <FormUser register={register} errors={errors} control={control} />
         );
-      case "exersice":
-        return <FormExersice object={object} setObject={setObject} />;
-      case "center":
+      case "activity":
         return (
-          <FormCenter
-            object={object}
-            setObject={setObject}
-            register={register}
-            errors={errors}
-          />
+          <FormActivity register={register} errors={errors} control={control} />
         );
+
       case "classes":
-        return <FormClass object={object} setObject={setObject} />;
+        return <FormClass register={register} errors={errors} />;
     }
   };
 
@@ -81,7 +67,7 @@ export const Form = ({ type, object, setObject, handleAdd, handleEdit }) => {
         color="primary"
         className={classes.submit}
       >
-        {button}
+        Añadir
       </Button>
     </form>
   );

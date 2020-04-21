@@ -1,5 +1,5 @@
 import React from "react";
 
-export const FormClass = () => {
+export const FormClass = ({ register, errors }) => {
   return <>CLASS</>;
 };

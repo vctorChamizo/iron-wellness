@@ -1,29 +1,26 @@
 import React, { useState, useEffect } from "react";
 
 import {
-  getCenters,
-  getCenter,
-  addCenter,
-  updateCenter,
-  removeCenter,
-} from "../../../../lib/api/center.api";
+  getActivities,
+  addActivity,
+  removeActivity,
+} from "../../../../lib/api/activity.api";
 
 import { Wrapper } from "../Wrapper";
 import { Loading } from "../../Loading";
 import { SnackBar } from "../../Snackbar/index";
 
-export const Center = ({ dispatch }) => {
+export const Activity = () => {
   const [loading, setLoading] = useState(true);
-  const [centers, setCenters] = useState([]);
-  const [object, setObject] = useState({});
+  const [activities, setActivities] = useState([]);
 
   const [message, setMessage] = useState();
   const [openMessage, setOpenMessage] = useState(false);
   const [severity, setSeverity] = useState();
 
   useEffect(() => {
-    getCenters()
-      .then(({ data }) => setCenters(data))
+    getActivities()
+      .then(({ data }) => setActivities(data))
       .catch((e) => console.error(e.response?.statusText))
       .finally(setLoading(false));
   }, []);
@@ -37,42 +34,47 @@ export const Center = ({ dispatch }) => {
   const handleAdd = async (data, e) => {
     setLoading(true);
     try {
-      console.log("llega aqui");
-      await addCenter(data);
+      await addActivity(data);
 
-      // const newCenters = [...centers];
-      // newCenters.push(data);
-      // setTrainers(newCenters);
+      const newActivities = [...activities];
+      newActivities.push(data);
+      setActivities(newActivities);
 
-      // e.target.reset();
-      handleSanckBar("El centro ha sido creado correctamente", "success");
+      e.target.reset();
+      handleSanckBar("La actividad ha sido creada correctamente", "success");
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
       }
     }
     setLoading(false);
   };
 
-  const handleGet = async (data) => {};
+  const handleRemove = async (data) => {
+    setLoading(true);
+    try {
+      await removeActivity(data);
 
-  const handleEdit = async (data) => {};
+      const newActivities = [...activities];
+      const index = activities.findIndex((e) => e._id === data);
+      newActivities.splice(index, 1);
+      setActivities(newActivities);
 
-  const handleRemove = async (data) => {};
+      handleSanckBar("La actividad ha sido eliminada correctamente", "success");
+    } catch (error) {
+      if (error.response) {
+      }
+    }
+    setLoading(false);
+  };
 
   return (
     <>
       <Loading open={loading} />
       <Wrapper
-        object={object}
-        setObject={setObject}
-        list={centers}
-        setList={setCenters}
+        list={activities}
         handleAdd={handleAdd}
-        handleGet={handleGet}
-        handleEdit={handleEdit}
         handleRemove={handleRemove}
-        type={"center"}
+        type={"activity"}
       ></Wrapper>
       <SnackBar
         message={message}
