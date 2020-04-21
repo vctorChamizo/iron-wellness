@@ -1,14 +1,8 @@
-import "date-fns";
 import React from "react";
-import { Controller } from "react-hook-form";
+import "date-fns";
 import _ from "lodash";
 
 import TextField from "@material-ui/core/TextField";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
 
 import {
   EMAIL_PATTERN,
@@ -16,83 +10,90 @@ import {
   PASSWORD_PATTERN,
 } from "../../../../lib/patterns";
 
-export const FormUser = ({ register, errors, control }) => (
-  <>
-    <TextField
-      variant="outlined"
-      margin="normal"
-      fullWidth
-      label="Usuario"
-      name="username"
-      inputRef={register({
-        required: true,
-        pattern: USERNAME_PATTERN,
-      })}
-      error={errors.username ? true : false}
-      helperText={errors.username ? errors.username.helperText : ""}
-    />
-    <TextField
-      variant="outlined"
-      margin="normal"
-      fullWidth
-      label="Email"
-      name="email"
-      autoComplete="email"
-      inputRef={register({
-        required: true,
-        pattern: EMAIL_PATTERN,
-      })}
-      error={errors.email ? true : false}
-      helperText={errors.email ? errors.email.helperText : ""}
-    />
-    <TextField
-      variant="outlined"
-      margin="normal"
-      fullWidth
-      label="Contraseña"
-      name="password"
-      type="password"
-      inputRef={register({ required: true, pattern: PASSWORD_PATTERN })}
-      error={errors.password ? true : false}
-      helperText={errors.password ? errors.password.helperText : ""}
-    />
-    <TextField
-      variant="outlined"
-      fullWidth
-      margin="normal"
-      label="Nombre"
-      name="name"
-      inputRef={register({ required: true })}
-      error={errors.name ? true : false}
-      helperText={errors.name ? errors.name.helperText : ""}
-    />
-    <TextField
-      variant="outlined"
-      fullWidth
-      margin="normal"
-      label="Apellido"
-      name="surname"
-      inputRef={register({ required: true })}
-      error={errors.surname ? true : false}
-      helperText={errors.surname ? errors.surname.helperText : ""}
-    />
+export const FormUser = ({ register, errors, control }) => {
+  const date = new Date();
 
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <Controller
-        as={KeyboardDatePicker}
-        name="reactSelect"
-        control={control}
-        onChange={(selected) => selected[1]}
-        fullWidth
-        variant="inline"
-        format="MM/dd/yyyy"
+  const currentDate = `${date.getFullYear()}-${String(date.getMonth()).padStart(
+    2,
+    "0"
+  )}-${String(date.getDate()).padStart(2, "0")}`;
+
+  return (
+    <>
+      <TextField
+        variant="outlined"
         margin="normal"
-        name="date"
-        label="Fecha de nacimiento"
-        KeyboardButtonProps={{
-          "aria-label": "change date",
-        }}
+        fullWidth
+        label="Usuario"
+        name="username"
+        inputRef={register({
+          required: true,
+          pattern: USERNAME_PATTERN,
+        })}
+        error={errors.username ? true : false}
+        helperText={errors.username ? errors.username.helperText : ""}
       />
-    </MuiPickersUtilsProvider>
-  </>
-);
+      <TextField
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        label="Email"
+        name="email"
+        autoComplete="email"
+        inputRef={register({
+          required: true,
+          pattern: EMAIL_PATTERN,
+        })}
+        error={errors.email ? true : false}
+        helperText={errors.email ? errors.email.helperText : ""}
+      />
+      <TextField
+        variant="outlined"
+        margin="normal"
+        fullWidth
+        label="Contraseña"
+        name="password"
+        type="password"
+        inputRef={register({ required: true, pattern: PASSWORD_PATTERN })}
+        error={errors.password ? true : false}
+        helperText={errors.password ? errors.password.helperText : ""}
+      />
+      <TextField
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        label="Nombre"
+        name="name"
+        inputRef={register({ required: true })}
+        error={errors.name ? true : false}
+        helperText={errors.name ? errors.name.helperText : ""}
+      />
+      <TextField
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        label="Apellido"
+        name="surname"
+        inputRef={register({ required: true })}
+        error={errors.surname ? true : false}
+        helperText={errors.surname ? errors.surname.helperText : ""}
+      />
+
+      <TextField
+        fullWidth
+        variant="outlined"
+        margin="normal"
+        label="Fecha de nacimiento"
+        type="date"
+        name="date"
+        defaultValue={currentDate}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        inputRef={register()}
+        error={errors.date ? true : false}
+        helperText={errors.date ? errors.date.helperText : ""}
+      />
+    </>
+  );
+};

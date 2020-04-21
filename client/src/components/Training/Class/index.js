@@ -177,20 +177,24 @@ export const Class = connect((state) => ({ user: state.user }))(
     const place =
       dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
 
-    const handlekAddClass = async (_class) => {
-      if (userList.findIndex((e) => e._id === user._id)) {
-        await addUserClass(_class._id);
+    const handleAddClass = async (_class) => {
+      try {
+        if (userList.findIndex((e) => e._id === user._id)) {
+          await addUserClass(_class._id);
 
-        const newList = [...userList];
-        newList.push(user);
-        setUserList(newList);
+          const newList = [...userList];
+          newList.push(user);
+          setUserList(newList);
 
-        user.classes.push(_class);
-        dispatch(useSetUser(user));
+          user.classes.push(_class);
+          dispatch(useSetUser(user));
 
-        handleSanckBar("Has sido añadido a la clase", "success");
-      } else {
-        handleSanckBar("Ya estás añadido a la clase", "info");
+          handleSanckBar("Has sido añadido a la clase", "success");
+        } else {
+          handleSanckBar("Ya estás añadido a la clase", "info");
+        }
+      } catch (error) {
+        console.log(error.response);
       }
     };
 
@@ -223,6 +227,8 @@ export const Class = connect((state) => ({ user: state.user }))(
 
     const handleCloseDialog = () => setOpenDialog(false);
 
+    console.log(dataClass);
+
     return (
       <>
         <Loading open={loading} />
@@ -234,7 +240,7 @@ export const Class = connect((state) => ({ user: state.user }))(
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => handlekAddClass(dataClass)}
+                  onClick={() => handleAddClass(dataClass)}
                 >
                   Añadir
                 </Button>
@@ -301,7 +307,7 @@ export const Class = connect((state) => ({ user: state.user }))(
                 <div className={classes.wrapperTrainer}>
                   <Avatar
                     alt="Avatar"
-                    src={dataClass.trainer?.image.url || ""}
+                    src={dataClass.trainer?.image?.url || ""}
                     className={classes.large}
                   />
                   <Divider className={classes.divider} />

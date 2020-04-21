@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primaryText,
   },
   submit: {
-    marginTop: "2.5vh",
+    margin: "2.5vh 0",
   },
 }));
 
@@ -52,8 +52,10 @@ export const Form = ({ type, handleAdd }) => {
           <FormActivity register={register} errors={errors} control={control} />
         );
 
-      case "classes":
-        return <FormClass register={register} errors={errors} />;
+      case "class":
+        return (
+          <FormClass register={register} errors={errors} control={control} />
+        );
     }
   };
 

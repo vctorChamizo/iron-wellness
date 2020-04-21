@@ -4,37 +4,36 @@ const classSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: "Name is required"
+      required: "Name is required",
     },
     activity: {
       type: mongoose.ObjectId,
       ref: "Activity",
-      required: "Activity is required"
+      required: "Activity is required",
     },
     students: [
       {
         type: mongoose.ObjectId,
-        ref: "User"
-      }
+        ref: "User",
+      },
     ],
     trainer: {
       type: mongoose.ObjectId,
       ref: "User",
-      required: "Trainer is required"
+      required: "Trainer is required",
     },
     date: {
       type: Date,
-      required: "Date is required"
+      required: "Date is required",
     },
     level: {
       type: String,
       required: "Level is required",
-      enum: ["BEGGINER", "MEDIUM", "PROFESSIONAL"]
+      enum: ["BEGGINER", "MEDIUM", "PROFESSIONAL"],
     },
-    size: { type: Number, required: "Size is required" }
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

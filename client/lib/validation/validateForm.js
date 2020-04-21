@@ -27,8 +27,9 @@ export const validateForm = (errors) => {
   if (errors.description)
     errors.description.helperText = "El campo no puede ser vacio";
 
-  if (errors.type)
-    errors.description.helperText = "El campo no puede ser vacio";
+  if (errors.type) errors.type.helperText = "El campo no puede ser vacio";
+
+  if (errors.date) errors.date.helperText = "El campo no puede ser vacio";
 
   return errors;
 };

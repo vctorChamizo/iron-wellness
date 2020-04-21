@@ -43,8 +43,7 @@ export const Class = () => {
       e.target.reset();
       handleSanckBar("La clase ha sido creada correctamente", "success");
     } catch (error) {
-      if (error.response) {
-      }
+      if (error.response) console.log(error.response);
     }
     setLoading(false);
   };
@@ -54,14 +53,14 @@ export const Class = () => {
     try {
       await removeClass(data);
 
-      //const newUsers = [...users];
-      //newUsers.push(data);
-      //setUsers(newUsers);
+      const newClasses = [...classes];
+      const index = classes.findIndex((e) => e._id === data);
+      newClasses.splice(index, 1);
+      setClasses(newClasses);
 
       handleSanckBar("La clase ha sido eliminada correctamente", "success");
     } catch (error) {
-      if (error.response) {
-      }
+      if (error.response) console.log(error.response);
     }
     setLoading(false);
   };

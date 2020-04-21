@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import React from "react";
 import { Controller } from "react-hook-form";
 
 import InputLabel from "@material-ui/core/InputLabel";
@@ -21,12 +20,21 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     marginTop: "1vh",
   },
+  title: {
+    color: theme.palette.primary.main,
+    fontFamily: '"Roboto", sans-serif',
+    fontWeight: "300",
+    fontSize: "1.2rem",
+    margin: 0,
+    paddingTop: "1vh",
+  },
+  control: {
+    padding: "0 1vw",
+  },
 }));
 
 export const FormActivity = ({ register, errors, control }) => {
   const classes = useStyles();
-
-  const [selectedValue, setSelectedValue] = useState("");
 
   return (
     <>
@@ -68,7 +76,7 @@ export const FormActivity = ({ register, errors, control }) => {
           <InputLabel id="demo-simple-select-outlined-label">Tipo</InputLabel>
           <Controller
             as={Select}
-            required
+            className={classes.control}
             name="type"
             labelId="demo-simple-select-outlined-label"
             id="demo-simple-select-outlined"
@@ -76,8 +84,12 @@ export const FormActivity = ({ register, errors, control }) => {
             onChange={(selected) => selected[0].target.value}
             defaultValue={""}
           >
-            <MenuItem value={"INDOOR"}>INDOOR</MenuItem>
-            <MenuItem value={"OUTDOOR"}>OUTDOOR</MenuItem>
+            <MenuItem value={"INDOOR"}>
+              <p className={classes.title}>INDOOR</p>
+            </MenuItem>
+            <MenuItem value={"OUTDOOR"}>
+              <p className={classes.title}>OUTDOOR</p>
+            </MenuItem>
           </Controller>
         </FormControl>
       </div>

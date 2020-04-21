@@ -135,7 +135,7 @@ router.get("/addclass/:id", isClient(), async (req, res, next) => {
     const _class = await Class.findById({ _id: req.params.id });
 
     if (_class) {
-      if (_class.size - _class.students.length > 0) {
+      if (!_class.size || _class.size - _class.students.length > 0) {
         await User.findByIdAndUpdate(req.user._id, {
           $addToSet: { classes: req.params.id },
         });
