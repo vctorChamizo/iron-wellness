@@ -166,7 +166,7 @@ export const Login = connect()(
                   variant="body2"
                   className={classes.redirect}
                 >
-                  {"No tines una cuenta aún? Regístrate."}
+                  {"¿No tienes una cuenta aún? Regístrate."}
                 </Link>
               </Grid>
               {loading && <LinearProgress className={classes.progress} />}

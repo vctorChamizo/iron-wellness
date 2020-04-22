@@ -4,12 +4,14 @@ import { connect } from "react-redux";
 
 import { Loading } from "../../Loading";
 import { ListUser } from "./ListUser";
-import { SnackBar } from "../../Snackbar/index";
-import { DialogOption } from "./DialogOption";
 
 import { getClass } from "../../../../lib/api/class.api";
 import { addUserClass, removeUserClass } from "../../../../lib/api/user.api";
-import { useSetUser } from "../../../../lib/redux/action";
+import {
+  useSetUser,
+  useSetSnackbar,
+  useSetDialog,
+} from "../../../../lib/redux/action";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -146,13 +148,6 @@ export const Class = connect((state) => ({ user: state.user }))(
     const [dataClass, setDataClass] = useState({});
     const [userList, setUserList] = useState([]);
 
-    const [message, setMessage] = useState();
-    const [openMessage, setOpenMessage] = useState(false);
-    const [severity, setSeverity] = useState();
-
-    const [openDialog, setOpenDialog] = useState(false);
-    const [classSelected, setClassSelected] = useState({});
-
     useEffect(() => {
       getClass(id)
         .then(({ data }) => {
@@ -189,9 +184,9 @@ export const Class = connect((state) => ({ user: state.user }))(
           user.classes.push(_class);
           dispatch(useSetUser(user));
 
-          handleSanckBar("Has sido añadido a la clase", "success");
+          //handleSanckBar("Has sido añadido a la clase", "success");
         } else {
-          handleSanckBar("Ya estás añadido a la clase", "info");
+          //handleSanckBar("Ya estás añadido a la clase", "info");
         }
       } catch (error) {
         console.log(error.response);
@@ -210,24 +205,31 @@ export const Class = connect((state) => ({ user: state.user }))(
       user.classes.splice(indexClassUser, 1);
       dispatch(useSetUser(user));
 
-      setOpenDialog(false);
-      handleSanckBar("Has sido eliminado de la clase", "success");
+      dispatch(
+        useSetDialog({
+          open: false,
+        })
+      );
+
+      //handleSanckBar("Has sido eliminado de la clase", "success");
     };
 
-    const handleSanckBar = (message, severity) => {
-      setMessage(message);
-      setSeverity(severity);
-      setOpenMessage(true);
+    // const handleSanckBar = (message, severity) => {
+    //   setMessage(message);
+    //   setSeverity(severity);
+    //   setOpenMessage(true);
+    // };
+
+    const handleClickRemoveClass = (_class) => {
+      dispatch(
+        useSetDialog({
+          executeOperation: handleRemoveClass,
+          data: _class,
+          open: true,
+          message: "¿Estás seguro que quieres desapuntarte de la clase?",
+        })
+      );
     };
-
-    const handleClickOpenDialog = (_class) => {
-      setOpenDialog(true);
-      setClassSelected(_class);
-    };
-
-    const handleCloseDialog = () => setOpenDialog(false);
-
-    console.log(dataClass);
 
     return (
       <>
@@ -247,7 +249,7 @@ export const Class = connect((state) => ({ user: state.user }))(
                 <Button
                   variant="outlined"
                   color="secondary"
-                  onClick={() => handleClickOpenDialog(dataClass)}
+                  onClick={() => handleClickRemoveClass(dataClass)}
                 >
                   Quitar
                 </Button>
@@ -326,18 +328,6 @@ export const Class = connect((state) => ({ user: state.user }))(
             </Paper>
           </div>
         </div>
-        <SnackBar
-          message={message}
-          severity={severity}
-          openMessage={openMessage}
-          setOpenMessage={setOpenMessage}
-        />
-        <DialogOption
-          openDialog={openDialog}
-          handleCloseDialog={handleCloseDialog}
-          handleRemoveClass={handleRemoveClass}
-          classSelected={classSelected}
-        />
       </>
     );
   })

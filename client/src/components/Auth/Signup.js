@@ -238,7 +238,7 @@ export const Signup = connect()(
                   variant="body2"
                   className={classes.redirect}
                 >
-                  {"Ya tienes una cuenta? Inicia sesión."}
+                  {"¿Ya tienes una cuenta? Inicia sesión."}
                 </Link>
               </Grid>
               {loading && <LinearProgress className={classes.progress} />}

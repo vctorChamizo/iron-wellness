@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
@@ -24,6 +24,9 @@ import { NutritionPage } from "./pages/Nutrition.page";
 import { NotFoundPage } from "./pages/NotFound.page";
 import { AdminPage } from "./pages/Admin.page";
 
+import { SnackBar } from "./components/PopUp/Snackbar/index";
+import { DialogOption } from "./components/PopUp/Dialog/index";
+
 const UserRoutes = () => (
   <>
     <Route path="/" exact component={RootPage} />
@@ -44,8 +47,15 @@ const AdminRoutes = () => (
   </>
 );
 
-const AppRole = connect((state) => ({ user: state.user }))(({ user }) => {
+const AppRole = connect((state) => ({
+  user: state.user,
+  snackbar: state.snackbar,
+  dialog: state.dialog,
+}))(({ user, snackbar, dialog }) => {
   AOS.init();
+
+  const [openMessage, setOpenMessage] = useState(snackbar?.open || false);
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -54,6 +64,18 @@ const AppRole = connect((state) => ({ user: state.user }))(({ user }) => {
           {user?.type == "ADMIN" ? <AdminRoutes /> : <UserRoutes />}
         </Switch>
       </Router>
+      <SnackBar
+        message={snackbar?.message}
+        severity={snackbar?.severity}
+        openMessage={openMessage}
+        setOpenMessage={setOpenMessage}
+      />
+      <DialogOption
+        executeOperation={dialog?.executeOperation}
+        data={dialog?.data}
+        message={dialog?.message}
+        openDialog={dialog?.open}
+      />
     </ThemeProvider>
   );
 });
