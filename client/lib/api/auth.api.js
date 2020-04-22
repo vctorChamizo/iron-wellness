@@ -2,7 +2,7 @@ import axios from "axios";
 import _ from "lodash";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.SERVER_URL,
   withCredentials: true,
 });
 
