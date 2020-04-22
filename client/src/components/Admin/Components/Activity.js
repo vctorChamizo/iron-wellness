@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 
+import { useSetLoading, useSetSnackbar } from "../../../../lib/redux/action";
 import {
   getActivities,
   addActivity,
@@ -7,81 +9,69 @@ import {
 } from "../../../../lib/api/activity.api";
 
 import { Wrapper } from "../Wrapper";
-import { Loading } from "../../Loading";
-import { SnackBar } from "../../Snackbar/index";
 
-export const Activity = () => {
-  const [loading, setLoading] = useState(true);
-  const [activities, setActivities] = useState([]);
+export const Activity = connect((state) => ({ snackbar: state.snackbar }))(
+  ({ dispatch }) => {
+    dispatch(useSetLoading(true));
 
-  const [message, setMessage] = useState();
-  const [openMessage, setOpenMessage] = useState(false);
-  const [severity, setSeverity] = useState();
+    const [activities, setActivities] = useState([]);
 
-  useEffect(() => {
-    getActivities()
-      .then(({ data }) => setActivities(data))
-      .catch((e) => console.error(e.response?.statusText))
-      .finally(setLoading(false));
-  }, []);
+    useEffect(() => {
+      getActivities()
+        .then(({ data }) => setActivities(data))
+        .catch((e) => console.error(e.response?.statusText))
+        .finally(dispatch(useSetLoading(false)));
+    }, []);
 
-  const handleSanckBar = (message, severity) => {
-    setMessage(message);
-    setSeverity(severity);
-    setOpenMessage(true);
-  };
+    const handleSanckBar = (message, severity) =>
+      dispatch(useSetSnackbar({ message, severity, open: true }));
 
-  const handleAdd = async (data, e) => {
-    setLoading(true);
-    try {
-      await addActivity(data);
+    const handleAdd = async (data, e) => {
+      dispatch(useSetLoading(true));
+      try {
+        await addActivity(data);
 
-      const newActivities = [...activities];
-      newActivities.push(data);
-      setActivities(newActivities);
+        const newActivities = [...activities];
+        newActivities.push(data);
+        setActivities(newActivities);
 
-      e.target.reset();
-      handleSanckBar("La actividad ha sido creada correctamente", "success");
-    } catch (error) {
-      if (error.response) {
+        e.target.reset();
+        handleSanckBar("La actividad ha sido creada correctamente", "success");
+      } catch (error) {
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
       }
-    }
-    setLoading(false);
-  };
+      dispatch(useSetLoading(false));
+    };
 
-  const handleRemove = async (data) => {
-    setLoading(true);
-    try {
-      await removeActivity(data);
+    const handleRemove = async (data) => {
+      dispatch(useSetLoading(true));
+      try {
+        await removeActivity(data);
 
-      const newActivities = [...activities];
-      const index = activities.findIndex((e) => e._id === data);
-      newActivities.splice(index, 1);
-      setActivities(newActivities);
+        const newActivities = [...activities];
+        const index = activities.findIndex((e) => e._id === data);
+        newActivities.splice(index, 1);
+        setActivities(newActivities);
 
-      handleSanckBar("La actividad ha sido eliminada correctamente", "success");
-    } catch (error) {
-      if (error.response)
-        handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
-    }
-    setLoading(false);
-  };
+        handleSanckBar(
+          "La actividad ha sido eliminada correctamente",
+          "success"
+        );
+      } catch (error) {
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
+      }
+      dispatch(useSetLoading(false));
+    };
 
-  return (
-    <>
-      <Loading open={loading} />
+    return (
       <Wrapper
         list={activities}
         handleAdd={handleAdd}
         handleRemove={handleRemove}
         type={"activity"}
       ></Wrapper>
-      <SnackBar
-        message={message}
-        severity={severity}
-        openMessage={openMessage}
-        setOpenMessage={setOpenMessage}
-      />
-    </>
-  );
-};
+    );
+  }
+);

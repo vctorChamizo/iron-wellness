@@ -1,11 +1,12 @@
 import React from "react";
+import { connect } from "react-redux";
+
+import { useSetDialog } from "../../../../lib/redux/action";
 
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import { connect } from "react-redux";
-import { useSetDialog } from "../../../../lib/redux/action";
 
 export const DialogOption = connect()(
   ({ openDialog, executeOperation, data, message, dispatch }) => (

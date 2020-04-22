@@ -4,6 +4,7 @@ const initialState = {
   dialog: {
     open: false,
   },
+  loading: true,
 };
 
 const reducer = (state = initialState, action) => {

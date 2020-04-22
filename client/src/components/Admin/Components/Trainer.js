@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 
+import { useSetLoading, useSetSnackbar } from "../../../../lib/redux/action";
 import {
   getUsersByType,
   addUser,
@@ -7,76 +9,67 @@ import {
 } from "../../../../lib/api/user.api";
 
 import { Wrapper } from "../Wrapper";
-import { Loading } from "../../Loading";
-import { SnackBar } from "../../Snackbar/index";
 
-export const Trainer = () => {
-  const [loading, setLoading] = useState(true);
-  const [trainers, setTrainers] = useState([]);
+export const Trainer = connect((state) => ({ snackbar: state.snackbar }))(
+  ({ dispatch }) => {
+    dispatch(useSetLoading(true));
 
-  const [message, setMessage] = useState();
-  const [openMessage, setOpenMessage] = useState(false);
-  const [severity, setSeverity] = useState();
+    const [trainers, setTrainers] = useState([]);
 
-  useEffect(() => {
-    getUsersByType("TRAINER")
-      .then(({ data }) => setTrainers(data))
-      .catch((e) => console.error(e.response?.statusText))
-      .finally(setLoading(false));
-  }, []);
+    useEffect(() => {
+      getUsersByType("TRAINER")
+        .then(({ data }) => setTrainers(data))
+        .catch((e) => console.error(e.response?.statusText))
+        .finally(dispatch(useSetLoading(false)));
+    }, []);
 
-  const handleSanckBar = (message, severity) => {
-    setMessage(message);
-    setSeverity(severity);
-    setOpenMessage(true);
-  };
+    const handleSanckBar = (message, severity) =>
+      dispatch(useSetSnackbar({ message, severity, open: true }));
 
-  const handleAdd = async (data, e) => {
-    setLoading(true);
-    try {
-      data.type = "TRAINER";
-      await addUser(data);
+    const handleAdd = async (data, e) => {
+      dispatch(useSetLoading(true));
+      try {
+        data.type = "TRAINER";
+        await addUser(data);
 
-      const newTrainers = [...trainers];
-      newTrainers.push(data);
-      setTrainers(newTrainers);
+        const newTrainers = [...trainers];
+        newTrainers.push(data);
+        setTrainers(newTrainers);
 
-      e.target.reset();
-      handleSanckBar("El entrenador ha sido creado correctamente", "success");
-    } catch (error) {
-      if (error.response) {
-        if (error.response.data.status === "UserExists")
-          handleSanckBar("El entranador ya existe", "error");
-        else handleSanckBar("Esta operación no está permitida", "error");
+        e.target.reset();
+        handleSanckBar("El entrenador ha sido creado correctamente", "success");
+      } catch (error) {
+        if (error.response) {
+          if (error.response.data.status === "UserExists")
+            handleSanckBar("El entranador ya existe", "error");
+          else handleSanckBar("Esta operación no está permitida", "error");
+        }
       }
-    }
-    setLoading(false);
-  };
+      dispatch(useSetLoading(false));
+    };
 
-  const handleRemove = async (data) => {
-    setLoading(true);
-    try {
-      await removeUser(data);
+    const handleRemove = async (data) => {
+      dispatch(useSetLoading(true));
+      try {
+        await removeUser(data);
 
-      const newTrainers = [...trainers];
-      const index = trainers.findIndex((e) => e._id === data);
-      newTrainers.splice(index, 1);
-      setTrainers(newTrainers);
+        const newTrainers = [...trainers];
+        const index = trainers.findIndex((e) => e._id === data);
+        newTrainers.splice(index, 1);
+        setTrainers(newTrainers);
 
-      handleSanckBar(
-        "El entrenador ha sido eliminado correctamente",
-        "success"
-      );
-    } catch (error) {
-      if (error.response)
-        handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
-    }
-    setLoading(false);
-  };
+        handleSanckBar(
+          "El entrenador ha sido eliminado correctamente",
+          "success"
+        );
+      } catch (error) {
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
+      }
+      dispatch(useSetLoading(false));
+    };
 
-  return (
-    <>
-      <Loading open={loading} />
+    return (
       <Wrapper
         list={trainers}
         setList={setTrainers}
@@ -84,12 +77,6 @@ export const Trainer = () => {
         handleRemove={handleRemove}
         type={"trainer"}
       ></Wrapper>
-      <SnackBar
-        message={message}
-        severity={severity}
-        openMessage={openMessage}
-        setOpenMessage={setOpenMessage}
-      />
-    </>
-  );
-};
+    );
+  }
+);
