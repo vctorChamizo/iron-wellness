@@ -30,7 +30,8 @@
     "redux": "^4.0.5"
   },
   "scripts": {
-    "start": "parcel public/index.html"
+    "start": "parcel public/index.html",
+    "build": "parcel build public/index.html"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
