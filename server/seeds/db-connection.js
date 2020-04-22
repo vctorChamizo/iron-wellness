@@ -3,12 +3,14 @@ require("dotenv").config();
 const { MongoError } = require("mongodb");
 const mongoose = require("mongoose");
 
-const connectionDB = async fn => {
+const connectionDB = async (fn) => {
   try {
-    await mongoose.set("useCreateIndex", true).connect(process.env.DB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose
+      .set("useCreateIndex", true)
+      .connect(process.env.DB_URL_REMOTE, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
     console.log(`Connection ready`);
     await fn();
   } catch (err) {
@@ -19,7 +21,7 @@ const connectionDB = async fn => {
   }
 };
 
-const dropIfExists = async Model => {
+const dropIfExists = async (Model) => {
   try {
     await Model.collection.drop();
   } catch (error) {
