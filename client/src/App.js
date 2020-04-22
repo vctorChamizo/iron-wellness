@@ -26,7 +26,6 @@ import { AdminPage } from "./pages/Admin.page";
 
 import { SnackBar } from "./components/PopUp/Snackbar/index";
 import { DialogOption } from "./components/PopUp/Dialog/index";
-import { Loading } from "./components/PopUp/Loading/index";
 
 const UserRoutes = () => (
   <>
@@ -52,15 +51,13 @@ const AppRole = connect((state) => ({
   user: state.user,
   snackbar: state.snackbar,
   dialog: state.dialog,
-  loading: state.loading,
-}))(({ user, snackbar, dialog, loading }) => {
+}))(({ user, snackbar, dialog }) => {
   AOS.init();
 
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <NavBar></NavBar>
-        <Loading open={loading} />
         <Switch>
           {user?.type == "ADMIN" ? <AdminRoutes /> : <UserRoutes />}
         </Switch>
