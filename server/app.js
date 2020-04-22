@@ -13,7 +13,7 @@ require("./lib/db-connection")();
 
 const app = express();
 
-const whitelist = ["http://localhost:1234", process.env.CLIENT_URL];
+const whitelist = [process.env.LOCAL_URL, process.env.CLIENT_URL];
 var corsOptions = {
   origin: function (origin, callback) {
     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;

@@ -60,7 +60,8 @@ export const Class = () => {
 
       handleSanckBar("La clase ha sido eliminada correctamente", "success");
     } catch (error) {
-      if (error.response) console.log(error.response);
+      if (error.response)
+        handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
     }
     setLoading(false);
   };

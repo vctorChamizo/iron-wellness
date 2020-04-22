@@ -65,8 +65,8 @@ export const User = () => {
 
       handleSanckBar("El usuario ha sido eliminado correctamente", "success");
     } catch (error) {
-      if (error.response) {
-      }
+      if (error.response)
+        handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
     }
     setLoading(false);
   };

@@ -51,7 +51,7 @@ const AppRole = connect((state) => ({ user: state.user }))(({ user }) => {
       <Router>
         <NavBar></NavBar>
         <Switch>
-          {user?.type === "ADMIN" ? <AdminRoutes /> : <UserRoutes />}
+          {user?.type == "ADMIN" ? <AdminRoutes /> : <UserRoutes />}
         </Switch>
       </Router>
     </ThemeProvider>

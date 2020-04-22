@@ -8,12 +8,12 @@ export const withLogged = (Component, { redirectTo = "/" } = {}) =>
   connect((state) => ({
     loading: state.loading,
     user: state.user,
-  }))(({ loading, user }) =>
-    loading ? (
+  }))(({ loading, user }) => {
+    return loading ? (
       <Loading open={true} />
     ) : user ? (
       <Component />
     ) : (
       <Redirect to={redirectTo} />
-    )
-  );
+    );
+  });
