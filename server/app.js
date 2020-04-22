@@ -13,13 +13,13 @@ require("./lib/db-connection")();
 
 const app = express();
 
-const whitelist = ["http://localhost:1234"];
+const whitelist = ["http://localhost:1234", process.env.CLIENT_URL];
 var corsOptions = {
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     var originIsWhitelisted = whitelist.indexOf(origin) !== -1;
     callback(null, originIsWhitelisted);
   },
-  credentials: true
+  credentials: true,
 };
 
 // Middleware Setup
@@ -33,7 +33,7 @@ app.use(
     secret: "express-passport-secret",
     resave: true,
     saveUninitialized: true,
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 
