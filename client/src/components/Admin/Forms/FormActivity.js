@@ -40,6 +40,7 @@ export const FormActivity = ({ register, errors, control }) => {
     <>
       <div>
         <TextField
+          autoComplete="off"
           fullWidth
           variant="outlined"
           margin="normal"
@@ -68,6 +69,7 @@ export const FormActivity = ({ register, errors, control }) => {
         />
 
         <FormControl
+          autoComplete="off"
           fullWidth
           name="type"
           className={classes.formControl}

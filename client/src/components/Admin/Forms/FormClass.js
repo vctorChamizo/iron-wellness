@@ -72,6 +72,7 @@ export const FormClass = ({ register, errors, control }) => {
     <>
       <div>
         <TextField
+          autoComplete="off"
           fullWidth
           variant="outlined"
           margin="normal"
@@ -85,6 +86,7 @@ export const FormClass = ({ register, errors, control }) => {
         />
 
         <TextField
+          autoComplete="off"
           fullWidth
           variant="outlined"
           label="Dia y Hora"
