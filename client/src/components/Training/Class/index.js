@@ -136,6 +136,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "100",
     color: theme.palette.secondary.main,
   },
+  wrapperDescription: {
+    overflow: "scroll",
+    height: "15vh",
+  },
 }));
 
 export const Class = connect((state) => ({ user: state.user }))(
@@ -161,7 +165,9 @@ export const Class = connect((state) => ({ user: state.user }))(
         .finally(setLoading(false));
     }, []);
 
-    const date = new Date(dataClass.date);
+    let date = undefined;
+    if (dataClass.date) date = new Date(dataClass.date);
+
     const level =
       dataClass.level == "BEGGINER"
         ? "PRINCIPIANTE"
@@ -170,7 +176,7 @@ export const Class = connect((state) => ({ user: state.user }))(
         : "PROFESIONAL";
 
     const place =
-      dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
+      dataClass.activity?.type == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
 
     const handleSanckBar = (message, severity) =>
       dispatch(useSetSnackbar({ message, severity, open: true }));
@@ -272,22 +278,21 @@ export const Class = connect((state) => ({ user: state.user }))(
             <div className={classes.wrapperClass}>
               <div className={classes.wrapperInfo}>
                 <EventIcon className={classes.icon} />
-                {"  "}
-                {`${date.getDate()}-${String(date.getMonth() + 1).padStart(
-                  2,
-                  "0"
-                )}-${date.getFullYear()}`}
+                {date &&
+                  `${date.getDate()}-${String(date.getMonth() + 1).padStart(
+                    2,
+                    "0"
+                  )}-${date.getFullYear()}`}
               </div>
               <div className={classes.wrapperInfo}>
                 <QueryBuilderIcon className={classes.icon} />
-                {"  "}
-                {`${String(date.getHours()).padStart(2, "0")}:${String(
-                  date.getMinutes()
-                ).padStart(2, "0")}`}
+                {date &&
+                  `${String(date.getHours()).padStart(2, "0")}:${String(
+                    date.getMinutes()
+                  ).padStart(2, "0")}`}
               </div>
               <div className={classes.wrapperInfo}>
                 <FitnessCenterIcon className={classes.icon} />
-                {"  "}
                 {level}
               </div>
             </div>
@@ -302,9 +307,13 @@ export const Class = connect((state) => ({ user: state.user }))(
                   <p className={classes.titleTrainer}>
                     {dataClass.activity?.name}
                   </p>
-                  <p className={classes.titleDescription}>
-                    {dataClass.activity?.description}
-                  </p>
+
+                  <div className={classes.wrapperDescription}>
+                    <p className={classes.titleDescription}>
+                      {dataClass.activity?.description}
+                    </p>
+                  </div>
+
                   <Divider className={classes.divider} />
                   <p className={classes.subtitlePlace}>
                     ACTIVIDAD <span className={classes.place}>{place}</span>

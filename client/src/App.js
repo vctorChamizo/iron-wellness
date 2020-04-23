@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
@@ -30,7 +35,6 @@ import { DialogOption } from "./components/PopUp/Dialog/index";
 const UserRoutes = () => (
   <>
     <Route path="/" exact component={RootPage} />
-    <Route path="/notfound" component={NotFoundPage} />
     <Route path="/home" component={HomePage} />
     <Route path="/centers" component={CentersPage} />
     <Route path="/profile" component={ProfilePage} />
@@ -39,13 +43,10 @@ const UserRoutes = () => (
     <Route path="/class/:id" component={ClassPage} />
     <Route path="/exersice" component={ExersicePage} />
     <Route path="/nutrition" component={NutritionPage} />
+    <Route component={NotFoundPage} />
   </>
 );
-const AdminRoutes = () => (
-  <>
-    <Route path="/profile" exact component={AdminPage} />
-  </>
-);
+const AdminRoutes = () => <Route path="*" exact component={AdminPage} />;
 
 const AppRole = connect((state) => ({
   user: state.user,

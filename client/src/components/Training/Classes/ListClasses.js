@@ -75,7 +75,6 @@ export const ListClasses = withRouter(({ history, classesList }) => {
                 <div className={classes.wrapperClass}>
                   <div className={classes.wrapperInfo}>
                     <EventIcon className={classes.icon} />
-                    {"  "}
                     {`${date.getDate()}-${String(date.getMonth() + 1).padStart(
                       2,
                       "0"
@@ -83,7 +82,6 @@ export const ListClasses = withRouter(({ history, classesList }) => {
                   </div>
                   <div className={classes.wrapperInfo}>
                     <QueryBuilderIcon className={classes.icon} />
-                    {"  "}
                     {`${String(date.getHours()).padStart(2, "0")}:${String(
                       date.getMinutes()
                     ).padStart(2, "0")}`}
