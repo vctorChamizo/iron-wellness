@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { useSetLoading, useSetSnackbar } from "../../../../lib/redux/action";
+import { useSetSnackbar } from "../../../../lib/redux/action";
 import {
   getUsersByType,
   addUser,
@@ -9,8 +9,10 @@ import {
 } from "../../../../lib/api/user.api";
 
 import { Wrapper } from "../Wrapper";
+import { Loading } from "../../PopUp/Loading/index";
 
 export const User = connect()(({ dispatch }) => {
+  const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -18,14 +20,14 @@ export const User = connect()(({ dispatch }) => {
     getUsersByType("CLIENT")
       .then(({ data }) => setUsers(data))
       .catch((e) => console.error(e.response?.statusText))
-      .finally(dispatch(useSetLoading(false)));
+      .finally(setLoading(false));
   }, []);
 
   const handleSanckBar = (message, severity) =>
     dispatch(useSetSnackbar({ message, severity, open: true }));
 
   const handleAdd = async (data, e) => {
-    dispatch(useSetLoading(true));
+    setLoading(true);
     try {
       data.type = "CLIENT";
       await addUser(data);
@@ -43,11 +45,11 @@ export const User = connect()(({ dispatch }) => {
         else handleSanckBar("Esta operación no está permitida", "error");
       }
     }
-    dispatch(useSetLoading(false));
+    setLoading(false);
   };
 
   const handleRemove = async (data) => {
-    dispatch(useSetLoading(true));
+    setLoading(true);
     try {
       await removeUser(data);
 
@@ -61,16 +63,18 @@ export const User = connect()(({ dispatch }) => {
       if (error.response)
         handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
     }
-    dispatch(useSetLoading(false));
+    setLoading(false);
   };
 
   return (
-    <Wrapper
-      list={users}
-      setList={setUsers}
-      handleAdd={handleAdd}
-      handleRemove={handleRemove}
-      type={"user"}
-    ></Wrapper>
+    <>
+      <Loading open={loading} />
+      <Wrapper
+        list={users}
+        handleAdd={handleAdd}
+        handleRemove={handleRemove}
+        type={"user"}
+      ></Wrapper>
+    </>
   );
 });

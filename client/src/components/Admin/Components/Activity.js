@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { useSetLoading, useSetSnackbar } from "../../../../lib/redux/action";
+import { useSetSnackbar } from "../../../../lib/redux/action";
 import {
   getActivities,
   addActivity,
@@ -9,25 +9,25 @@ import {
 } from "../../../../lib/api/activity.api";
 
 import { Wrapper } from "../Wrapper";
+import { Loading } from "../../PopUp/Loading/index";
 
 export const Activity = connect((state) => ({ snackbar: state.snackbar }))(
   ({ dispatch }) => {
-    dispatch(useSetLoading(true));
-
+    const [loading, setLoading] = useState(true);
     const [activities, setActivities] = useState([]);
 
     useEffect(() => {
       getActivities()
         .then(({ data }) => setActivities(data))
         .catch((e) => console.error(e.response?.statusText))
-        .finally(dispatch(useSetLoading(false)));
+        .finally(setLoading(false));
     }, []);
 
     const handleSanckBar = (message, severity) =>
       dispatch(useSetSnackbar({ message, severity, open: true }));
 
     const handleAdd = async (data, e) => {
-      dispatch(useSetLoading(true));
+      setLoading(true);
       try {
         await addActivity(data);
 
@@ -41,11 +41,11 @@ export const Activity = connect((state) => ({ snackbar: state.snackbar }))(
         if (error.response)
           handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
       }
-      dispatch(useSetLoading(false));
+      setLoading(false);
     };
 
     const handleRemove = async (data) => {
-      dispatch(useSetLoading(true));
+      setLoading(true);
       try {
         await removeActivity(data);
 
@@ -62,16 +62,19 @@ export const Activity = connect((state) => ({ snackbar: state.snackbar }))(
         if (error.response)
           handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
       }
-      dispatch(useSetLoading(false));
+      setLoading(false);
     };
 
     return (
-      <Wrapper
-        list={activities}
-        handleAdd={handleAdd}
-        handleRemove={handleRemove}
-        type={"activity"}
-      ></Wrapper>
+      <>
+        <Loading open={loading} />
+        <Wrapper
+          list={activities}
+          handleAdd={handleAdd}
+          handleRemove={handleRemove}
+          type={"activity"}
+        ></Wrapper>
+      </>
     );
   }
 );

@@ -1,12 +1,12 @@
-import "date-fns";
 import React, { useState } from "react";
+import "date-fns";
 import { connect } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
 
 import { signup, socialLogin } from "../../../lib/api/auth.api";
-import { useSetUser } from "../../../lib/redux/action";
+import { useSetUser, useSetSnackbar } from "../../../lib/redux/action";
 import { validateForm } from "../../../lib/validation/validateForm";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -14,8 +14,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
-import MuiAlert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
@@ -76,48 +74,62 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Alert = (props) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
-
 export const Signup = connect()(
   withRouter(
     ({ history, dispatch, setComponent, setOpenDialog, redirectTo }) => {
       const classes = useStyles();
 
-      const [openError, setOpenError] = useState(false);
       const { register, handleSubmit, errors, control } = useForm();
       const [loading, setLoading] = useState(false);
+
+      const handleSanckBar = (message, severity) =>
+        dispatch(useSetSnackbar({ message, severity, open: true }));
 
       const onSubmit = async (data) => {
         setLoading(true);
         try {
           const newUser = await signup(data);
+
           dispatch(useSetUser(newUser.data));
-          setLoading(false);
           setOpenDialog(false);
+
           history.push(redirectTo);
+
           setComponent("Login");
         } catch (error) {
-          if (error.response?.data.status == "UserExists") setOpenError(true);
-          setLoading(false);
+          if (error.response?.data.status == "UserExists")
+            handleSanckBar("El usuario ya existe", "error");
+          if (error.response)
+            handleSanckBar(
+              "Ha ocurrido un error. Vuelve a intentarlo.",
+              "error"
+            );
         }
+        setLoading(false);
       };
 
       const handleClickSocialLogin = async () => {
+        setLoading(true);
         try {
           dispatch(useSetUser(await socialLogin()));
           setOpenDialog(false);
-          return history.push("/profile");
+
+          history.push(redirectTo);
+
+          setComponent("Login");
         } catch (error) {
           if (error.response?.data.status == "BadCredentials")
-            setOpenError(true);
+            handleSanckBar("El usuario ya existe", "error");
+          if (error.response)
+            handleSanckBar(
+              "Ha ocurrido un error. Vuelve a intentarlo.",
+              "error"
+            );
         }
+        setLoading(false);
       };
 
       if (!_.isEmpty(errors)) validateForm(errors);
-
-      const handleCloseError = () => setOpenError(false);
 
       return (
         <div className={classes.paper}>
@@ -238,21 +250,12 @@ export const Signup = connect()(
                   variant="body2"
                   className={classes.redirect}
                 >
-                  {"¿Ya tienes una cuenta? Inicia sesión."}
+                  ¿Ya tienes una cuenta? Inicia sesión.
                 </Link>
               </Grid>
               {loading && <LinearProgress className={classes.progress} />}
             </Grid>
           </form>
-          <Snackbar
-            open={openError}
-            autoHideDuration={6000}
-            onClose={handleCloseError}
-          >
-            <Alert onClose={handleCloseError} severity="error">
-              El usuario o email ya están registrado.
-            </Alert>
-          </Snackbar>
         </div>
       );
     }

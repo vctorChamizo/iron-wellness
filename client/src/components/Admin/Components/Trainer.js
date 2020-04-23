@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { useSetLoading, useSetSnackbar } from "../../../../lib/redux/action";
+import { useSetSnackbar } from "../../../../lib/redux/action";
 import {
   getUsersByType,
   addUser,
@@ -9,25 +9,25 @@ import {
 } from "../../../../lib/api/user.api";
 
 import { Wrapper } from "../Wrapper";
+import { Loading } from "../../PopUp/Loading/index";
 
 export const Trainer = connect((state) => ({ snackbar: state.snackbar }))(
   ({ dispatch }) => {
-    dispatch(useSetLoading(true));
-
+    const [loading, setLoading] = useState(true);
     const [trainers, setTrainers] = useState([]);
 
     useEffect(() => {
       getUsersByType("TRAINER")
         .then(({ data }) => setTrainers(data))
         .catch((e) => console.error(e.response?.statusText))
-        .finally(dispatch(useSetLoading(false)));
+        .finally(setLoading(false));
     }, []);
 
     const handleSanckBar = (message, severity) =>
       dispatch(useSetSnackbar({ message, severity, open: true }));
 
     const handleAdd = async (data, e) => {
-      dispatch(useSetLoading(true));
+      setLoading(true);
       try {
         data.type = "TRAINER";
         await addUser(data);
@@ -45,11 +45,11 @@ export const Trainer = connect((state) => ({ snackbar: state.snackbar }))(
           else handleSanckBar("Esta operación no está permitida", "error");
         }
       }
-      dispatch(useSetLoading(false));
+      setLoading(false);
     };
 
     const handleRemove = async (data) => {
-      dispatch(useSetLoading(true));
+      setLoading(true);
       try {
         await removeUser(data);
 
@@ -66,17 +66,19 @@ export const Trainer = connect((state) => ({ snackbar: state.snackbar }))(
         if (error.response)
           handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
       }
-      dispatch(useSetLoading(false));
+      setLoading(false);
     };
 
     return (
-      <Wrapper
-        list={trainers}
-        setList={setTrainers}
-        handleAdd={handleAdd}
-        handleRemove={handleRemove}
-        type={"trainer"}
-      ></Wrapper>
+      <>
+        <Loading open={loading} />
+        <Wrapper
+          list={trainers}
+          handleAdd={handleAdd}
+          handleRemove={handleRemove}
+          type={"trainer"}
+        ></Wrapper>
+      </>
     );
   }
 );

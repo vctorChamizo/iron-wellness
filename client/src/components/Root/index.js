@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 
 import { getCenters } from "../../../lib/api/center.api";
 
-import { Loading } from "../Loading";
+import { Loading } from "../PopUp/Loading/index";
 import { AuthDialog } from "../Auth/AuthDialog";
 import { Slider } from "./Slider";
 import { Footer } from "../../layouts/Footer";

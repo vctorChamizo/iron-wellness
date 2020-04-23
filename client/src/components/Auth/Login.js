@@ -5,7 +5,7 @@ import { withRouter } from "react-router-dom";
 import _ from "lodash";
 
 import { login, socialLogin } from "../../../lib/api/auth.api";
-import { useSetUser } from "../../../lib/redux/action";
+import { useSetUser, useSetSnackbar } from "../../../lib/redux/action";
 import { validateForm } from "../../../lib/validation/validateForm";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,8 +13,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Link from "@material-ui/core/Link";
-import MuiAlert from "@material-ui/lab/Alert";
-import Snackbar from "@material-ui/core/Snackbar";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
@@ -57,49 +55,63 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Alert = (props) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
-
 export const Login = connect()(
   withRouter(
     ({ history, dispatch, setComponent, setOpenDialog, redirectTo }) => {
       const classes = useStyles();
 
-      const [openError, setOpenError] = useState(false);
       const { register, handleSubmit, errors } = useForm();
       const [loading, setLoading] = useState(false);
+
+      const handleSanckBar = (message, severity) =>
+        dispatch(useSetSnackbar({ message, severity, open: true }));
 
       const onSubmit = async ({ email, password }) => {
         setLoading(true);
         try {
           const { data } = await login(email, password);
+
           dispatch(useSetUser(data));
-          setLoading(false);
           setOpenDialog(false);
+
           return history.push(redirectTo);
         } catch (error) {
-          if (error.response.data.status === "BadCredentials")
-            setOpenError(true);
-
-          setLoading(false);
+          if (error.response?.data.status === "BadCredentials")
+            handleSanckBar(
+              "El usuario o la contraseña son incorrectos",
+              "error"
+            );
+          if (error.response)
+            handleSanckBar(
+              "Ha ocurrido un error. Vuelve a intentarlo.",
+              "error"
+            );
         }
+        setLoading(false);
       };
 
       const handleClickSocialLogin = async () => {
         try {
           dispatch(useSetUser(await socialLogin()));
+
           setOpenDialog(false);
+
           return history.push("/profile");
         } catch (error) {
-          if (error?.response?.data.status === "BadCredentials")
-            setOpenError(true);
+          if (error.response?.data.status === "BadCredentials")
+            handleSanckBar(
+              "El usuario o la contraseña son incorrectos",
+              "error"
+            );
+          if (error.response)
+            handleSanckBar(
+              "Ha ocurrido un error. Vuelve a intentarlo.",
+              "error"
+            );
         }
       };
 
       if (!_.isEmpty(errors)) validateForm(errors);
-
-      const handleCloseError = () => setOpenError(false);
 
       return (
         <div className={classes.paper}>
@@ -166,22 +178,12 @@ export const Login = connect()(
                   variant="body2"
                   className={classes.redirect}
                 >
-                  {"¿No tienes una cuenta aún? Regístrate."}
+                  ¿No tienes una cuenta aún? Regístrate.
                 </Link>
               </Grid>
               {loading && <LinearProgress className={classes.progress} />}
             </Grid>
           </form>
-
-          <Snackbar
-            open={openError}
-            autoHideDuration={6000}
-            onClose={handleCloseError}
-          >
-            <Alert onClose={handleCloseError} severity="error">
-              El usuario o la contraseñas son incorrectos.
-            </Alert>
-          </Snackbar>
         </div>
       );
     }

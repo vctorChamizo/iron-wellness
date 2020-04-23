@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { getCenters } from "../../../lib/api/center.api";
 
-import { Loading } from "../Loading";
+import { Loading } from "../PopUp/Loading/index";
 
 import { makeStyles } from "@material-ui/core/styles";
 

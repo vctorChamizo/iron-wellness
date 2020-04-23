@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 
-import { useSetLoading, useSetSnackbar } from "../../../../lib/redux/action";
+import { useSetSnackbar } from "../../../../lib/redux/action";
 import {
   getClasses,
   addClass,
@@ -9,24 +9,24 @@ import {
 } from "../../../../lib/api/class.api";
 
 import { Wrapper } from "../Wrapper";
+import { Loading } from "../../PopUp/Loading/index";
 
 export const Class = connect((state) => ({ snackbar: state.snackbar }))(
   ({ dispatch }) => {
-    dispatch(useSetLoading(true));
-
+    const [loading, setLoading] = useState(true);
     const [classes, setClasses] = useState([]);
 
     useEffect(() => {
       getClasses()
         .then(({ data }) => setClasses(data))
         .catch((e) => console.error(e.response?.statusText))
-        .finally(dispatch(useSetLoading(false)));
+        .finally(setLoading(false));
     }, []);
 
     dispatch(useSetSnackbar({ message, severity, open: true }));
 
     const handleAdd = async (data, e) => {
-      dispatch(useSetLoading(true));
+      setLoading(true);
       try {
         await addClass(data);
 
@@ -40,11 +40,11 @@ export const Class = connect((state) => ({ snackbar: state.snackbar }))(
         if (error.response)
           handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
       }
-      dispatch(useSetLoading(false));
+      setLoading(false);
     };
 
     const handleRemove = async (data) => {
-      dispatch(useSetLoading(true));
+      setLoading(true);
       try {
         await removeClass(data);
 
@@ -58,17 +58,19 @@ export const Class = connect((state) => ({ snackbar: state.snackbar }))(
         if (error.response)
           handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
       }
-      dispatch(useSetLoading(false));
+      setLoading(false);
     };
 
     return (
-      <Wrapper
-        list={classes}
-        setList={setClasses}
-        handleAdd={handleAdd}
-        handleRemove={handleRemove}
-        type={"class"}
-      ></Wrapper>
+      <>
+        <Loading open={loading} />
+        <Wrapper
+          list={classes}
+          handleAdd={handleAdd}
+          handleRemove={handleRemove}
+          type={"class"}
+        ></Wrapper>
+      </>
     );
   }
 );

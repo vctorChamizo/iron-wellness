@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Loading } from "../../Loading";
+import { Loading } from "../../PopUp/Loading/index";
 import { Calendar } from "./Calendar";
 import { Level } from "./Level";
 

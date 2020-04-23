@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { Loading } from "../../Loading";
-import { ListUser } from "./ListUser";
-
 import { getClass } from "../../../../lib/api/class.api";
 import { addUserClass, removeUserClass } from "../../../../lib/api/user.api";
 import {
@@ -12,6 +9,9 @@ import {
   useSetSnackbar,
   useSetDialog,
 } from "../../../../lib/redux/action";
+
+import { Loading } from "../../PopUp/Loading/index";
+import { ListUser } from "./ListUser";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -172,7 +172,11 @@ export const Class = connect((state) => ({ user: state.user }))(
     const place =
       dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
 
+    const handleSanckBar = (message, severity) =>
+      dispatch(useSetSnackbar({ message, severity, open: true }));
+
     const handleAddClass = async (_class) => {
+      setLoading(true);
       try {
         if (userList.findIndex((e) => e._id === user._id)) {
           await addUserClass(_class._id);
@@ -184,41 +188,46 @@ export const Class = connect((state) => ({ user: state.user }))(
           user.classes.push(_class);
           dispatch(useSetUser(user));
 
-          //handleSanckBar("Has sido añadido a la clase", "success");
+          handleSanckBar("Has sido añadido a la clase", "success");
         } else {
-          //handleSanckBar("Ya estás añadido a la clase", "info");
+          handleSanckBar("Ya estás añadido a la clase", "info");
         }
       } catch (error) {
-        console.log(error.response);
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
       }
+      setLoading(false);
     };
 
     const handleRemoveClass = async (_class) => {
-      await removeUserClass(_class._id);
+      setLoading(true);
+      try {
+        if (userList.findIndex((e) => e._id === user._id)) {
+          await removeUserClass(_class._id);
 
-      const index = userList.findIndex((e) => e._id === user._id);
-      setUserList([...userList].splice(index, index));
+          const index = userList.findIndex((e) => e._id === user._id);
+          setUserList([...userList].splice(index, index));
 
-      const indexClassUser = user.classes.findIndex(
-        (e) => e._id === _class._id
-      );
-      user.classes.splice(indexClassUser, 1);
-      dispatch(useSetUser(user));
+          const indexClassUser = user.classes.findIndex(
+            (e) => e._id === _class._id
+          );
+          user.classes.splice(indexClassUser, 1);
+          dispatch(useSetUser(user));
 
-      dispatch(
-        useSetDialog({
-          open: false,
-        })
-      );
+          dispatch(
+            useSetDialog({
+              open: false,
+            })
+          );
 
-      //handleSanckBar("Has sido eliminado de la clase", "success");
+          handleSanckBar("Has sido eliminado de la clase", "success");
+        }
+      } catch (error) {
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
+      }
+      setLoading(false);
     };
-
-    // const handleSanckBar = (message, severity) => {
-    //   setMessage(message);
-    //   setSeverity(severity);
-    //   setOpenMessage(true);
-    // };
 
     const handleClickRemoveClass = (_class) => {
       dispatch(
