@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Loading } from "../../Loading";
+import { Loading } from "../../PopUp/Loading/index";
 import { Calendar } from "./Calendar";
 import { Level } from "./Level";
 
@@ -58,7 +58,6 @@ export const Classes = () => {
   useEffect(() => {
     getClasses()
       .then(({ data }) => setDataClasses(data))
-      .catch((e) => console.error(e.response?.statusText))
       .finally(setLoading(false));
   }, []);
 

@@ -15,7 +15,7 @@ passport.use(
         })
           .populate({
             path: "classes",
-            select: ["_id", "name", "date"],
+            select: ["_id", "name", "date", "level"],
           })
           .select("_id username email name surname date image type password");
 

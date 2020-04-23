@@ -1,11 +1,13 @@
-import "date-fns";
 import React, { useState } from "react";
+import "date-fns";
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 
 import { validateForm } from "../../../lib/validation/validateForm";
 import { editUser, upload } from "../../../lib/api/user.api";
 import { useSetUser } from "../../../lib/redux/action";
+
+import { Loading } from "../PopUp/Loading/index";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -22,9 +24,6 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-
-import { Loading } from "../Loading";
-import { SnackBar } from "../Snackbar/index";
 
 import { EMAIL_PATTERN, USERNAME_PATTERN } from "../../../lib/patterns";
 
@@ -95,10 +94,6 @@ export const Edit = ({ user, dispatch }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const [message, setMessage] = useState();
-  const [openMessage, setOpenMessage] = useState(false);
-  const [severity, setSeverity] = useState();
-
   const [imagePath, setImagePath] = useState(user.image?.url);
 
   const { register, handleSubmit, errors, control } = useForm({
@@ -114,42 +109,45 @@ export const Edit = ({ user, dispatch }) => {
   if (!_.isEmpty(errors)) validateForm(errors);
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
-      setLoading(true);
       const updatedUser = await editUser(Object.assign(user, data));
       dispatch(useSetUser(updatedUser.data));
-      setLoading(false);
+
       handleSanckBar("Perfil actualizado", "success");
     } catch (error) {
-      setLoading(false);
       if (error.response) {
         if (error.response.data.status === "UserExists")
           handleSanckBar("El usuario ya existe", "error");
         else handleSanckBar("Esta operación no está permitida", "error");
       }
     }
+    setLoading(false);
   };
 
   const onSumbitPicture = async (data) => {
-    if (data.avatar[0]) {
-      setLoading(true);
-      const updatedUser = await upload(data.avatar[0]);
-      dispatch(useSetUser(updatedUser.data));
-      setImagePath(updatedUser.data.image.url);
-      setLoading(false);
-      handleSanckBar("Foto de perfil actualizada", "success");
-    } else
-      handleSanckBar(
-        "La foto de perfil no se ha cargado correctamente",
-        "error"
-      );
+    setLoading(true);
+
+    try {
+      if (data.avatar[0]) {
+        const updatedUser = await upload(data.avatar[0]);
+        dispatch(useSetUser(updatedUser.data));
+        setImagePath(updatedUser.data.image.url);
+        handleSanckBar("Foto de perfil actualizada", "success");
+      } else
+        handleSanckBar(
+          "La foto de perfil no se ha cargado correctamente",
+          "error"
+        );
+    } catch (error) {
+      if (error.response)
+        handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
+    }
+    setLoading(false);
   };
 
-  const handleSanckBar = (message, severity) => {
-    setMessage(message);
-    setSeverity(severity);
-    setOpenMessage(true);
-  };
+  const handleSanckBar = (message, severity) =>
+    dispatch(useSetSnackbar({ message, severity, open: true }));
 
   return (
     <>
@@ -212,6 +210,7 @@ export const Edit = ({ user, dispatch }) => {
               error={errors.username ? true : false}
               helperText={errors.username ? errors.username.helperText : ""}
             />
+
             <TextField
               variant="outlined"
               margin="normal"
@@ -237,6 +236,7 @@ export const Edit = ({ user, dispatch }) => {
               error={errors.name ? true : false}
               helperText={errors.name ? errors.name.helperText : ""}
             />
+
             <TextField
               variant="outlined"
               fullWidth
@@ -278,12 +278,6 @@ export const Edit = ({ user, dispatch }) => {
           </Grid>
         </form>
       </Grid>
-      <SnackBar
-        message={message}
-        severity={severity}
-        openMessage={openMessage}
-        setOpenMessage={setOpenMessage}
-      />
     </>
   );
 };

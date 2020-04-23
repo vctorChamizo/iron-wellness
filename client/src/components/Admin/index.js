@@ -13,11 +13,11 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Grid from "@material-ui/core/Grid";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     display: "flex",
   },
-}));
+});
 
 export const Admin = connect((state) => ({ user: state.user }))(
   withRouter(({ user, history, dispatch }) => {

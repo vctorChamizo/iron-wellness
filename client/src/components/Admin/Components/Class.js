@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 
+import { useSetSnackbar } from "../../../../lib/redux/action";
 import {
   getClasses,
   addClass,
@@ -7,80 +9,74 @@ import {
 } from "../../../../lib/api/class.api";
 
 import { Wrapper } from "../Wrapper";
-import { Loading } from "../../Loading";
-import { SnackBar } from "../../Snackbar/index";
+import { Loading } from "../../PopUp/Loading/index";
 
-export const Class = () => {
-  const [loading, setLoading] = useState(true);
-  const [classes, setClasses] = useState([]);
+export const Class = connect((state) => ({ snackbar: state.snackbar }))(
+  ({ dispatch }) => {
+    const [loading, setLoading] = useState(true);
+    const [classes, setClasses] = useState([]);
 
-  const [message, setMessage] = useState();
-  const [openMessage, setOpenMessage] = useState(false);
-  const [severity, setSeverity] = useState();
+    useEffect(() => {
+      getClasses()
+        .then(({ data }) => setClasses(data))
+        .catch((e) =>
+          handleSanckBar(
+            "Ha ocurrido un error. Vuelve a intentarlo más tarde.",
+            "error"
+          )
+        )
+        .finally(setLoading(false));
+    }, []);
 
-  useEffect(() => {
-    getClasses()
-      .then(({ data }) => setClasses(data))
-      .catch((e) => console.error(e.response?.statusText))
-      .finally(setLoading(false));
-  }, []);
+    const handleSanckBar = (message, severity) =>
+      dispatch(useSetSnackbar({ message, severity, open: true }));
 
-  const handleSanckBar = (message, severity) => {
-    setMessage(message);
-    setSeverity(severity);
-    setOpenMessage(true);
-  };
+    const handleAdd = async (data, e) => {
+      setLoading(true);
+      try {
+        const newClass = await addClass(data);
 
-  const handleAdd = async (data, e) => {
-    setLoading(true);
-    try {
-      await addClass(data);
+        const newClasses = [...classes];
+        newClasses.push(newClass.data);
+        setClasses(newClasses);
 
-      const newClass = [...classes];
-      newClass.push(data);
-      setClasses(newClass);
+        e.target.reset();
+        handleSanckBar("La clase ha sido creada correctamente", "success");
+      } catch (error) {
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
+      }
+      setLoading(false);
+    };
 
-      e.target.reset();
-      handleSanckBar("La clase ha sido creada correctamente", "success");
-    } catch (error) {
-      if (error.response) console.log(error.response);
-    }
-    setLoading(false);
-  };
+    const handleRemove = async (data) => {
+      setLoading(true);
+      try {
+        await removeClass(data);
 
-  const handleRemove = async (data) => {
-    setLoading(true);
-    try {
-      await removeClass(data);
+        const newClasses = [...classes];
+        const index = classes.findIndex((e) => e._id === data);
+        newClasses.splice(index, 1);
+        setClasses(newClasses);
 
-      const newClasses = [...classes];
-      const index = classes.findIndex((e) => e._id === data);
-      newClasses.splice(index, 1);
-      setClasses(newClasses);
+        handleSanckBar("La clase ha sido eliminada correctamente", "success");
+      } catch (error) {
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
+      }
+      setLoading(false);
+    };
 
-      handleSanckBar("La clase ha sido eliminada correctamente", "success");
-    } catch (error) {
-      if (error.response) console.log(error.response);
-    }
-    setLoading(false);
-  };
-
-  return (
-    <>
-      <Loading open={loading} />
-      <Wrapper
-        list={classes}
-        setList={setClasses}
-        handleAdd={handleAdd}
-        handleRemove={handleRemove}
-        type={"class"}
-      ></Wrapper>
-      <SnackBar
-        message={message}
-        severity={severity}
-        openMessage={openMessage}
-        setOpenMessage={setOpenMessage}
-      />
-    </>
-  );
-};
+    return (
+      <>
+        <Loading open={loading} />
+        <Wrapper
+          list={classes}
+          handleAdd={handleAdd}
+          handleRemove={handleRemove}
+          type={"class"}
+        ></Wrapper>
+      </>
+    );
+  }
+);

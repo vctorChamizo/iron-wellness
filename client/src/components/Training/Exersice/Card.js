@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: "17.5vw",
     height: "30vh",
+    cursor: "pointer",
   },
   title: {
     fontFamily: '"Roboto", sans-serif',

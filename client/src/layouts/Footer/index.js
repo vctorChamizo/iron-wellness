@@ -53,7 +53,10 @@ export const Footer = () => {
           ></img>
         </a>
 
-        <a href="https://wa.me/650074740" target="_blank">
+        <a
+          href="https://api.whatsapp.com/send?phone=+34650074740"
+          target="_blank"
+        >
           <img
             className={classes.icon}
             src="https://res.cloudinary.com/vctorchzr/image/upload/v1587127728/iron-wellness/logos/whatsapp_jwekp2.svg"

@@ -42,7 +42,6 @@ export const Classes = ({ classesList }) => {
       else if (e.level == "MEDIUM") medium.push(e);
       else professional.push(e);
     });
-
   return (
     <>
       <section>

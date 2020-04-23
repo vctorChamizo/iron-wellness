@@ -5,4 +5,4 @@ const api = axios.create({
   withCredentials: true,
 });
 
-export const getCenters = async () => await api.get("/centers/");
+export const getExersices = async () => await api.get("/exersices/");

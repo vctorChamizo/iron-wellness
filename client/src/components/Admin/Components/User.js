@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 
+import { useSetSnackbar } from "../../../../lib/redux/action";
 import {
   getUsersByType,
   addUser,
@@ -7,38 +9,35 @@ import {
 } from "../../../../lib/api/user.api";
 
 import { Wrapper } from "../Wrapper";
-import { Loading } from "../../Loading";
-import { SnackBar } from "../../Snackbar/index";
+import { Loading } from "../../PopUp/Loading/index";
 
-export const User = () => {
+export const User = connect()(({ dispatch }) => {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
-
-  const [message, setMessage] = useState();
-  const [openMessage, setOpenMessage] = useState(false);
-  const [severity, setSeverity] = useState();
 
   useEffect(() => {
     getUsersByType("CLIENT")
       .then(({ data }) => setUsers(data))
-      .catch((e) => console.error(e.response?.statusText))
+      .catch((e) =>
+        handleSanckBar(
+          "Ha ocurrido un error. Vuelve a intentarlo más tarde.",
+          "error"
+        )
+      )
       .finally(setLoading(false));
   }, []);
 
-  const handleSanckBar = (message, severity) => {
-    setMessage(message);
-    setSeverity(severity);
-    setOpenMessage(true);
-  };
+  const handleSanckBar = (message, severity) =>
+    dispatch(useSetSnackbar({ message, severity, open: true }));
 
   const handleAdd = async (data, e) => {
     setLoading(true);
     try {
       data.type = "CLIENT";
-      await addUser(data);
+      const newUser = await addUser(data);
 
       const newUsers = [...users];
-      newUsers.push(data);
+      newUsers.push(newUser.data);
       setUsers(newUsers);
 
       e.target.reset();
@@ -65,8 +64,8 @@ export const User = () => {
 
       handleSanckBar("El usuario ha sido eliminado correctamente", "success");
     } catch (error) {
-      if (error.response) {
-      }
+      if (error.response)
+        handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
     }
     setLoading(false);
   };
@@ -76,17 +75,10 @@ export const User = () => {
       <Loading open={loading} />
       <Wrapper
         list={users}
-        setList={setUsers}
         handleAdd={handleAdd}
         handleRemove={handleRemove}
         type={"user"}
       ></Wrapper>
-      <SnackBar
-        message={message}
-        severity={severity}
-        openMessage={openMessage}
-        setOpenMessage={setOpenMessage}
-      />
     </>
   );
-};
+});
