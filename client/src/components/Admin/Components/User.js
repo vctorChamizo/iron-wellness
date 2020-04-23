@@ -18,7 +18,12 @@ export const User = connect()(({ dispatch }) => {
   useEffect(() => {
     getUsersByType("CLIENT")
       .then(({ data }) => setUsers(data))
-      .catch((e) => console.error(e.response?.statusText))
+      .catch((e) =>
+        handleSanckBar(
+          "Ha ocurrido un error. Vuelve a intentarlo más tarde.",
+          "error"
+        )
+      )
       .finally(setLoading(false));
   }, []);
 

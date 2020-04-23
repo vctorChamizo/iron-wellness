@@ -19,7 +19,12 @@ export const Activity = connect((state) => ({ snackbar: state.snackbar }))(
     useEffect(() => {
       getActivities()
         .then(({ data }) => setActivities(data))
-        .catch((e) => console.error(e.response?.statusText))
+        .catch((e) =>
+          handleSanckBar(
+            "Ha ocurrido un error. Vuelve a intentarlo más tarde.",
+            "error"
+          )
+        )
         .finally(setLoading(false));
     }, []);
 

@@ -19,7 +19,12 @@ export const Class = connect((state) => ({ snackbar: state.snackbar }))(
     useEffect(() => {
       getClasses()
         .then(({ data }) => setClasses(data))
-        .catch((e) => console.error(e.response?.statusText))
+        .catch((e) =>
+          handleSanckBar(
+            "Ha ocurrido un error. Vuelve a intentarlo más tarde.",
+            "error"
+          )
+        )
         .finally(setLoading(false));
     }, []);
 

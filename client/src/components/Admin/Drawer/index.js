@@ -58,9 +58,7 @@ export const Menu = ({ setComponent, user, history, dispatch }) => {
         await logout();
         dispatch(useLogout());
         history.push("/");
-      } catch (error) {
-        console.error(error?.response.textStatus);
-      }
+      } catch (error) {}
     } else setComponent(key);
   };
 

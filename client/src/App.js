@@ -43,7 +43,7 @@ const UserRoutes = () => (
     <Route path="/class/:id" component={ClassPage} />
     <Route path="/exersice" component={ExersicePage} />
     <Route path="/nutrition" component={NutritionPage} />
-    <Route component={NotFoundPage} />
+    {/* <Route path="*" component={NotFoundPage} /> */}
   </>
 );
 const AdminRoutes = () => <Route path="*" exact component={AdminPage} />;

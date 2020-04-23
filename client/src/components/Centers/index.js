@@ -42,7 +42,6 @@ export const Centers = () => {
   useEffect(() => {
     getCenters()
       .then(({ data }) => setCenters(data))
-      .catch((e) => console.error(e.response?.statusText))
       .finally(setLoading(false));
   }, []);
 

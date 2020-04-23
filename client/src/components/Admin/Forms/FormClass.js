@@ -59,13 +59,9 @@ export const FormClass = ({ register, errors, control }) => {
   const [trainers, setTrainers] = useState([]);
 
   useEffect(() => {
-    getUsersByType("TRAINER")
-      .then(({ data }) => setTrainers(data))
-      .catch((e) => console.error(e.response?.statusText));
+    getUsersByType("TRAINER").then(({ data }) => setTrainers(data));
 
-    getActivities()
-      .then(({ data }) => setActivities(data))
-      .catch((e) => console.error(e.response?.statusText));
+    getActivities().then(({ data }) => setActivities(data));
   }, []);
 
   return (

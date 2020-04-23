@@ -58,7 +58,6 @@ export const Classes = () => {
   useEffect(() => {
     getClasses()
       .then(({ data }) => setDataClasses(data))
-      .catch((e) => console.error(e.response?.statusText))
       .finally(setLoading(false));
   }, []);
 
