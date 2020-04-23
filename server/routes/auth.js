@@ -127,7 +127,7 @@ router.get("/loggedin", async (req, res) => {
       const user = await User.findOne({ _id: req.user._id })
         .populate({
           path: "classes",
-          select: ["_id", "name", "date"],
+          select: ["_id", "name", "date", "level"],
         })
         .select("_id username email name surname date image type");
 

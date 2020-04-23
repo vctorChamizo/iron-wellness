@@ -156,7 +156,7 @@ export const Class = connect((state) => ({ user: state.user }))(
         })
         .catch((e) => {
           if (e.response?.data.status == "BadRequest")
-            history.push("/notfound");
+            return history.push("/notfound");
         })
         .finally(setLoading(false));
     }, []);
@@ -200,28 +200,26 @@ export const Class = connect((state) => ({ user: state.user }))(
     };
 
     const handleRemoveClass = async (_class) => {
+      dispatch(
+        useSetDialog({
+          open: false,
+        })
+      );
       setLoading(true);
+
       try {
-        if (userList.findIndex((e) => e._id === user._id)) {
-          await removeUserClass(_class._id);
+        await removeUserClass(_class._id);
 
-          const index = userList.findIndex((e) => e._id === user._id);
-          setUserList([...userList].splice(index, index));
+        const index = userList.findIndex((e) => e._id === user._id);
+        setUserList([...userList].splice(index, index));
 
-          const indexClassUser = user.classes.findIndex(
-            (e) => e._id === _class._id
-          );
-          user.classes.splice(indexClassUser, 1);
-          dispatch(useSetUser(user));
+        const indexClassUser = user.classes.findIndex(
+          (e) => e._id === _class._id
+        );
+        user.classes.splice(indexClassUser, 1);
+        dispatch(useSetUser(user));
 
-          dispatch(
-            useSetDialog({
-              open: false,
-            })
-          );
-
-          handleSanckBar("Has sido eliminado de la clase", "success");
-        }
+        handleSanckBar("Has sido eliminado de la clase", "success");
       } catch (error) {
         if (error.response)
           handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
@@ -230,14 +228,17 @@ export const Class = connect((state) => ({ user: state.user }))(
     };
 
     const handleClickRemoveClass = (_class) => {
-      dispatch(
-        useSetDialog({
-          executeOperation: handleRemoveClass,
-          data: _class,
-          open: true,
-          message: "¿Estás seguro que quieres desapuntarte de la clase?",
-        })
-      );
+      if (userList.findIndex((e) => e._id == user._id) === -1)
+        handleSanckBar("No estás apuntado a la clase", "info");
+      else
+        dispatch(
+          useSetDialog({
+            executeOperation: handleRemoveClass,
+            data: _class,
+            open: true,
+            message: "¿Estás seguro que quieres desapuntarte de la clase?",
+          })
+        );
     };
 
     return (

@@ -23,7 +23,8 @@ export const Class = connect((state) => ({ snackbar: state.snackbar }))(
         .finally(setLoading(false));
     }, []);
 
-    dispatch(useSetSnackbar({ message, severity, open: true }));
+    const handleSanckBar = (message, severity) =>
+      dispatch(useSetSnackbar({ message, severity, open: true }));
 
     const handleAdd = async (data, e) => {
       setLoading(true);

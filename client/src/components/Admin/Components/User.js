@@ -12,11 +12,10 @@ import { Wrapper } from "../Wrapper";
 import { Loading } from "../../PopUp/Loading/index";
 
 export const User = connect()(({ dispatch }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    dispatch(useSetLoading(true));
     getUsersByType("CLIENT")
       .then(({ data }) => setUsers(data))
       .catch((e) => console.error(e.response?.statusText))

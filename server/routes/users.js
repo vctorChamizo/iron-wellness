@@ -181,7 +181,7 @@ router.get("/:id", async (req, res, next) => {
     const user = await User.findOne({ _id: req.params.id })
       .populate({
         path: "classes",
-        select: ["_id", "name", "date"],
+        select: ["_id", "name", "date", "level"],
       })
       .select("_id username email name surname image type");
 
