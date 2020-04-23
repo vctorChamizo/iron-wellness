@@ -29,10 +29,10 @@ export const Activity = connect((state) => ({ snackbar: state.snackbar }))(
     const handleAdd = async (data, e) => {
       setLoading(true);
       try {
-        await addActivity(data);
+        const newActivity = await addActivity(data);
 
         const newActivities = [...activities];
-        newActivities.push(data);
+        newActivities.push(newActivity.data);
         setActivities(newActivities);
 
         e.target.reset();

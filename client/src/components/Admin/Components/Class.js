@@ -29,11 +29,11 @@ export const Class = connect((state) => ({ snackbar: state.snackbar }))(
     const handleAdd = async (data, e) => {
       setLoading(true);
       try {
-        await addClass(data);
+        const newClass = await addClass(data);
 
-        const newClass = [...classes];
-        newClass.push(data);
-        setClasses(newClass);
+        const newClasses = [...classes];
+        newClasses.push(newClass.data);
+        setClasses(newClasses);
 
         e.target.reset();
         handleSanckBar("La clase ha sido creada correctamente", "success");

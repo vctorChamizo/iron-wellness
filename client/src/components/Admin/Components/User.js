@@ -29,10 +29,10 @@ export const User = connect()(({ dispatch }) => {
     setLoading(true);
     try {
       data.type = "CLIENT";
-      await addUser(data);
+      const newUser = await addUser(data);
 
       const newUsers = [...users];
-      newUsers.push(data);
+      newUsers.push(newUser.data);
       setUsers(newUsers);
 
       e.target.reset();

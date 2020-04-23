@@ -30,10 +30,10 @@ export const Trainer = connect((state) => ({ snackbar: state.snackbar }))(
       setLoading(true);
       try {
         data.type = "TRAINER";
-        await addUser(data);
+        const newTrainer = await addUser(data);
 
         const newTrainers = [...trainers];
-        newTrainers.push(data);
+        newTrainers.push(newTrainer.data);
         setTrainers(newTrainers);
 
         e.target.reset();
