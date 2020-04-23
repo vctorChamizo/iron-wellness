@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import _ from "lodash";
 
-import { Loading } from "../../Loading";
+import { getExersices } from "../../../../lib/api/exersice.api";
+
+import { Loading } from "../../PopUp/Loading/index";
 import { ExersiceDialog } from "./ExersiceDialog";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -54,87 +57,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const exersiceData = [
-  {
-    image: {
-      url:
-        "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png",
-    },
-    week: 1,
-    day: 1,
-  },
-  {
-    image: {
-      url:
-        "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png",
-    },
-    week: 1,
-    day: 2,
-  },
-  {
-    image: {
-      url:
-        "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png",
-    },
-    week: 1,
-    day: 3,
-  },
-  {
-    image: {
-      url:
-        "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png",
-    },
-    week: 1,
-    day: 4,
-  },
-  {
-    image: {
-      url:
-        "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png",
-    },
-    week: 1,
-    day: 5,
-  },
-  {
-    image: {
-      url:
-        "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png",
-    },
-    week: 1,
-    day: 6,
-  },
-  {
-    image: {
-      url:
-        "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png",
-    },
-    week: 1,
-    day: 7,
-  },
-];
-
 export const Exersice = () => {
   const classes = useStyles();
 
   const [loading, setLoading] = useState(false);
-  const [exersice, setExersice] = useState(exersiceData);
+  const [exersices, setExersices] = useState([]);
 
   const [imageURL, setImageURL] = useState();
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleClick = (index) => {
-    setImageURL(exersice[index].image.url);
+  const handleClick = (image) => {
+    setImageURL(image);
     setOpenDialog(true);
   };
 
   const handleClose = () => setOpenDialog(false);
 
-  // useEffect(() => {
-  //   getCenters()
-  //     .then(({ data }) => setCenters(data))
-  //     .catch((e) => console.error(e.response?.statusText))
-  //     .finally(setLoading(false));
-  // }, []);
+  useEffect(() => {
+    getExersices()
+      .then(({ data }) => setExersices(data))
+      .finally(setLoading(false));
+  }, []);
+
+  let formatExersices = {};
+  if (exersices.length > 0) formatExersices = _.groupBy(exersices, "week");
 
   return (
     <>
@@ -156,20 +102,30 @@ export const Exersice = () => {
           <Divider />
         </div>
 
-        <p className={classes.weekTitle}>SEMANA 1</p>
-        <div className={classes.wrapperExersice}>
-          {exersice.map((e, i) => (
-            <div
-              key={i}
-              data-aos="zoom-in"
-              className={classes.card}
-              onClick={() => handleClick(i)}
-            >
-              <CardExersice exersice={e} />
+        {Object.entries(formatExersices).map((week) => {
+          let number = week[0] - 1;
+          let exersices = week[1];
+
+          return (
+            <div key={number}>
+              <p className={classes.weekTitle}>SEMANA {number + 1}</p>
+              <div className={classes.wrapperExersice}>
+                {exersices.map((e) => (
+                  <div
+                    key={e._id}
+                    data-aos="zoom-in"
+                    className={classes.card}
+                    onClick={() => handleClick(e.image?.url)}
+                  >
+                    <CardExersice exersice={e} />
+                  </div>
+                ))}
+              </div>
+
+              <Divider className={classes.divider} />
             </div>
-          ))}
-        </div>
-        <Divider className={classes.divider} />
+          );
+        })}
       </section>
       <ExersiceDialog
         image={imageURL}

@@ -11,7 +11,6 @@ import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Toolbar from "@material-ui/core/Toolbar";
-import Avatar from "@material-ui/core/Avatar";
 
 const drawerWidth = 240;
 
@@ -40,16 +39,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     padding: "2.5vh 0",
   },
-  large: {
-    width: theme.spacing(7),
-    height: theme.spacing(7),
-    marginBottom: "2.5vh",
-  },
   titleName: {
     margin: "0",
     fontFamily: '"Roboto", sans-serif',
     fontWeight: "300",
-    fontSize: "1.3rem",
+    fontSize: "1.5rem",
   },
 }));
 
@@ -64,9 +58,7 @@ export const Menu = ({ setComponent, user, history, dispatch }) => {
         await logout();
         dispatch(useLogout());
         history.push("/");
-      } catch (error) {
-        console.error(error?.response.textStatus);
-      }
+      } catch (error) {}
     } else setComponent(key);
   };
 
@@ -82,11 +74,6 @@ export const Menu = ({ setComponent, user, history, dispatch }) => {
       <div className={classes.drawerContainer}>
         <List>
           <div className={classes.wrappetAvatar}>
-            <Avatar
-              alt="Avatar"
-              src={user.image?.url}
-              className={classes.large}
-            />
             <p className={classes.titleName}>{user.name}</p>
           </div>
           <Divider />

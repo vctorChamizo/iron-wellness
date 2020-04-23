@@ -1,6 +1,13 @@
 import { createStore } from "redux";
 
-const reducer = (state = {}, action) => {
+const initialState = {
+  dialog: {
+    open: false,
+  },
+  loading: true,
+};
+
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "USE_USER":
       return state.user;
@@ -13,6 +20,18 @@ const reducer = (state = {}, action) => {
 
     case "SET_LOADING":
       return { ...state, loading: action.loading };
+
+    case "USE_SNACKBAR":
+      return state.snackbar;
+
+    case "SET_SNACKBAR":
+      return { ...state, snackbar: action.snackbar };
+
+    case "USE_DIALOG":
+      return state.dialog;
+
+    case "SET_DIALOG":
+      return { ...state, dialog: action.dialog };
 
     case "USE_LOGOUT":
       return { ...state, user: undefined };

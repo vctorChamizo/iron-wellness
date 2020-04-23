@@ -41,7 +41,7 @@ export const ItemList = ({ type, handleClick }) => {
       case "calendar":
         return "Calendario";
       case "logout":
-        return "CerrarSesion";
+        return "Cerrar Sesion";
     }
   };
 

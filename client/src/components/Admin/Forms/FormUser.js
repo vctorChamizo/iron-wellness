@@ -21,6 +21,7 @@ export const FormUser = ({ register, errors, control }) => {
   return (
     <>
       <TextField
+        autoComplete="off"
         variant="outlined"
         margin="normal"
         fullWidth
@@ -34,12 +35,12 @@ export const FormUser = ({ register, errors, control }) => {
         helperText={errors.username ? errors.username.helperText : ""}
       />
       <TextField
+        autoComplete="off"
         variant="outlined"
         margin="normal"
         fullWidth
         label="Email"
         name="email"
-        autoComplete="email"
         inputRef={register({
           required: true,
           pattern: EMAIL_PATTERN,
@@ -48,6 +49,7 @@ export const FormUser = ({ register, errors, control }) => {
         helperText={errors.email ? errors.email.helperText : ""}
       />
       <TextField
+        autoComplete="off"
         variant="outlined"
         margin="normal"
         fullWidth
@@ -59,6 +61,7 @@ export const FormUser = ({ register, errors, control }) => {
         helperText={errors.password ? errors.password.helperText : ""}
       />
       <TextField
+        autoComplete="off"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -69,6 +72,7 @@ export const FormUser = ({ register, errors, control }) => {
         helperText={errors.name ? errors.name.helperText : ""}
       />
       <TextField
+        autoComplete="off"
         variant="outlined"
         fullWidth
         margin="normal"
@@ -80,6 +84,7 @@ export const FormUser = ({ register, errors, control }) => {
       />
 
       <TextField
+        autoComplete="off"
         fullWidth
         variant="outlined"
         margin="normal"

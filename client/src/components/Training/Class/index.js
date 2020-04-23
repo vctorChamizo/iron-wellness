@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useParams, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
-import { Loading } from "../../Loading";
-import { ListUser } from "./ListUser";
-import { SnackBar } from "../../Snackbar/index";
-import { DialogOption } from "./DialogOption";
-
 import { getClass } from "../../../../lib/api/class.api";
 import { addUserClass, removeUserClass } from "../../../../lib/api/user.api";
-import { useSetUser } from "../../../../lib/redux/action";
+import {
+  useSetUser,
+  useSetSnackbar,
+  useSetDialog,
+} from "../../../../lib/redux/action";
+
+import { Loading } from "../../PopUp/Loading/index";
+import { ListUser } from "./ListUser";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -134,6 +136,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "100",
     color: theme.palette.secondary.main,
   },
+  wrapperDescription: {
+    overflow: "scroll",
+    height: "15vh",
+  },
 }));
 
 export const Class = connect((state) => ({ user: state.user }))(
@@ -146,13 +152,6 @@ export const Class = connect((state) => ({ user: state.user }))(
     const [dataClass, setDataClass] = useState({});
     const [userList, setUserList] = useState([]);
 
-    const [message, setMessage] = useState();
-    const [openMessage, setOpenMessage] = useState(false);
-    const [severity, setSeverity] = useState();
-
-    const [openDialog, setOpenDialog] = useState(false);
-    const [classSelected, setClassSelected] = useState({});
-
     useEffect(() => {
       getClass(id)
         .then(({ data }) => {
@@ -161,12 +160,14 @@ export const Class = connect((state) => ({ user: state.user }))(
         })
         .catch((e) => {
           if (e.response?.data.status == "BadRequest")
-            history.push("/notfound");
+            return history.push("/notfound");
         })
         .finally(setLoading(false));
     }, []);
 
-    const date = new Date(dataClass.date);
+    let date = undefined;
+    if (dataClass.date) date = new Date(dataClass.date);
+
     const level =
       dataClass.level == "BEGGINER"
         ? "PRINCIPIANTE"
@@ -175,9 +176,13 @@ export const Class = connect((state) => ({ user: state.user }))(
         : "PROFESIONAL";
 
     const place =
-      dataClass.activity?.place == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
+      dataClass.activity?.type == "OUTDOOR" ? "EXTERIOR" : "INTERIOR";
+
+    const handleSanckBar = (message, severity) =>
+      dispatch(useSetSnackbar({ message, severity, open: true }));
 
     const handleAddClass = async (_class) => {
+      setLoading(true);
       try {
         if (userList.findIndex((e) => e._id === user._id)) {
           await addUserClass(_class._id);
@@ -194,40 +199,53 @@ export const Class = connect((state) => ({ user: state.user }))(
           handleSanckBar("Ya estás añadido a la clase", "info");
         }
       } catch (error) {
-        console.log(error.response);
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
       }
+      setLoading(false);
     };
 
     const handleRemoveClass = async (_class) => {
-      await removeUserClass(_class._id);
-
-      const index = userList.findIndex((e) => e._id === user._id);
-      setUserList([...userList].splice(index, index));
-
-      const indexClassUser = user.classes.findIndex(
-        (e) => e._id === _class._id
+      dispatch(
+        useSetDialog({
+          open: false,
+        })
       );
-      user.classes.splice(indexClassUser, 1);
-      dispatch(useSetUser(user));
+      setLoading(true);
 
-      setOpenDialog(false);
-      handleSanckBar("Has sido eliminado de la clase", "success");
+      try {
+        await removeUserClass(_class._id);
+
+        const index = userList.findIndex((e) => e._id === user._id);
+        setUserList([...userList].splice(index, index));
+
+        const indexClassUser = user.classes.findIndex(
+          (e) => e._id === _class._id
+        );
+        user.classes.splice(indexClassUser, 1);
+        dispatch(useSetUser(user));
+
+        handleSanckBar("Has sido eliminado de la clase", "success");
+      } catch (error) {
+        if (error.response)
+          handleSanckBar("Ha ocurrido un error. Vuelve a intentarlo.", "error");
+      }
+      setLoading(false);
     };
 
-    const handleSanckBar = (message, severity) => {
-      setMessage(message);
-      setSeverity(severity);
-      setOpenMessage(true);
+    const handleClickRemoveClass = (_class) => {
+      if (userList.findIndex((e) => e._id == user._id) === -1)
+        handleSanckBar("No estás apuntado a la clase", "info");
+      else
+        dispatch(
+          useSetDialog({
+            executeOperation: handleRemoveClass,
+            data: _class,
+            open: true,
+            message: "¿Estás seguro que quieres desapuntarte de la clase?",
+          })
+        );
     };
-
-    const handleClickOpenDialog = (_class) => {
-      setOpenDialog(true);
-      setClassSelected(_class);
-    };
-
-    const handleCloseDialog = () => setOpenDialog(false);
-
-    console.log(dataClass);
 
     return (
       <>
@@ -247,7 +265,7 @@ export const Class = connect((state) => ({ user: state.user }))(
                 <Button
                   variant="outlined"
                   color="secondary"
-                  onClick={() => handleClickOpenDialog(dataClass)}
+                  onClick={() => handleClickRemoveClass(dataClass)}
                 >
                   Quitar
                 </Button>
@@ -260,22 +278,21 @@ export const Class = connect((state) => ({ user: state.user }))(
             <div className={classes.wrapperClass}>
               <div className={classes.wrapperInfo}>
                 <EventIcon className={classes.icon} />
-                {"  "}
-                {`${date.getDate()}-${String(date.getMonth() + 1).padStart(
-                  2,
-                  "0"
-                )}-${date.getFullYear()}`}
+                {date &&
+                  `${date.getDate()}-${String(date.getMonth() + 1).padStart(
+                    2,
+                    "0"
+                  )}-${date.getFullYear()}`}
               </div>
               <div className={classes.wrapperInfo}>
                 <QueryBuilderIcon className={classes.icon} />
-                {"  "}
-                {`${String(date.getHours()).padStart(2, "0")}:${String(
-                  date.getMinutes()
-                ).padStart(2, "0")}`}
+                {date &&
+                  `${String(date.getHours()).padStart(2, "0")}:${String(
+                    date.getMinutes()
+                  ).padStart(2, "0")}`}
               </div>
               <div className={classes.wrapperInfo}>
                 <FitnessCenterIcon className={classes.icon} />
-                {"  "}
                 {level}
               </div>
             </div>
@@ -290,9 +307,13 @@ export const Class = connect((state) => ({ user: state.user }))(
                   <p className={classes.titleTrainer}>
                     {dataClass.activity?.name}
                   </p>
-                  <p className={classes.titleDescription}>
-                    {dataClass.activity?.description}
-                  </p>
+
+                  <div className={classes.wrapperDescription}>
+                    <p className={classes.titleDescription}>
+                      {dataClass.activity?.description}
+                    </p>
+                  </div>
+
                   <Divider className={classes.divider} />
                   <p className={classes.subtitlePlace}>
                     ACTIVIDAD <span className={classes.place}>{place}</span>
@@ -326,18 +347,6 @@ export const Class = connect((state) => ({ user: state.user }))(
             </Paper>
           </div>
         </div>
-        <SnackBar
-          message={message}
-          severity={severity}
-          openMessage={openMessage}
-          setOpenMessage={setOpenMessage}
-        />
-        <DialogOption
-          openDialog={openDialog}
-          handleCloseDialog={handleCloseDialog}
-          handleRemoveClass={handleRemoveClass}
-          classSelected={classSelected}
-        />
       </>
     );
   })

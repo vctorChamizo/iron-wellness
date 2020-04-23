@@ -11,7 +11,6 @@ export const withAuthentication = (Component) => () => {
   useEffect(() => {
     loggedin()
       .then((data) => (data ? store.dispatch(useSetUser(data)) : undefined))
-      .catch((e) => console.error(e.response?.statusText))
       .finally(() => store.dispatch(useSetLoading(false)));
   }, []);
 

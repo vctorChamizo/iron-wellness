@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
@@ -24,10 +29,12 @@ import { NutritionPage } from "./pages/Nutrition.page";
 import { NotFoundPage } from "./pages/NotFound.page";
 import { AdminPage } from "./pages/Admin.page";
 
+import { SnackBar } from "./components/PopUp/Snackbar/index";
+import { DialogOption } from "./components/PopUp/Dialog/index";
+
 const UserRoutes = () => (
   <>
     <Route path="/" exact component={RootPage} />
-    <Route path="/notfound" component={NotFoundPage} />
     <Route path="/home" component={HomePage} />
     <Route path="/centers" component={CentersPage} />
     <Route path="/profile" component={ProfilePage} />
@@ -36,16 +43,18 @@ const UserRoutes = () => (
     <Route path="/class/:id" component={ClassPage} />
     <Route path="/exersice" component={ExersicePage} />
     <Route path="/nutrition" component={NutritionPage} />
+    {/* <Route path="*" component={NotFoundPage} /> */}
   </>
 );
-const AdminRoutes = () => (
-  <>
-    <Route path="/profile" exact component={AdminPage} />
-  </>
-);
+const AdminRoutes = () => <Route path="*" exact component={AdminPage} />;
 
-const AppRole = connect((state) => ({ user: state.user }))(({ user }) => {
+const AppRole = connect((state) => ({
+  user: state.user,
+  snackbar: state.snackbar,
+  dialog: state.dialog,
+}))(({ user, snackbar, dialog }) => {
   AOS.init();
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -54,6 +63,17 @@ const AppRole = connect((state) => ({ user: state.user }))(({ user }) => {
           {user?.type == "ADMIN" ? <AdminRoutes /> : <UserRoutes />}
         </Switch>
       </Router>
+      <SnackBar
+        message={snackbar?.message}
+        severity={snackbar?.severity}
+        openMessage={snackbar?.open}
+      />
+      <DialogOption
+        executeOperation={dialog?.executeOperation}
+        data={dialog?.data}
+        message={dialog?.message}
+        openDialog={dialog?.open}
+      />
     </ThemeProvider>
   );
 });
