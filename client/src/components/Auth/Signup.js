@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+
 import "date-fns";
+import es from "date-fns/locale/es"; // the locale you want
+
 import { connect } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { withRouter } from "react-router-dom";
@@ -200,7 +203,7 @@ export const Signup = connect()(
                 helperText={errors.surname ? errors.surname.helperText : ""}
               />
             </div>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <MuiPickersUtilsProvider utils={DateFnsUtils} locale={es}>
               <Controller
                 as={KeyboardDatePicker}
                 name="reactSelect"
@@ -208,7 +211,7 @@ export const Signup = connect()(
                 onChange={(selected) => selected[1]}
                 fullWidth
                 variant="inline"
-                format="MM/dd/yyyy"
+                format="dd/MM/yyyy"
                 margin="normal"
                 name="date"
                 label="Fecha de nacimiento"
