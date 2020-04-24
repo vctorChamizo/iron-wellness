@@ -9,12 +9,159 @@
     "type": "ADMIN"
   },
   {
-    "username": "trainer",
-    "email": "trainer@trainer.es",
-    "password": "123",
+    "username": "felisuco_22",
+    "email": "trainer1@trainer.es",
+    "password": "Ironwellness2020",
+    "name": "Felix",
+    "surname": "Santos",
+    "date": "1996-01-21",
+    "type": "TRAINER",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587750393/iron-wellness/avatar/trainer-1_llpgxr.jpg"
+    }
+  },
+  {
+    "username": "izando_velas",
+    "email": "trainer1@trainer.es",
+    "password": "Ironwellness2020",
+    "name": "Izan",
+    "surname": "Hernandez",
+    "date": "1996-01-21",
+    "type": "TRAINER",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587750393/iron-wellness/avatar/trainer-2_vjyyfk.jpg"
+    }
+  },
+  {
+    "username": "Alba.G",
+    "email": "trainer1@trainer.es",
+    "password": "Ironwellness2020",
     "name": "Alba",
     "surname": "Martinez",
     "date": "1996-01-21",
-    "type": "TRAINER"
+    "type": "TRAINER",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587750393/iron-wellness/avatar/trainer-3_aolspw.jpg"
+    }
+  },
+  {
+    "username": "vero.H",
+    "email": "usuario1@usuario.es",
+    "password": "Ironwellness2020",
+    "name": "Veronica",
+    "surname": "Hernandez",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751302/iron-wellness/avatar/user-1_obisqi.jpg"
+    }
+  },
+  {
+    "username": "antoñusqui",
+    "email": "usuario2@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Antonio",
+    "surname": "Diaz",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751302/iron-wellness/avatar/user-2_bg9rxr.jpg"
+    }
+  },
+  {
+    "username": "la_coke",
+    "email": "usuario3@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Raquel",
+    "surname": "Garcia",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751303/iron-wellness/avatar/user-3_bjryik.jpg"
+    }
+  },
+  {
+    "username": "charlie.R",
+    "email": "usuario4@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Carlos",
+    "surname": "Ruiz",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751302/iron-wellness/avatar/user-4_ur7elo.jpg"
+    }
+  },
+  {
+    "username": "marigo",
+    "email": "usuario5@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Maria",
+    "surname": "Gomez",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751302/iron-wellness/avatar/user-5_letqtb.jpg"
+    }
+  },
+  {
+    "username": "isma_morenito",
+    "email": "usuario6@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Ismael",
+    "surname": "Moreno",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751302/iron-wellness/avatar/user-6_lv8sye.jpg"
+    }
+  },
+  {
+    "username": "m.Gonzalez",
+    "email": "usuario7@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Miriam",
+    "surname": "Gonzalez",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751302/iron-wellness/avatar/user-7_hu02mm.jpg"
+    }
+  },
+  {
+    "username": "bar_lo",
+    "email": "usuario8@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Barbara",
+    "surname": "Lopez",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751303/iron-wellness/avatar/user-8_u4uaue.jpg"
+    }
+  },
+  {
+    "username": "varito_garci",
+    "email": "usuario9@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Alvaro",
+    "surname": "Garcia",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751303/iron-wellness/avatar/user-9_tqbkxc.jpg"
+    }
+  },
+  {
+    "username": "la_paca",
+    "email": "usuario10@ususario.es",
+    "password": "Ironwellness2020",
+    "name": "Francisco",
+    "surname": "Chamizo",
+    "date": "1996-01-21",
+    "type": "CLIENT",
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587751303/iron-wellness/avatar/user-10_rn4vv6.jpg"
+    }
   }
 ]

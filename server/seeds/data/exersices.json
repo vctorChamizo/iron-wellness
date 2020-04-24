@@ -1,51 +1,149 @@
 [
   {
     "image": {
-      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png"
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748429/iron-wellness/components/exersice/week-1-day-1_sgavdw.png"
     },
     "week": 1,
     "day": 1
   },
   {
     "image": {
-      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png"
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748429/iron-wellness/components/exersice/week-1-day-2_k3czdf.png"
     },
     "week": 1,
     "day": 2
   },
   {
     "image": {
-      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png"
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748429/iron-wellness/components/exersice/week-1-day-3_etirih.png"
     },
     "week": 1,
     "day": 3
   },
   {
     "image": {
-      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png"
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748430/iron-wellness/components/exersice/week-1-day-4_yb5emb.png"
     },
     "week": 1,
     "day": 4
   },
   {
     "image": {
-      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png"
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748430/iron-wellness/components/exersice/week-1-day-5_qjgbpd.png"
     },
     "week": 1,
     "day": 5
   },
   {
     "image": {
-      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png"
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748429/iron-wellness/components/exersice/week-1-day-6_tzu4vl.png"
     },
     "week": 1,
     "day": 6
   },
   {
     "image": {
-      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587197820/iron-wellness/components/exersice/Sunday-Arms_Day_sgkmii.png"
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748429/iron-wellness/components/exersice/week-1-day-7_iyermn.png"
     },
     "week": 1,
+    "day": 7
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748430/iron-wellness/components/exersice/week-2-day-1_kwkbtz.png"
+    },
+    "week": 2,
+    "day": 1
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748430/iron-wellness/components/exersice/week-2-day-2_ppv9c0.png"
+    },
+    "week": 2,
+    "day": 2
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748430/iron-wellness/components/exersice/week-2-day-3_metvjr.png"
+    },
+    "week": 2,
+    "day": 3
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748430/iron-wellness/components/exersice/week-2-day-4_ym13bx.png"
+    },
+    "week": 2,
+    "day": 4
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748430/iron-wellness/components/exersice/week-2-day-5_frk7lp.png"
+    },
+    "week": 2,
+    "day": 5
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748431/iron-wellness/components/exersice/week-2-day-6_tt4z9v.png"
+    },
+    "week": 2,
+    "day": 6
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748431/iron-wellness/components/exersice/week-2-day-7_jiyva2.png"
+    },
+    "week": 2,
+    "day": 7
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748431/iron-wellness/components/exersice/week-3-day-1_vcp2zd.png"
+    },
+    "week": 3,
+    "day": 1
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748431/iron-wellness/components/exersice/week-3-day-2_xdrvtl.png"
+    },
+    "week": 3,
+    "day": 2
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748431/iron-wellness/components/exersice/week-3-day-3_yrdi2k.png"
+    },
+    "week": 3,
+    "day": 3
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748431/iron-wellness/components/exersice/week-3-day-4_uozn4q.png"
+    },
+    "week": 3,
+    "day": 4
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748431/iron-wellness/components/exersice/week-3-day-5_kw5oit.png"
+    },
+    "week": 3,
+    "day": 5
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748432/iron-wellness/components/exersice/week-3-day-6_hpfngz.png"
+    },
+    "week": 3,
+    "day": 6
+  },
+  {
+    "image": {
+      "url": "https://res.cloudinary.com/vctorchzr/image/upload/v1587748432/iron-wellness/components/exersice/week-3-day-7_rqm5pm.png"
+    },
+    "week": 3,
     "day": 7
   }
 ]

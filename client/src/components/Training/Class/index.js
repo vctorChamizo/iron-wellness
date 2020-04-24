@@ -137,7 +137,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.secondary.main,
   },
   wrapperDescription: {
-    overflow: "scroll",
     height: "15vh",
   },
 }));

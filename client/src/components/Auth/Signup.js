@@ -102,7 +102,7 @@ export const Signup = connect()(
         } catch (error) {
           if (error.response?.data.status == "UserExists")
             handleSanckBar("El usuario ya existe", "error");
-          if (error.response)
+          else if (error.response)
             handleSanckBar(
               "Ha ocurrido un error. Vuelve a intentarlo.",
               "error"
@@ -123,7 +123,7 @@ export const Signup = connect()(
         } catch (error) {
           if (error.response?.data.status == "BadCredentials")
             handleSanckBar("El usuario ya existe", "error");
-          if (error.response)
+          else if (error.response)
             handleSanckBar(
               "Ha ocurrido un error. Vuelve a intentarlo.",
               "error"
