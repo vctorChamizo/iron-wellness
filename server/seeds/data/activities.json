@@ -1,12 +1,27 @@
 [
   {
-    "name": "Crossfit",
-    "description": "Resistencia, fuerza física, flexibilidad, potencia, equilibrio... ¡Todo en uno!",
+    "name": "Pilates",
+    "description": "Movimiento físico diseñado para estirar, fortalecer y equilibrar el cuerpo.",
+    "type": "INDOOR"
+  },
+  {
+    "name": "Body Combat",
+    "description": "Ejercicios cardiovasculares que se realiza en grupo y consiste en realizar movimientos de diferentes artes marciales como el taekwondo, karate, capoeira, muay thay.",
+    "type": "INDOOR"
+  },
+  {
+    "name": "Deporte de Aventura",
+    "description": "Creatividad, pasión y experimentación. Además de actividad física ponte en contacto con la naturaleza y busca inyecciones de adrenalina encontrando nuevas emociones.",
     "type": "OUTDOOR"
   },
   {
-    "name": "Yoga",
-    "description": "En el yoga, cuerpo, mente y espíritu se fortalecen y serenan con la práctica de las asanas, la respiración y la meditación.",
+    "name": "Deporte de Agua",
+    "description": "Entrenar en agua duplica la eficacia del entrenamiento.",
+    "type": "INDOOR"
+  },
+  {
+    "name": "TRX",
+    "description": "Sistema de entrenamiento en el que se realizan ejercicios de suspensión. En este tipo de ejercicios se busca el aprovechamiento del peso del propio cuerpo para ejercitar la masa muscular.",
     "type": "INDOOR"
   }
 ]

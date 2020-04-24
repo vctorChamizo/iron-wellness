@@ -7,7 +7,7 @@ const connectionDB = async (fn) => {
   try {
     await mongoose
       .set("useCreateIndex", true)
-      .connect(process.env.DB_URL, {
+      .connect(process.env.DB_URL_REMOTE, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       });
