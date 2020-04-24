@@ -81,7 +81,7 @@ export const Login = connect()(
               "El usuario o la contraseña son incorrectos",
               "error"
             );
-          if (error.response)
+          else if (error.response)
             handleSanckBar(
               "Ha ocurrido un error. Vuelve a intentarlo.",
               "error"
@@ -103,7 +103,7 @@ export const Login = connect()(
               "El usuario o la contraseña son incorrectos",
               "error"
             );
-          if (error.response)
+          else if (error.response)
             handleSanckBar(
               "Ha ocurrido un error. Vuelve a intentarlo.",
               "error"
