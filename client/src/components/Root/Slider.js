@@ -29,6 +29,7 @@ export const Slider = ({ slideData }) => {
     transform: `translateX(-${current * (100 / slideData.length)}%)`,
   };
 
+
   return (
     <div className="slider">
       <ul className="slider__wrapper" style={wrapperTransform}>

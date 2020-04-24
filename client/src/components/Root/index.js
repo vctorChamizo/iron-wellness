@@ -109,7 +109,7 @@ export const Root = connect((state) => ({ user: state.user }))(
     const classes = useStyles();
 
     const [loading, setLoading] = useState(true);
-    const [centers, setCenters] = useState([]);
+    const [centers, setCenters] = useState();
 
     useEffect(() => {
       getCenters()
@@ -171,7 +171,7 @@ export const Root = connect((state) => ({ user: state.user }))(
             <Divider className={classes.divider} />
           </div>
 
-          <Slider slideData={centers} />
+          <Slider slideData={centers || []} />
         </section>
 
         <section className={classes.backgroundLast}>
