@@ -2,6 +2,9 @@
 
 **Iron Wellness** was born from the idea of creating a **sports class manager** for different gyms as well as the possibility of receiving from users a series of trainings that they can carry out from their homes following an **exercise table** or teaching **virtual classes**.
 
+## Design
+You can view the structure design details [here](https://miro.com/app/board/o9J_ku9GGfA=/)
+
 ## Technologies
 - **Node JS**: used for the development back-end.
 - **React JS**: JavaScript library used to development front-end.
