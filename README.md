@@ -9,9 +9,9 @@ You can view the structure design details [here](https://miro.com/app/board/o9J_
 In order to run this project locally do the following (on both client and server folders except for step 1):
 
 1. Clone the project
-2. Run npm install to install all the dependencies
-3. Create a .env file and paste the required environment variables in the corresponding field
-4. Run npm run dev to launch the application and access it at localhost:*port*
+2. Run `npm install` to install all the dependencies
+3. Create a `.env` file and paste the required environment variables in the corresponding field
+4. Run `npm run dev` to launch the application and access it at localhost:*port*
 
 ## Features
 ### Home
@@ -30,7 +30,7 @@ In order to run this project locally do the following (on both client and server
 ![info_class-iron_wellbess](https://user-images.githubusercontent.com/32466953/83861687-2f724a00-a721-11ea-9e41-856617fa2ec6.png)
 ---
 
-## Admin Management
+### Admin Management
 ![admin-iron_wellness](https://user-images.githubusercontent.com/32466953/83861671-297c6900-a721-11ea-85b8-1fa50f6524a4.png)
 ---
 
